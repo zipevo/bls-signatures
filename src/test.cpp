@@ -17,6 +17,8 @@
 #include "bls.hpp"
 #include "test-utils.hpp"
 
+#include <array>
+
 using std::string;
 using std::vector;
 using std::cout;
@@ -1375,6 +1377,85 @@ TEST_CASE("AggregationInfo") {
                 privateKeysList, pubKeysList);
 
         Signature aggSig3 = aggSk.Sign(msg, sizeof(msg));
+    }
+}
+
+TEST_CASE("Threshold Signatures") {
+    SECTION("Secret Key Shares") {
+        size_t m = 3;
+        size_t n = 5;
+
+        std::vector<PrivateKey> sks;
+        std::vector<PublicKey> pks;
+        std::vector<InsecureSignature> sigs;
+        std::vector<std::array<uint8_t, BLS::ID_SIZE>> ids(n);
+        std::vector<PrivateKey> skShares;
+        std::vector<PublicKey> pkShares;
+        std::vector<InsecureSignature> sigShares;
+
+        uint8_t hash[32];
+        getRandomSeed(hash);
+
+        for (size_t i = 0; i < n; i++) {
+            getRandomSeed(ids[i].data());
+        }
+
+        for (size_t i = 0; i < m; i++) {
+            uint8_t buf[32];
+            getRandomSeed(buf);
+
+            PrivateKey sk = PrivateKey::FromSeed(buf, 32);
+            sks.push_back(sk);
+            pks.push_back(sk.GetPublicKey());
+            sigs.push_back(sk.SignInsecurePrehashed(hash));
+            ASSERT(sigs.back().Verify({hash}, {sk.GetPublicKey()}));
+        }
+
+        InsecureSignature sig = sks[0].SignInsecurePrehashed(hash);
+        REQUIRE(sig.Verify({hash}, {pks[0]}));
+
+        for (size_t i = 0; i < n; i++) {
+            PrivateKey skShare = BLS::PrivateKeyShare(sks, ids[i].data());
+            PublicKey pkShare = BLS::PublicKeyShare(pks, ids[i].data());
+            InsecureSignature sigShare1 = BLS::SignatureShare(sigs, ids[i].data());
+            REQUIRE(skShare.GetPublicKey() == pkShare);
+
+            InsecureSignature sigShare2 = skShare.SignInsecurePrehashed(hash);
+            REQUIRE(sigShare1 == sigShare2);
+            REQUIRE(sigShare1.Verify({hash}, {pkShare}));
+
+            skShares.push_back(skShare);
+            pkShares.push_back(pkShare);
+            sigShares.push_back(sigShare1);
+        }
+
+        std::vector<PrivateKey> rsks;
+        std::vector<PublicKey> rpks;
+        std::vector<InsecureSignature> rsigs;
+        std::vector<const uint8_t*> rids;
+        for (size_t i = 0; i < 2; i++) {
+            rsks.push_back(skShares[i]);
+            rpks.push_back(pkShares[i]);
+            rsigs.push_back(sigShares[i]);
+            rids.push_back(ids[i].data());
+        }
+        PrivateKey recSk = BLS::RecoverPrivateKey(rsks, rids);
+        PublicKey recPk = BLS::RecoverPublicKey(rpks, rids);
+        InsecureSignature recSig = BLS::RecoverSig(rsigs, rids);
+        REQUIRE(recSk != sks[0]);
+        REQUIRE(recPk != pks[0]);
+        REQUIRE(recSig != sig);
+
+        rsks.push_back(skShares[2]);
+        rpks.push_back(pkShares[2]);
+        rsigs.push_back(sigShares[2]);
+        rids.push_back(ids[2].data());
+        recSk = BLS::RecoverPrivateKey(rsks, rids);
+        recPk = BLS::RecoverPublicKey(rpks, rids);
+        recSig = BLS::RecoverSig(rsigs, rids);
+        REQUIRE(recSk == sks[0]);
+        REQUIRE(recPk == pks[0]);
+        REQUIRE(recSig == sig);
     }
 }
 

@@ -34,6 +34,7 @@ namespace bls {
  */
 class InsecureSignature {
  friend class Signature;
+ template <typename T> friend struct PolyOps;
  public:
     static const size_t SIGNATURE_SIZE = 96;
 
