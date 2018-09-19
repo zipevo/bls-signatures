@@ -25,6 +25,8 @@
 #include "signature.hpp"
 namespace bls {
 class PrivateKey {
+ template <typename T> friend struct PolyOps;
+ friend class BLS;
  public:
     // Private keys are represented as 32 byte field elements. Note that
     // not all 32 byte integers are valid keys, the private key must be
