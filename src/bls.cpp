@@ -100,6 +100,10 @@ void BLS::HashPubKeys(bn_t* output, size_t numOutputs,
     CheckRelicErrors();
 }
 
+BLSPublicKey BLS::DHKeyExchange(const BLSPrivateKey& privKey, const BLSPublicKey& pubKey) {
+    return pubKey.Exp(*privKey.keydata);
+}
+
 void BLS::CheckRelicErrors() {
     if (!core_get()) {
         throw std::string("Library not initialized properly. Call BLS::Init()");
