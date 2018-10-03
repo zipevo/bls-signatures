@@ -55,6 +55,8 @@ class BLS {
     // Cleans the BLS library
     static void Clean();
 
+    static void SetSecureAllocator(Util::SecureAllocCallback allocCb, Util::SecureFreeCallback freeCb);
+
     // Used for secure aggregation
     static void HashPubKeys(
             bn_t* output,
