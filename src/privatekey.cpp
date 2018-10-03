@@ -44,7 +44,6 @@ PrivateKey PrivateKey::FromSeed(const uint8_t* seed, size_t seedLen) {
     bn_mod_basic(*skBn, *skBn, order);
 
     PrivateKey k;
-    k.AllocateKeyData();
     bn_copy(*k.keydata, *skBn);
 
     Util::SecFree(skBn);
@@ -56,7 +55,6 @@ PrivateKey PrivateKey::FromSeed(const uint8_t* seed, size_t seedLen) {
 PrivateKey PrivateKey::FromBytes(const uint8_t* bytes, bool modOrder) {
     BLS::AssertInitialized();
     PrivateKey k;
-    k.AllocateKeyData();
     bn_read_bin(*k.keydata, bytes, PrivateKey::PRIVATE_KEY_SIZE);
     bn_t ord;
     bn_new(ord);
@@ -69,6 +67,11 @@ PrivateKey PrivateKey::FromBytes(const uint8_t* bytes, bool modOrder) {
         }
     }
     return k;
+}
+
+PrivateKey::PrivateKey() {
+    BLS::AssertInitialized();
+    AllocateKeyData();
 }
 
 // Construct a private key from another private key.
@@ -174,7 +177,6 @@ PrivateKey PrivateKey::Mul(const bn_t n) const {
     g2_get_ord(order);
 
     PrivateKey ret;
-    ret.AllocateKeyData();
     bn_mul_comba(*ret.keydata, *keydata, n);
     bn_mod_basic(*ret.keydata, *ret.keydata, order);
     return ret;

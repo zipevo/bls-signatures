@@ -66,9 +66,10 @@ class InsecureSignature {
     friend std::ostream &operator<<(std::ostream &os, InsecureSignature const &s);
     InsecureSignature& operator=(const InsecureSignature& rhs);
 
- private:
+ public:
     // Prevent public construction, force static method
     InsecureSignature();
+ private:
 
     // Exponentiate signature with n
     InsecureSignature Exp(const bn_t n) const;
