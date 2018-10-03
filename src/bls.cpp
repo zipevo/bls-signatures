@@ -151,7 +151,6 @@ struct PolyOps<PrivateKey> : PolyOpsBase
 {
     PrivateKey New() {
         PrivateKey r;
-        r.AllocateKeyData();
         return r;
     }
     PrivateKey Add(const PrivateKey& a, const PrivateKey& b) {

@@ -73,9 +73,10 @@ class PrivateKey {
     Signature Sign(const uint8_t *msg, size_t len) const;
     Signature SignPrehashed(const uint8_t *hash) const;
 
- private:
+ public:
     // Don't allow public construction, force static methods
-    PrivateKey() {}
+    PrivateKey();
+ private:
 
     // Multiply private key with n
     PrivateKey Mul(const bn_t n) const;
