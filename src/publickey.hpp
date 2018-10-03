@@ -62,10 +62,11 @@ class PublicKey {
     // Returns the first 4 bytes of the serialized pk
     uint32_t GetFingerprint() const;
 
- private:
+ public:
     // Don't allow public construction, force static methods
     PublicKey();
 
+ private:
     // Exponentiate public key with n
     PublicKey Exp(const bn_t n) const;
 
