@@ -26,9 +26,11 @@ include_directories(
   ${INCLUDE_DIRECTORIES}
   ${relic_SOURCE_DIR}/include
   ${relic_BINARY_DIR}/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/../contrib/catch
-  ${GMP_INCLUDES}
   )
+
+if (GMP_FOUND)
+  include_directories(${GMP_INCLUDES})
+endif(GMP_FOUND)
 
 set(C_LIB ${CMAKE_BINARY_DIR}/libbls.a)
 
@@ -78,16 +80,26 @@ set_target_properties(combined
         )
 
 file(GLOB includes "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp")
+install(DIRECTORY ${relic_SOURCE_DIR}/include/ DESTINATION include/chiabls)
+install(DIRECTORY ${relic_BINARY_DIR}/include/ DESTINATION include/chiabls)
 install(FILES ${includes} DESTINATION include/chiabls)
 install(FILES ${C_LIB} DESTINATION lib)
 
-add_executable(runtest test.cpp)
-add_executable(runbench test-bench.cpp)
+if (BUILD_BLS_TESTS)
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../contrib/catch)
+  add_executable(runtest test.cpp)
+  if (SODIUM_FOUND)
+    target_link_libraries(runtest blstmp relic_s sodium)
+  else()
+    target_link_libraries(runtest blstmp relic_s)
+  endif()
+endif()
 
-if (SODIUM_FOUND)
-  target_link_libraries(runtest blstmp relic_s sodium)
-  target_link_libraries(runbench blstmp relic_s sodium)
-else()
-  target_link_libraries(runtest blstmp relic_s)
-  target_link_libraries(runbench blstmp relic_s)
+if (BUILD_BLS_BENCHMARKS)
+  add_executable(runbench test-bench.cpp)
+  if (SODIUM_FOUND)
+    target_link_libraries(runbench blstmp relic_s sodium)
+  else()
+    target_link_libraries(runbench blstmp relic_s)
+  endif()
 endif()

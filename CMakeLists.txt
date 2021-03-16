@@ -8,6 +8,14 @@ ENDIF()
 
 project(BLS)
 
+set(BUILD_BLS_PYTHON_BINDINGS 1 CACHE INTEGER "")
+set(BUILD_BLS_TESTS 1 CACHE INTEGER "")
+set(BUILD_BLS_BENCHMARKS 1 CACHE INTEGER "")
+
+message(STATUS "Build python bindings: ${BUILD_BLS_PYTHON_BINDINGS}")
+message(STATUS "Build tests: ${BUILD_BLS_TESTS}")
+message(STATUS "Build benchmarks: ${BUILD_BLS_BENCHMARKS}")
+
 # Add path for custom modules
 set(CMAKE_MODULE_PATH
 	${CMAKE_MODULE_PATH}
@@ -32,7 +40,6 @@ set(STBIN TRUE)
 find_package(gmp)
 if (GMP_FOUND)
   message(STATUS "Found libgmp")
-  include_directories(${GMP_INCLUDE_DIR})
   set(ARITH "gmp" CACHE STRING "")
 else()
   set(ARITH "easy" CACHE STRING "")
@@ -90,5 +97,7 @@ if (EMSCRIPTEN)
 else()
   # emscripten can't build python bindings, it produces only javascript
   # add_subdirectory(contrib/pybind11)
-  add_subdirectory(python-bindings)
+  if (BUILD_BLS_PYTHON_BINDINGS)
+    add_subdirectory(python-bindings)
+  endif()
 endif()
