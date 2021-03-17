@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <algorithm>
+#include <cstring>
 #include <set>
 
 #include "bls.hpp"
@@ -24,6 +25,35 @@ using std::string;
 using std::vector;
 
 namespace bls {
+
+static void HashPubKeys(bn_t* computedTs, std::vector<Bytes> vecPubKeyBytes)
+{
+    bn_t order;
+    bn_new(order);
+    g2_get_ord(order);
+
+    std::vector<uint8_t> vecBuffer(vecPubKeyBytes.size() * G1Element::SIZE);
+
+    for (size_t i = 0; i < vecPubKeyBytes.size(); i++) {
+        memcpy(vecBuffer.data() + i * G1Element::SIZE, vecPubKeyBytes[i].begin(), G1Element::SIZE);
+    }
+
+    uint8_t pkHash[32];
+    Util::Hash256(pkHash, vecBuffer.data(), vecPubKeyBytes.size() * G1Element::SIZE);
+    for (size_t i = 0; i < vecPubKeyBytes.size(); ++i) {
+        uint8_t hash[32];
+        uint8_t buffer[4 + 32];
+        memset(buffer, 0, 4);
+        // Set first 4 bytes to index, to generate different ts
+        Util::IntToFourBytes(buffer, i);
+        // Set next 32 bytes as the hash of all the public keys
+        std::memcpy(buffer + 4, pkHash, 32);
+        Util::Hash256(hash, buffer, 4 + 32);
+
+        bn_read_bin(computedTs[i], hash, 32);
+        bn_mod_basic(computedTs[i], computedTs[i], order);
+    }
+}
 
 enum InvariantResult { BAD=false, GOOD=true, CONTINUE };
 
@@ -148,6 +178,92 @@ G1Element CoreMPL::Aggregate(const vector<G1Element> &publicKeys)
         aggregated += publicKey;
     }
     return aggregated;
+}
+
+G2Element CoreMPL::AggregateSecure(std::vector<G1Element> const &vecPublicKeys,
+                                   std::vector<G2Element> const &vecSignatures,
+                                   const Bytes& message,
+                                   const bool fLegacy) {
+    if (vecSignatures.size() != vecPublicKeys.size()) {
+        throw std::invalid_argument("LegacySchemeMPL::AggregateSigs sigs.size() != pubKeys.size()");
+    }
+
+    bn_t* computedTs = new bn_t[vecPublicKeys.size()];
+    std::vector<std::pair<vector<uint8_t>, const G2Element*>> vecSorted(vecPublicKeys.size());
+    for (size_t i = 0; i < vecPublicKeys.size(); i++) {
+        bn_new(computedTs[i]);
+        vecSorted[i] = std::make_pair(vecPublicKeys[i].Serialize(fLegacy), &vecSignatures[i]);
+    }
+    std::sort(vecSorted.begin(), vecSorted.end(), [](const auto& a, const auto& b) {
+        return std::memcmp(a.first.data(), b.first.data(), G1Element::SIZE) < 0;
+    });
+
+    std::vector<Bytes> vecPublicKeyBytes;
+    vecPublicKeyBytes.reserve(vecPublicKeys.size());
+    for (const auto& it : vecSorted) {
+        vecPublicKeyBytes.push_back(Bytes{it.first});
+    }
+
+    HashPubKeys(computedTs, vecPublicKeyBytes);
+
+    // Raise all signatures to power of the corresponding t's and aggregate the results into aggSig
+    // Also accumulates aggregation info for each signature
+    std::vector<G2Element> expSigs;
+    expSigs.reserve(vecSorted.size());
+    for (size_t i = 0; i < vecSorted.size(); i++) {
+        expSigs.emplace_back(*vecSorted[i].second * computedTs[i]);
+    }
+
+    G2Element aggSig = CoreMPL::Aggregate(expSigs);
+
+    delete[] computedTs;
+
+    return aggSig;
+}
+
+G2Element CoreMPL::AggregateSecure(std::vector<G1Element> const &vecPublicKeys,
+                                   std::vector<G2Element> const &vecSignatures,
+                                   const Bytes& message) {
+    return CoreMPL::AggregateSecure(vecPublicKeys, vecSignatures, message, false);
+}
+
+bool CoreMPL::VerifySecure(const std::vector<G1Element>& vecPublicKeys,
+                           const G2Element& signature,
+                           const Bytes& message,
+                           const bool fLegacy) {
+    bn_t one;
+    bn_new(one);
+    bn_zero(one);
+    bn_set_dig(one, 1);
+
+    bn_t* computedTs = new bn_t[vecPublicKeys.size()];
+    std::vector<vector<uint8_t>> vecSorted(vecPublicKeys.size());
+    for (size_t i = 0; i < vecPublicKeys.size(); i++) {
+        bn_new(computedTs[i]);
+        vecSorted[i] = vecPublicKeys[i].Serialize(fLegacy);
+    }
+    std::sort(vecSorted.begin(), vecSorted.end(), [](const auto& a, const auto& b) -> bool {
+        return std::memcmp(a.data(), b.data(), G1Element::SIZE) < 0;
+    });
+
+    HashPubKeys(computedTs, {vecSorted.begin(), vecSorted.end()});
+
+    G1Element publicKey;
+    for (size_t i = 0; i < vecSorted.size(); ++i) {
+        G1Element g1 = G1Element::FromBytes(Bytes(vecSorted[i]), fLegacy);
+        publicKey = CoreMPL::Aggregate({publicKey, g1 * computedTs[i]});
+    }
+
+    bn_free(one);
+    delete[] computedTs;
+
+    return AggregateVerify({publicKey}, {message}, {signature});
+}
+
+bool CoreMPL::VerifySecure(const std::vector<G1Element>& vecPublicKeys,
+                           const G2Element& signature,
+                           const Bytes& message) {
+    return CoreMPL::VerifySecure(vecPublicKeys, signature, message, false);
 }
 
 bool CoreMPL::AggregateVerify(const vector<vector<uint8_t>> &pubkeys,
@@ -527,4 +643,56 @@ bool PopSchemeMPL::FastAggregateVerify(const vector<Bytes>& pubkeys,
 
     return PopSchemeMPL::FastAggregateVerify(pkelements, message, G2Element::FromBytes(signature));
 }
+
+G2Element LegacySchemeMPL::Sign(const PrivateKey& seckey, const Bytes& message)
+{
+    return seckey.SignG2(message.begin(), message.size(), nullptr, 0, true);
+}
+
+bool LegacySchemeMPL::Verify(const G1Element &pubkey, const Bytes& message, const G2Element &signature)
+{
+    g1_t g1s[2];
+    g2_t g2s[2];
+
+    G1Element::Generator().Negate().ToNative(g1s[0]);
+    pubkey.ToNative(g1s[1]);
+    signature.ToNative(g2s[0]);
+    G2Element::FromMessage(message, nullptr, 0, true).ToNative(g2s[1]);
+
+    return CoreMPL::NativeVerify(g1s, g2s, 2);
+}
+
+G2Element LegacySchemeMPL::AggregateSecure(std::vector<G1Element> const &vecPublicKeys,
+                                          std::vector<G2Element> const &vecSignatures,
+                                          const Bytes& message) {
+    return CoreMPL::AggregateSecure(vecPublicKeys, vecSignatures, message, true);
+}
+
+bool LegacySchemeMPL::VerifySecure(const std::vector<G1Element>& vecPublicKeys,
+                                   const G2Element& signature,
+                                   const Bytes& message) {
+    return CoreMPL::VerifySecure(vecPublicKeys, signature, message, true);
+}
+
+bool LegacySchemeMPL::AggregateVerify(const vector<G1Element> &pubkeys,
+                                      const vector<Bytes> &messages,
+                                      const G2Element &signature)
+{
+    const size_t nPubKeys = pubkeys.size();
+    const auto arg_check = VerifyAggregateSignatureArguments(nPubKeys, messages.size(), signature);
+    if (arg_check != CONTINUE) return arg_check;
+
+    std::vector<g1_st> vecG1(nPubKeys + 1);
+    std::vector<g2_st> vecG2(nPubKeys + 1);
+    G1Element::Generator().Negate().ToNative(&vecG1[0]);
+    signature.ToNative(&vecG2[0]);
+
+    for (size_t i = 0; i < nPubKeys; ++i) {
+        pubkeys[i].ToNative(&vecG1[i + 1]);
+        G2Element::FromMessage(messages[i], nullptr, 0, true).ToNative(&vecG2[i + 1]);
+    }
+
+    return CoreMPL::NativeVerify((g1_t*)vecG1.data(), (g2_t*)vecG2.data(), nPubKeys + 1);
+}
+
 }  // end namespace bls

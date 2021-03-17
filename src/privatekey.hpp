@@ -40,6 +40,8 @@ class PrivateKey {
     // Aggregate many private keys into one (sum of keys mod order)
     static PrivateKey Aggregate(std::vector<PrivateKey> const &privateKeys);
 
+    PrivateKey();
+
     // Construct a private key from another private key. Allocates memory in
     // secure heap, and copies keydata.
     PrivateKey(const PrivateKey &k);
@@ -68,19 +70,21 @@ class PrivateKey {
     friend G2Element operator*(const G2Element &a, const PrivateKey &k);
     friend G2Element operator*(const PrivateKey &k, const G2Element &a);
 
+    friend PrivateKey operator*(const PrivateKey& a, const bn_t& k);
+    friend PrivateKey operator*(const bn_t& k, const PrivateKey& a);
+
     // Serialize the key into bytes
     void Serialize(uint8_t *buffer) const;
-    std::vector<uint8_t> Serialize() const;
+    std::vector<uint8_t> Serialize(bool fLegacy = false) const;
 
     G2Element SignG2(
         const uint8_t *msg,
         size_t len,
         const uint8_t *dst,
-        size_t dst_len) const;
+        size_t dst_len,
+        bool fLegacy = false) const;
     
  private:
-    // Don't allow public construction, force static methods
-    PrivateKey();
 
     // Allocate memory for private key
     void AllocateKeyData();

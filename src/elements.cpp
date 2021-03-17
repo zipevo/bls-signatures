@@ -15,10 +15,11 @@
 #include <cstring>
 
 #include "bls.hpp"
+#include "legacy.hpp"
 
 namespace bls {
 
-G1Element G1Element::FromBytes(const Bytes& bytes)
+G1Element G1Element::FromBytes(const Bytes& bytes, bool fLegacy)
 {
     if (bytes.size() != SIZE) {
         throw std::invalid_argument("G1Element::FromBytes: Invalid size");
@@ -29,8 +30,6 @@ G1Element G1Element::FromBytes(const Bytes& bytes)
     // convert bytes to relic form
     uint8_t buffer[G1Element::SIZE + 1];
     std::memcpy(buffer + 1, bytes.begin(), G1Element::SIZE);
-    buffer[0] = 0x00;
-    buffer[1] &= 0x1f;  // erase 3 msbs from given input
 
     if ((bytes[0] & 0xc0) == 0xc0) {  // representing infinity
         // enforce that infinity must be 0xc0000..00
@@ -46,15 +45,27 @@ G1Element G1Element::FromBytes(const Bytes& bytes)
         }
         return ele;
     } else {
-        if ((bytes[0] & 0xc0) != 0x80) {
-            throw std::invalid_argument(
-                "Given G1 non-infinity element must start with 0b10");
-        }
-
-        if (bytes[0] & 0x20) {  // sign bit
-            buffer[0] = 0x03;
+        if (fLegacy) {
+            if (bytes[0] & 0x80) {
+                buffer[0] = 0x03;   // Insert extra byte for Y=1
+                buffer[1] &= 0x7f;  // Remove initial Y bit
+            } else {
+                buffer[0] = 0x02;   // Insert extra byte for Y=0
+            }
         } else {
-            buffer[0] = 0x02;
+            buffer[0] = 0x00;
+            buffer[1] &= 0x1f;  // erase 3 msbs from given input
+
+            if ((bytes[0] & 0xc0) != 0x80) {
+                throw std::invalid_argument(
+                        "Given G1 non-infinity element must start with 0b10");
+            }
+
+            if (bytes[0] & 0x20) {  // sign bit
+                buffer[0] = 0x03;
+            } else {
+                buffer[0] = 0x02;
+            }
         }
     }
     g1_read_bin(ele.p, buffer, G1Element::SIZE + 1);
@@ -62,9 +73,9 @@ G1Element G1Element::FromBytes(const Bytes& bytes)
     return ele;
 }
 
-G1Element G1Element::FromByteVector(const std::vector<uint8_t>& bytevec)
+G1Element G1Element::FromByteVector(const std::vector<uint8_t>& bytevec, bool fLegacy)
 {
-    return G1Element::FromBytes(Bytes(bytevec));
+    return G1Element::FromBytes(Bytes(bytevec), fLegacy);
 }
 
 G1Element G1Element::FromNative(const g1_t element)
@@ -142,7 +153,7 @@ uint32_t G1Element::GetFingerprint() const
     return Util::FourBytesToInt(hash);
 }
 
-std::vector<uint8_t> G1Element::Serialize() const {
+std::vector<uint8_t> G1Element::Serialize(const bool fLegacy) const {
     uint8_t buffer[G1Element::SIZE + 1];
     g1_write_bin(buffer, G1Element::SIZE + 1, p, 1);
 
@@ -153,10 +164,12 @@ std::vector<uint8_t> G1Element::Serialize() const {
     }
 
     if (buffer[0] == 0x03) {  // sign bit set
-        buffer[1] |= 0x20;
+        buffer[1] |= fLegacy ? 0x80 : 0x20;
     }
 
-    buffer[1] |= 0x80;  // indicate compression
+    if (!fLegacy) {
+        buffer[1] |= 0x80;  // indicate compression
+    }
     return std::vector<uint8_t>(buffer + 1, buffer + 1 + G1Element::SIZE);
 }
 
@@ -203,7 +216,7 @@ G1Element operator*(const bn_t& k, const G1Element& a) { return a * k; }
 
 
 
-G2Element G2Element::FromBytes(const Bytes& bytes)
+G2Element G2Element::FromBytes(const Bytes& bytes, const bool fLegacy)
 {
     if (bytes.size() != SIZE) {
         throw std::invalid_argument("G2Element::FromBytes: Invalid size");
@@ -211,14 +224,18 @@ G2Element G2Element::FromBytes(const Bytes& bytes)
 
     G2Element ele;
     uint8_t buffer[G2Element::SIZE + 1];
-    std::memcpy(buffer + 1, bytes.begin() + G2Element::SIZE / 2, G2Element::SIZE / 2);
-    std::memcpy(buffer + 1 + G2Element::SIZE / 2, bytes.begin(), G2Element::SIZE / 2);
-    buffer[0] = 0x00;
-    buffer[49] &= 0x1f;  // erase 3 msbs from input
 
-    if ((bytes[48] & 0xe0) != 0x00) {
-        throw std::invalid_argument(
-            "Given G2 element must always have 48th byte start with 0b000");
+    if (fLegacy) {
+        std::memcpy(buffer + 1, bytes.begin(), G2Element::SIZE);
+    } else {
+        std::memcpy(buffer + 1, bytes.begin() + G2Element::SIZE / 2, G2Element::SIZE / 2);
+        std::memcpy(buffer + 1 + G2Element::SIZE / 2, bytes.begin(), G2Element::SIZE / 2);
+        buffer[0] = 0x00;
+        buffer[49] &= 0x1f;  // erase 3 msbs from input
+        if ((bytes[48] & 0xe0) != 0x00) {
+            throw std::invalid_argument(
+                    "Given G2 element must always have 48th byte start with 0b000");
+        }
     }
     if (((bytes[0] & 0xc0) == 0xc0)) {  // infinity
         // enforce that infinity must be 0xc0000..00
@@ -233,6 +250,15 @@ G2Element G2Element::FromBytes(const Bytes& bytes)
             }
         }
         return ele;
+    }
+
+    if (fLegacy) {
+        if (bytes[0] & 0x80) {
+            buffer[0] = 0x03;   // Insert extra byte for Y=1
+            buffer[1] &= 0x7f;  // Remove initial Y bit
+        } else {
+            buffer[0] = 0x02;   // Insert extra byte for Y=0
+        }
     } else {
         if (((bytes[0] & 0xc0) != 0x80)) {
             throw std::invalid_argument(
@@ -250,9 +276,9 @@ G2Element G2Element::FromBytes(const Bytes& bytes)
     return ele;
 }
 
-G2Element G2Element::FromByteVector(const std::vector<uint8_t>& bytevec)
+G2Element G2Element::FromByteVector(const std::vector<uint8_t>& bytevec, bool fLegacy)
 {
-    return G2Element::FromBytes(Bytes(bytevec));
+    return G2Element::FromBytes(Bytes(bytevec), fLegacy);
 }
 
 G2Element G2Element::FromNative(const g2_t element)
@@ -265,17 +291,23 @@ G2Element G2Element::FromNative(const g2_t element)
 
 G2Element G2Element::FromMessage(const std::vector<uint8_t>& message,
                                  const uint8_t* dst,
-                                 int dst_len)
+                                 int dst_len,
+                                 const bool fLegacy)
 {
-    return FromMessage(Bytes(message), dst, dst_len);
+    return FromMessage(Bytes(message), dst, dst_len, fLegacy);
 }
 
 G2Element G2Element::FromMessage(const Bytes& message,
                                  const uint8_t* dst,
-                                 int dst_len)
+                                 int dst_len,
+                                 const bool fLegacy)
 {
     G2Element ans;
-    ep2_map_dst(ans.q, message.begin(), (int)message.size(), dst, dst_len);
+    if (fLegacy) {
+        ep2_map_legacy(ans.q, message.begin(), BLS::MESSAGE_HASH_LEN);
+    } else {
+        ep2_map_dst(ans.q, message.begin(), (int)message.size(), dst, dst_len);
+    }
     ans.CheckValid();
     return ans;
 }
@@ -321,7 +353,7 @@ G2Element G2Element::Negate() const
     return ans;
 }
 
-std::vector<uint8_t> G2Element::Serialize() const {
+std::vector<uint8_t> G2Element::Serialize(const bool fLegacy) const {
     uint8_t buffer[G2Element::SIZE + 1];
     g2_write_bin(buffer, G2Element::SIZE + 1, (g2_st*)q, 1);
 
@@ -331,19 +363,30 @@ std::vector<uint8_t> G2Element::Serialize() const {
         return result;
     }
 
-    // remove leading 3 bits
-    buffer[1] &= 0x1f;
-    buffer[49] &= 0x1f;
-    if (buffer[0] == 0x03) {
-        buffer[49] |= 0xa0;  // swapped later to 0
+    if (fLegacy) {
+        if (buffer[0] == 0x03) {  // sign bit set
+            buffer[1] |= 0x80;
+        }
     } else {
-        buffer[49] |= 0x80;
+        // remove leading 3 bits
+        buffer[1] &= 0x1f;
+        buffer[49] &= 0x1f;
+        if (buffer[0] == 0x03) {
+            buffer[49] |= 0xa0;  // swapped later to 0
+        } else {
+            buffer[49] |= 0x80;
+        }
     }
 
-    // Swap buffer, relic uses the opposite ordering for Fq2 elements
     std::vector<uint8_t> result(G2Element::SIZE, 0);
-    std::memcpy(result.data(), buffer + 1 + G2Element::SIZE / 2, G2Element::SIZE / 2);
-    std::memcpy(result.data() + G2Element::SIZE / 2, buffer + 1, G2Element::SIZE / 2);
+    if (fLegacy) {
+        std::memcpy(result.data(), buffer + 1, G2Element::SIZE);
+    } else {
+        // Swap buffer, relic uses the opposite ordering for Fq2 elements
+        std::memcpy(result.data(), buffer + 1 + G2Element::SIZE / 2, G2Element::SIZE / 2);
+        std::memcpy(result.data() + G2Element::SIZE / 2, buffer + 1, G2Element::SIZE / 2);
+    }
+
     return result;
 }
 

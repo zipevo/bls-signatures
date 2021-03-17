@@ -418,7 +418,7 @@ PYBIND11_MODULE(blspy, m)
                 return G2Element::FromBytes(Bytes(data_ptr, G2Element::SIZE));
             })
         .def("generator", &G2Element::Generator)
-        .def("from_message", py::overload_cast<const std::vector<uint8_t>&, const uint8_t*, int>(&G2Element::FromMessage))
+        .def("from_message", py::overload_cast<const std::vector<uint8_t>&, const uint8_t*, int, bool>(&G2Element::FromMessage))
         .def("negate", &G2Element::Negate)
         .def(
             "__deepcopy__",

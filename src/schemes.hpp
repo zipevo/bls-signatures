@@ -71,6 +71,14 @@ public:
 
     virtual G1Element Aggregate(const vector<G1Element> &publicKeys);
 
+    virtual G2Element AggregateSecure(const std::vector<G1Element>& vecPublicKeys,
+                                      const std::vector<G2Element>& vecSignatures,
+                                      const Bytes& message);
+
+    virtual bool VerifySecure(const std::vector<G1Element>& vecPublicKeys,
+                              const G2Element& signature,
+                              const Bytes& message);
+
     virtual bool AggregateVerify(const vector<vector<uint8_t>> &pubkeys,
                                  const vector<vector<uint8_t>> &messages,
                                  const vector<uint8_t> &signature);
@@ -94,6 +102,14 @@ public:
 protected:
     const std::string& strCiphersuiteId;
     bool NativeVerify(g1_t *pubKeys, g2_t *mappedHashes, size_t length);
+    G2Element AggregateSecure(std::vector<G1Element> const &vecPublicKeys,
+                              std::vector<G2Element> const &vecSignatures,
+                              const Bytes& message,
+                              bool fLegacy);
+    bool VerifySecure(const std::vector<G1Element>& vecPublicKeys,
+                      const G2Element& signature,
+                      const Bytes& message,
+                      bool fLegacy);
 };
 
 class BasicSchemeMPL : public CoreMPL {
@@ -202,6 +218,56 @@ public:
                              const Bytes& signature);
 };
 
+/**
+ * This scheme reflects the Sign/Verify behaviour of older bls-signatures library versions (<0.1.29).
+ */
+class LegacySchemeMPL : public CoreMPL {
+
+public:
+    LegacySchemeMPL() : CoreMPL(std::string{}) {}
+
+    virtual vector<uint8_t> SkToPk(const PrivateKey &seckey) final { throw std::runtime_error("Not supported in LegacySchemeMPL"); }
+
+    G2Element Sign(const PrivateKey &seckey, const vector<uint8_t> &message) final { throw std::runtime_error("Not supported in LegacySchemeMPL"); }
+    G2Element Sign(const PrivateKey &seckey, const Bytes& message) final;
+
+    bool Verify(const vector<uint8_t>& pubkey,
+                const vector<uint8_t>& message,
+                const vector<uint8_t>& signature) final { throw std::runtime_error("Not supported in LegacySchemeMPL"); }
+
+    bool Verify(const G1Element& pubkey,
+                const vector<uint8_t>& message,
+                const G2Element& signature) final { throw std::runtime_error("Not supported in LegacySchemeMPL"); }
+
+    bool Verify(const Bytes& pubkey, const Bytes& message, const Bytes& signature) final { throw std::runtime_error("Not supported in LegacySchemeMPL"); }
+    bool Verify(const G1Element &pubkey, const Bytes& message, const G2Element &signature) final;
+
+    vector<uint8_t> Aggregate(const vector<vector<uint8_t>> &signatures) final { throw std::runtime_error("Not supported in LegacySchemeMPL"); }
+
+    G2Element AggregateSecure(const std::vector<G1Element>& vecPublicKeys,
+                              const std::vector<G2Element>& vecSignatures,
+                              const Bytes& message) final;
+
+    bool VerifySecure(const std::vector<G1Element>& vecPublicKeys,
+                      const G2Element& signature,
+                      const Bytes& message) final;
+
+    bool AggregateVerify(const vector<vector<uint8_t>> &pubkeys,
+                         const vector<vector<uint8_t>> &messages,
+                         const vector<uint8_t> &signature) final { throw std::runtime_error("Not supported in LegacySchemeMPL"); }
+
+    bool AggregateVerify(const vector<Bytes> &pubkeys,
+                         const vector<Bytes> &messages,
+                         const Bytes &signature) final { throw std::runtime_error("Not supported in LegacySchemeMPL"); }
+
+    bool AggregateVerify(const vector<G1Element> &pubkeys,
+                         const vector<vector<uint8_t>> &messages,
+                         const G2Element &signature) final { throw std::runtime_error("Not supported in LegacySchemeMPL"); }
+
+    bool AggregateVerify(const vector<G1Element> &pubkeys,
+                         const vector<Bytes> &messages,
+                         const G2Element &signature) final;
+};
 }  // end namespace bls
 
 #endif  // SRC_BLSSCHEMES_HPP_

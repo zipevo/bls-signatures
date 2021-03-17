@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "bls.hpp"
+#include "legacy.hpp"
 
 namespace bls {
 
@@ -153,6 +154,21 @@ G2Element operator*(const G2Element &a, const PrivateKey &k)
 
 G2Element operator*(const PrivateKey &k, const G2Element &a) { return a * k; }
 
+PrivateKey operator*(const PrivateKey& k, const bn_t& a)
+{
+    k.CheckKeyData();
+    bn_t order;
+    bn_new(order);
+    g2_get_ord(order);
+
+    PrivateKey ret;
+    bn_mul_comba(ret.keydata, k.keydata, a);
+    bn_mod_basic(ret.keydata, ret.keydata, order);
+    return ret;
+}
+
+PrivateKey operator*(const bn_t& a, const PrivateKey& k) { return a * k; }
+
 G2Element PrivateKey::GetG2Power(const G2Element& element) const
 {
     CheckKeyData();
@@ -208,7 +224,7 @@ void PrivateKey::Serialize(uint8_t *buffer) const
     bn_write_bin(buffer, PrivateKey::PRIVATE_KEY_SIZE, keydata);
 }
 
-std::vector<uint8_t> PrivateKey::Serialize() const
+std::vector<uint8_t> PrivateKey::Serialize(const bool fLegacy) const
 {
     std::vector<uint8_t> data(PRIVATE_KEY_SIZE);
     Serialize(data.data());
@@ -219,13 +235,19 @@ G2Element PrivateKey::SignG2(
     const uint8_t *msg,
     size_t len,
     const uint8_t *dst,
-    size_t dst_len) const
+    size_t dst_len,
+    const bool fLegacy) const
 {
     CheckKeyData();
 
     g2_st* pt = Util::SecAlloc<g2_st>(1);
 
-    ep2_map_dst(pt, msg, len, dst, dst_len);
+    if (fLegacy) {
+        ep2_map_legacy(pt, msg, BLS::MESSAGE_HASH_LEN);
+    } else {
+        ep2_map_dst(pt, msg, len, dst, dst_len);
+    }
+    
     g2_mul(pt, pt, keydata);
     G2Element ret = G2Element::FromNative(pt);
     Util::SecFree(pt);

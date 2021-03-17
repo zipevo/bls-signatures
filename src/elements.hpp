@@ -39,8 +39,8 @@ public:
         g1_set_infty(p);
     }
 
-    static G1Element FromBytes(const Bytes& bytes);
-    static G1Element FromByteVector(const std::vector<uint8_t> &bytevec);
+    static G1Element FromBytes(const Bytes& bytes, bool fLegacy = false);
+    static G1Element FromByteVector(const std::vector<uint8_t> &bytevec, bool fLegacy = false);
     static G1Element FromNative(const g1_t element);
     static G1Element FromMessage(const std::vector<uint8_t> &message,
                                  const uint8_t *dst,
@@ -54,7 +54,7 @@ public:
     void ToNative(g1_t output) const;
     G1Element Negate() const;
     uint32_t GetFingerprint() const;
-    std::vector<uint8_t> Serialize() const;
+    std::vector<uint8_t> Serialize(bool fLegacy = false) const;
 
     friend bool operator==(const G1Element &a, const G1Element &b);
     friend bool operator!=(const G1Element &a, const G1Element &b);
@@ -76,21 +76,23 @@ public:
         g2_set_infty(q);
     }
 
-    static G2Element FromBytes(const Bytes& bytes);
-    static G2Element FromByteVector(const std::vector<uint8_t> &bytevec);
+    static G2Element FromBytes(const Bytes& bytes, bool fLegacy = false);
+    static G2Element FromByteVector(const std::vector<uint8_t> &bytevec, bool fLegacy = false);
     static G2Element FromNative(const g2_t element);
     static G2Element FromMessage(const std::vector<uint8_t>& message,
                                  const uint8_t* dst,
-                                 int dst_len);
+                                 int dst_len,
+                                 bool fLegacy = false);
     static G2Element FromMessage(const Bytes& message,
                                  const uint8_t* dst,
-                                 int dst_len);
+                                 int dst_len,
+                                 bool fLegacy = false);
     static G2Element Generator();
 
     void CheckValid() const;
     void ToNative(g2_t output) const;
     G2Element Negate() const;
-    std::vector<uint8_t> Serialize() const;
+    std::vector<uint8_t> Serialize(bool fLegacy = false) const;
 
     friend bool operator==(G2Element const &a, G2Element const &b);
     friend bool operator!=(G2Element const &a, G2Element const &b);
