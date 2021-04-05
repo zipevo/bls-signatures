@@ -50,6 +50,7 @@ public:
                                  int dst_len);
     static G1Element Generator();
 
+    bool IsValid() const;
     void CheckValid() const;
     void ToNative(g1_t output) const;
     G1Element Negate() const;
@@ -89,6 +90,7 @@ public:
                                  bool fLegacy = false);
     static G2Element Generator();
 
+    bool IsValid() const;
     void CheckValid() const;
     void ToNative(g2_t output) const;
     G2Element Negate() const;

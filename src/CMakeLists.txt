@@ -4,13 +4,13 @@ set (CMAKE_CXX_STANDARD 17)
 # CMake 3.14+
 include(FetchContent)
 
-if (DEFINED ENV{RELIC_MASTER})
-  set(RELIC_GIT_TAG "origin/master")
+if (DEFINED ENV{RELIC_MAIN})
+  set(RELIC_GIT_TAG "origin/main")
 else ()
-  set(RELIC_GIT_TAG "186a15da6d07ef436dd8f00a4345838310a0aad3")
+  set(RELIC_GIT_TAG "1885ae3b681c423c72b65ce1fe70910142cf941c")
 endif ()
 
-message(STATUS "Relic will be build from: ${RELIC_GIT_TAG}")
+message(STATUS "Relic will be built from: ${RELIC_GIT_TAG}")
 
 FetchContent_Declare(
   relic

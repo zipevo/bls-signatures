@@ -29,14 +29,14 @@ using namespace bls;
 
 
 void benchSigs() {
-    string testName = "Sigining";
-    double numIters = 5000;
+    string testName = "Signing";
+    const int numIters = 5000;
     PrivateKey sk = AugSchemeMPL().KeyGen(getRandomSeed());
     vector<uint8_t> message1 = sk.GetG1Element().Serialize();
 
     auto start = startStopwatch();
 
-    for (size_t i = 0; i < numIters; i++) {
+    for (int i = 0; i < numIters; i++) {
         AugSchemeMPL().Sign(sk, message1);
     }
     endStopwatch(testName, start, numIters);
@@ -44,13 +44,13 @@ void benchSigs() {
 
 void benchVerification() {
     string testName = "Verification";
-    double numIters = 10000;
+    const int numIters = 10000;
     PrivateKey sk = AugSchemeMPL().KeyGen(getRandomSeed());
     G1Element pk = sk.GetG1Element();
 
     std::vector<G2Element> sigs;
 
-    for (size_t i = 0; i < numIters; i++) {
+    for (int i = 0; i < numIters; i++) {
         uint8_t message[4];
         Util::IntToFourBytes(message, i);
         vector<uint8_t> messageBytes(message, message + 4);
@@ -58,7 +58,7 @@ void benchVerification() {
     }
 
     auto start = startStopwatch();
-    for (size_t i = 0; i < numIters; i++) {
+    for (int i = 0; i < numIters; i++) {
         uint8_t message[4];
         Util::IntToFourBytes(message, i);
         vector<uint8_t> messageBytes(message, message + 4);
@@ -69,24 +69,42 @@ void benchVerification() {
 }
 
 void benchBatchVerification() {
-    double numIters = 100000;
+    const int numIters = 100000;
 
-    vector<G2Element> sigs;
-    vector<G1Element> pks;
+    vector<vector<uint8_t>> sig_bytes;
+    vector<vector<uint8_t>> pk_bytes;
     vector<vector<uint8_t>> ms;
 
-    for (size_t i = 0; i < numIters; i++) {
+    for (int i = 0; i < numIters; i++) {
         uint8_t message[4];
         Util::IntToFourBytes(message, i);
         vector<uint8_t> messageBytes(message, message + 4);
         PrivateKey sk = AugSchemeMPL().KeyGen(getRandomSeed());
         G1Element pk = sk.GetG1Element();
-        sigs.push_back(AugSchemeMPL().Sign(sk, messageBytes));
-        pks.push_back(pk);
+        sig_bytes.push_back(AugSchemeMPL().Sign(sk, messageBytes).Serialize());
+        pk_bytes.push_back(pk.Serialize());
         ms.push_back(messageBytes);
     }
 
+    vector<G1Element> pks;
+    pks.reserve(numIters);
+
     auto start = startStopwatch();
+    for (auto const& pk : pk_bytes) {
+        pks.emplace_back(G1Element::FromBytes(Bytes(pk)));
+    }
+    endStopwatch("Public key validation", start, numIters);
+
+    vector<G2Element> sigs;
+    sigs.reserve(numIters);
+
+    start = startStopwatch();
+    for (auto const& sig : sig_bytes) {
+        sigs.emplace_back(G2Element::FromBytes(Bytes(sig)));
+    }
+    endStopwatch("Signature validation", start, numIters);
+
+    start = startStopwatch();
     G2Element aggSig = AugSchemeMPL().Aggregate(sigs);
     endStopwatch("Aggregation", start, numIters);
 
@@ -97,14 +115,14 @@ void benchBatchVerification() {
 }
 
 void benchFastAggregateVerification() {
-    double numIters = 5000;
+    const int numIters = 5000;
 
     vector<G2Element> sigs;
     vector<G1Element> pks;
     vector<uint8_t> message = {1, 2, 3, 4, 5, 6, 7, 8};
     vector<G2Element> pops;
 
-    for (size_t i = 0; i < numIters; i++) {
+    for (int i = 0; i < numIters; i++) {
         PrivateKey sk = PopSchemeMPL().KeyGen(getRandomSeed());
         G1Element pk = sk.GetG1Element();
         sigs.push_back(PopSchemeMPL().Sign(sk, message));
@@ -118,7 +136,7 @@ void benchFastAggregateVerification() {
 
 
     start = startStopwatch();
-    for (size_t i = 0; i < numIters; i++) {
+    for (int i = 0; i < numIters; i++) {
         bool ok = PopSchemeMPL().PopVerify(pks[i], pops[i]);
         ASSERT(ok);
     }

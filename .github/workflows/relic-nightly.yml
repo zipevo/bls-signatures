@@ -2,7 +2,7 @@ name:  Build and Test C++ with Relic Nightly
 
 on:
   schedule:
-    - cron: "* 14 * * *"
+    - cron: "0 11 * * *"
   workflow_dispatch:
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - name: Cancel previous runs on the same branch
-      if: ${{ github.ref != 'refs/heads/master' }}
+      if: ${{ github.ref != 'refs/heads/main' }}
       uses: styfle/cancel-workflow-action@0.7.0
       with:
         access_token: ${{ github.token }}
@@ -24,9 +24,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Ubuntu build C++ and test Relic at origin/master
+    - name: Ubuntu build C++ and test Relic at origin/main
       if: startsWith(matrix.os, 'ubuntu')
       run: |
+        echo "Relic origin/main commit:"
+        curl -H "application/vnd.github.v3.sha" \
+        https://api.github.com/repos/relic-toolkit/relic/commits/main | \
+        head -10
         sudo apt-get update
         sudo apt-get install snap -y
         sudo apt-get remove --purge cmake -y
@@ -44,7 +48,7 @@ jobs:
         cd ..
         echo "Setting libsodium to static compile."
         export CIBUILDWHEEL=1
-        export RELIC_MASTER=1
+        export RELIC_MAIN=1
         mkdir -p build
         cd build
         cmake ../

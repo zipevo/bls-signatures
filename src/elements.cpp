@@ -101,7 +101,8 @@ G1Element G1Element::FromMessage(const Bytes& message,
 {
     G1Element ans;
     ep_map_dst(ans.p, message.begin(), (int)message.size(), dst, dst_len);
-    ans.CheckValid();
+    BLS::CheckRelicErrors();
+    assert(ans.IsValid());
     return ans;
 }
 
@@ -113,24 +114,18 @@ G1Element G1Element::Generator()
     return ele;
 }
 
-void G1Element::CheckValid() const {
+bool G1Element::IsValid() const {
     // Infinity no longer valid in Relic
     // https://github.com/relic-toolkit/relic/commit/f3be2babb955cf9f82743e0ae5ef265d3da6c02b
     if (g1_is_infty((g1_st*)p) == 1)
-        return;
-    if (g1_is_valid((g1_st*)p) == 0)
-        throw std::invalid_argument(
-            "Given G1 element failed g1_is_valid check");
+        return true;
 
-    // check if inside subgroup
-    bn_t order;
-    bn_new(order);
-    g1_get_ord(order);
+    return g1_is_valid((g1_st*)p);
+}
 
-    G1Element point = *this * order;
-    if (point != G1Element())
-        throw std::invalid_argument("Given G1 element failed in_subgroup check");
-    bn_free(order);
+void G1Element::CheckValid() const {
+    if (!IsValid())
+        throw std::invalid_argument("G1 element is invalid");
     BLS::CheckRelicErrors();
 }
 
@@ -312,7 +307,8 @@ G2Element G2Element::FromMessage(const Bytes& message,
     } else {
         ep2_map_dst(ans.q, message.begin(), (int)message.size(), dst, dst_len);
     }
-    ans.CheckValid();
+    BLS::CheckRelicErrors();
+    assert(ans.IsValid());
     return ans;
 }
 
@@ -324,24 +320,18 @@ G2Element G2Element::Generator()
     return ele;
 }
 
-void G2Element::CheckValid() const {
+bool G2Element::IsValid() const {
     // Infinity no longer valid in Relic
     // https://github.com/relic-toolkit/relic/commit/f3be2babb955cf9f82743e0ae5ef265d3da6c02b
     if (g2_is_infty((g2_st*)q) == 1)
-        return;
-    if (g2_is_valid((g2_st*)q) == 0)
-        throw std::invalid_argument(
-            "Given G2 element failed g2_is_valid check");
+        return true;
 
-    // check if inside subgroup
-    bn_t order;
-    bn_new(order);
-    g2_get_ord(order);
+    return g2_is_valid((g2_st*)q);
+}
 
-    G2Element point = *this * order;
-    if (point != G2Element())
-        throw std::invalid_argument("Given G2 element failed in_subgroup check");
-    bn_free(order);
+void G2Element::CheckValid() const {
+    if (!IsValid())
+        throw std::invalid_argument("G2 element is invalid");
     BLS::CheckRelicErrors();
 }
 
