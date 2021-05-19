@@ -39,7 +39,10 @@ add_library(bls-dash ${CMAKE_CURRENT_SOURCE_DIR}/privatekey.cpp)
 add_library(blstmp ${HEADERS}
   ${CMAKE_CURRENT_SOURCE_DIR}/privatekey.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/bls.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/chaincode.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/elements.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/extendedprivatekey.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/extendedpublickey.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/legacy.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/schemes.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/threshold.cpp

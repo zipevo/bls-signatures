@@ -1238,6 +1238,120 @@ TEST_CASE("Schemes") {
     }
 }
 
+TEST_CASE("Legacy HD keys") {
+    SECTION("Should create an extended private key from seed") {
+        std::vector<uint8_t> seed{1, 50, 6, 244, 24, 199, 1, 25};
+        ExtendedPrivateKey esk = ExtendedPrivateKey::FromSeed(Bytes(seed));
+
+        ExtendedPrivateKey esk77 = esk.PrivateChild(77 + (1 << 31));
+        ExtendedPrivateKey esk77copy = esk.PrivateChild(77 + (1 << 31));
+
+        REQUIRE(esk77 == esk77copy);
+
+        ExtendedPrivateKey esk77nh = esk.PrivateChild(77);
+
+        auto eskLong = esk.PrivateChild((1 << 31) + 5)
+                .PrivateChild(0)
+                .PrivateChild(0)
+                .PrivateChild((1 << 31) + 56)
+                .PrivateChild(70)
+                .PrivateChild(4);
+        uint8_t chainCode[32];
+        eskLong.GetChainCode().Serialize(chainCode);
+    }
+
+
+    SECTION("Should match derivation through private and public keys") {
+        std::vector<uint8_t> seed{1, 50, 6, 244, 24, 199, 1, 25};
+        ExtendedPrivateKey esk = ExtendedPrivateKey::FromSeed(Bytes(seed));
+        ExtendedPublicKey epk = esk.GetExtendedPublicKey();
+
+        G1Element pk1 = esk.PrivateChild(238757).GetPublicKey();
+        G1Element pk2 = epk.PublicChild(238757).GetPublicKey();
+
+        REQUIRE(pk1 == pk2);
+
+        PrivateKey sk3 = esk.PrivateChild(0)
+                .PrivateChild(3)
+                .PrivateChild(8)
+                .PrivateChild(1)
+                .GetPrivateKey();
+
+        G1Element pk4 = epk.PublicChild(0)
+                .PublicChild(3)
+                .PublicChild(8)
+                .PublicChild(1)
+                .GetPublicKey();
+        REQUIRE(sk3.GetG1Element() == pk4);
+
+        G2Element sig = LegacySchemeMPL().Sign(sk3, Bytes(seed));
+
+        REQUIRE(LegacySchemeMPL().Verify(sk3.GetG1Element(), Bytes(seed), sig));
+    }
+
+    SECTION("Should prevent hardened pk derivation") {
+        std::vector<uint8_t> seed{1, 50, 6, 244, 24, 199, 1, 25};
+        ExtendedPrivateKey esk = ExtendedPrivateKey::FromSeed(Bytes(seed));
+        ExtendedPublicKey epk = esk.GetExtendedPublicKey();
+
+        ExtendedPrivateKey sk = esk.PrivateChild((1 << 31) + 3);
+        REQUIRE_THROWS(epk.PublicChild((1 << 31) + 3));
+    }
+
+    SECTION("Should derive public child from parent") {
+        std::vector<uint8_t> seed{1, 50, 6, 244, 24, 199, 1, 0, 0, 0};
+        ExtendedPrivateKey esk = ExtendedPrivateKey::FromSeed(Bytes(seed));
+        ExtendedPublicKey epk = esk.GetExtendedPublicKey();
+
+        ExtendedPublicKey pk1 = esk.PublicChild(13);
+        ExtendedPublicKey pk2 = epk.PublicChild(13);
+
+        REQUIRE(pk1 == pk2);
+    }
+
+    SECTION("Should cout structures") {
+        std::vector<uint8_t> seed{1, 50, 6, 244, 24, 199, 1, 0, 0, 0};
+        ExtendedPrivateKey esk = ExtendedPrivateKey::FromSeed(Bytes(seed));
+        ExtendedPublicKey epk = esk.GetExtendedPublicKey();
+
+        cout << epk << endl;
+        cout << epk.GetPublicKey() << endl;
+        cout << epk.GetChainCode() << endl;
+
+        G2Element sig1 = LegacySchemeMPL().Sign(esk.GetPrivateKey(), Bytes(seed));
+        cout << sig1 << endl;
+    }
+
+    SECTION("Should serialize extended keys") {
+        std::vector<uint8_t> seed{1, 50, 6, 244, 25, 199, 1, 25};
+        ExtendedPrivateKey esk = ExtendedPrivateKey::FromSeed(Bytes(seed));
+        ExtendedPublicKey epk = esk.GetExtendedPublicKey();
+
+        G1Element pk1 = esk.PrivateChild(238757).GetPublicKey();
+        G1Element pk2 = epk.PublicChild(238757).GetPublicKey();
+
+        REQUIRE(pk1 == pk2);
+
+        ExtendedPrivateKey sk3 = esk.PrivateChild(0)
+                .PrivateChild(3)
+                .PrivateChild(8)
+                .PrivateChild(1);
+
+        ExtendedPublicKey pk4 = epk.PublicChild(0)
+                .PublicChild(3)
+                .PublicChild(8)
+                .PublicChild(1);
+        uint8_t buffer1[ExtendedPrivateKey::SIZE];
+        uint8_t buffer2[ExtendedPublicKey::SIZE];
+        uint8_t buffer3[ExtendedPublicKey::SIZE];
+
+        sk3.Serialize(buffer1);
+        sk3.GetExtendedPublicKey().Serialize(buffer2);
+        pk4.Serialize(buffer3);
+        REQUIRE(std::memcmp(buffer2, buffer3, ExtendedPublicKey::SIZE) == 0);
+    }
+}
+
 TEST_CASE("Threshold Signatures") {
     SECTION("Secret Key Shares") {
         size_t m = 3;
