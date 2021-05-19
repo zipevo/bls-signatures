@@ -225,6 +225,8 @@ namespace bls {
                 bn_free(delta[i]);
                 bn_free(ids2[i]);
             }
+            delete[] delta;
+            delete[] ids2;
         };
 
         bn_copy(a, ids2[0]);
