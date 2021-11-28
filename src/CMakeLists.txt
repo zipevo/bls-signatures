@@ -40,6 +40,7 @@ install(FILES $<TARGET_FILE:bls-dash> DESTINATION lib)
 
 if(BUILD_BLS_TESTS)
   add_executable(runtest test.cpp)
+  INCLUDE(FindPkgConfig)
   pkg_check_modules(CATCH2 catch2)
   if (CATCH2_FOUND)
     # Adding "catch2" subdir to include dirs because "catch.hpp" is included
