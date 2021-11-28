@@ -7,4 +7,4 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(pybind11 relic)
 
 pybind11_add_module(blspy ${CMAKE_CURRENT_SOURCE_DIR}/pythonbindings.cpp)
-target_link_libraries(blspy PRIVATE bls)
+target_link_libraries(blspy PRIVATE bls-dash)
