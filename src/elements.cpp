@@ -32,6 +32,8 @@ G1Element G1Element::FromBytes(const Bytes& bytes, bool fLegacy)
     // convert bytes to relic form
     uint8_t buffer[G1Element::SIZE + 1];
     std::memcpy(buffer + 1, bytes.begin(), G1Element::SIZE);
+    buffer[0] = 0x00;
+    buffer[1] &= 0x1f;  // erase 3 msbs from given input
 
     bool fZerosOnly = Util::HasOnlyZeros(Bytes(buffer, G1Element::SIZE + 1));
     if ((bytes[0] & 0xc0) == 0xc0) {  // representing infinity
