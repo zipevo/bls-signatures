@@ -35,8 +35,11 @@ G1Element G1Element::FromBytes(const Bytes& bytes, bool fLegacy)
     buffer[0] = 0x00;
     buffer[1] &= 0x1f;  // erase 3 msbs from given input
 
-    bool fZerosOnly = Util::HasOnlyZeros(Bytes(buffer, G1Element::SIZE + 1));
     if ((bytes[0] & 0xc0) == 0xc0) {  // representing infinity
+        buffer[0] = 0x00;
+        buffer[1] &= 0x1f;  // erase 3 msbs from given input
+
+        bool fZerosOnly = Util::HasOnlyZeros(Bytes(buffer, G1Element::SIZE + 1));
         // enforce that infinity must be 0xc0000..00
         if (bytes[0] != 0xc0 || !fZerosOnly) {
             throw std::invalid_argument("Given G1 infinity element must be canonical");
@@ -54,6 +57,7 @@ G1Element G1Element::FromBytes(const Bytes& bytes, bool fLegacy)
             buffer[0] = 0x00;
             buffer[1] &= 0x1f;  // erase 3 msbs from given input
 
+            bool fZerosOnly = Util::HasOnlyZeros(Bytes(buffer, G1Element::SIZE + 1));
             if ((bytes[0] & 0xc0) != 0x80) {
                 throw std::invalid_argument(
                         "Given G1 non-infinity element must start with 0b10");
