@@ -77,5 +77,4 @@ jobs:
     - name: Test go bindings
       run: |
         cd go-bindings
-        go test
-
+        make
