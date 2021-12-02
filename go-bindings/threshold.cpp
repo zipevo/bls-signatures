@@ -31,10 +31,10 @@ CPrivateKey CThresholdPrivateKeyShare(void** sks, const size_t sksLen, const voi
 }
 
 CPrivateKey CThresholdPrivateKeyRecover(void** sks,
-                                       const size_t sksLen,
-                                       void** msgs,
-                                       const void* msgsLens,
-                                       const size_t msgsLen) {
+                                        const size_t sksLen,
+                                        void** msgs,
+                                        const void* msgsLens,
+                                        const size_t msgsLen) {
     const size_t* msgLensPtr = (size_t*)msgsLens;
     const std::vector<bls::PrivateKey> vecPrivKeys = toBLSVector<bls::PrivateKey>(sks, sksLen);
     const std::vector<size_t> vecMsgsLens = std::vector<size_t>(msgLensPtr, msgLensPtr + msgsLen);
