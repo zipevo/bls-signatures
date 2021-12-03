@@ -1,9 +1,13 @@
 package blschia
 
+// #include "blschia.h"
+// #include <string.h>
+import "C"
 import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
+	"unsafe"
 )
 
 // HashSize ...
@@ -38,4 +42,11 @@ func BuildSignHash(llmqType uint8, quorumHash Hash, signID Hash, msgHash Hash) H
 	hasher.Write(signID[:])
 	hasher.Write(msgHash[:])
 	return sha256.Sum256(hasher.Sum(nil))
+}
+
+func cAllocBytes(data []byte) unsafe.Pointer {
+	l := C.size_t(len(data))
+	ptr := unsafe.Pointer(C.SecAllocBytes(l))
+	C.memcpy(ptr, unsafe.Pointer(&data[0]), l)
+	return ptr
 }
