@@ -11,7 +11,7 @@ import (
 
 // ThresholdPrivateKeyShare retrieves a shared PrivateKey from a set of PrivateKey and an arbitrary data
 // this function is a binding of bls::Threshold::PrivateKeyShare
-func ThresholdPrivateKeyShare(sks []*PrivateKey, data []byte) *PrivateKey {
+func ThresholdPrivateKeyShare(sks []*PrivateKey, data []byte) (*PrivateKey, error) {
 	cDataPtr := C.CBytes(data)
 	defer C.free(cDataPtr)
 	cPrivKeyArrPtr := C.AllocPtrArray(C.size_t(len(sks)))
@@ -19,16 +19,20 @@ func ThresholdPrivateKeyShare(sks []*PrivateKey, data []byte) *PrivateKey {
 		C.SetPtrArray(cPrivKeyArrPtr, unsafe.Pointer(privKey.val), C.int(i))
 	}
 	defer C.FreePtrArray(cPrivKeyArrPtr)
+	var cDidErr C.bool
 	sk := PrivateKey{
-		val: C.CThresholdPrivateKeyShare(cPrivKeyArrPtr, C.size_t(len(sks)), cDataPtr, C.size_t(len(data))),
+		val: C.CThresholdPrivateKeyShare(cPrivKeyArrPtr, C.size_t(len(sks)), cDataPtr, C.size_t(len(data)), &cDidErr),
+	}
+	if cDidErr {
+		return nil, errFromC()
 	}
 	runtime.SetFinalizer(&sk, func(pk *PrivateKey) { sk.free() })
-	return &sk
+	return &sk, nil
 }
 
 // ThresholdPublicKeyShare retrieves a shared G1Element (public key) from a set of G1Element and an arbitrary data
 // this function is a binding of bls::Threshold::PublicKeyShare
-func ThresholdPublicKeyShare(pks []*G1Element, data []byte) *G1Element {
+func ThresholdPublicKeyShare(pks []*G1Element, data []byte) (*G1Element, error) {
 	cDataPtr := C.CBytes(data)
 	defer C.free(cDataPtr)
 	cArrPtr := C.AllocPtrArray(C.size_t(len(pks)))
@@ -36,16 +40,20 @@ func ThresholdPublicKeyShare(pks []*G1Element, data []byte) *G1Element {
 		C.SetPtrArray(cArrPtr, unsafe.Pointer(pk.val), C.int(i))
 	}
 	defer C.FreePtrArray(cArrPtr)
+	var cDidErr C.bool
 	pk := G1Element{
-		val: C.CThresholdPublicKeyShare(cArrPtr, C.size_t(len(pks)), cDataPtr, C.size_t(len(data))),
+		val: C.CThresholdPublicKeyShare(cArrPtr, C.size_t(len(pks)), cDataPtr, C.size_t(len(data)), &cDidErr),
+	}
+	if cDidErr {
+		return nil, errFromC()
 	}
 	runtime.SetFinalizer(&pk, func(pk *G1Element) { pk.free() })
-	return &pk
+	return &pk, nil
 }
 
 // ThresholdSignatureShare retrieves a shared G2Element (signature) from a set of G2Element and an arbitrary data
 // this function is a binding of bls::Threshold::SignatureShare
-func ThresholdSignatureShare(sigs []*G2Element, data []byte) *G2Element {
+func ThresholdSignatureShare(sigs []*G2Element, data []byte) (*G2Element, error) {
 	cDataPtr := C.CBytes(data)
 	defer C.free(cDataPtr)
 	cArrPtr := C.AllocPtrArray(C.size_t(len(sigs)))
@@ -53,16 +61,20 @@ func ThresholdSignatureShare(sigs []*G2Element, data []byte) *G2Element {
 		C.SetPtrArray(cArrPtr, unsafe.Pointer(sig.val), C.int(i))
 	}
 	defer C.FreePtrArray(cArrPtr)
+	var cDidErr C.bool
 	sig := G2Element{
-		val: C.CThresholdSignatureShare(cArrPtr, C.size_t(len(sigs)), cDataPtr, C.size_t(len(data))),
+		val: C.CThresholdSignatureShare(cArrPtr, C.size_t(len(sigs)), cDataPtr, C.size_t(len(data)), &cDidErr),
+	}
+	if cDidErr {
+		return nil, errFromC()
 	}
 	runtime.SetFinalizer(&sig, func(pk *G2Element) { sig.free() })
-	return &sig
+	return &sig, nil
 }
 
 // ThresholdPrivateKeyRecover recovers PrivateKey from the set of shared PrivateKey with a list of messages
 // this function is a binding of bls::Threshold::PrivateKeyRecover
-func ThresholdPrivateKeyRecover(sks []*PrivateKey, msgs [][]byte) *PrivateKey {
+func ThresholdPrivateKeyRecover(sks []*PrivateKey, msgs [][]byte) (*PrivateKey, error) {
 	cArrPtr := C.AllocPtrArray(C.size_t(len(sks)))
 	for i, sk := range sks {
 		C.SetPtrArray(cArrPtr, unsafe.Pointer(sk.val), C.int(i))
@@ -70,6 +82,7 @@ func ThresholdPrivateKeyRecover(sks []*PrivateKey, msgs [][]byte) *PrivateKey {
 	defer C.FreePtrArray(cArrPtr)
 	cMsgArrPtr, msgLens := cAllocMsgs(msgs)
 	defer C.FreePtrArray(cMsgArrPtr)
+	var cDidErr C.bool
 	sk := PrivateKey{
 		val: C.CThresholdPrivateKeyRecover(
 			cArrPtr,
@@ -77,15 +90,19 @@ func ThresholdPrivateKeyRecover(sks []*PrivateKey, msgs [][]byte) *PrivateKey {
 			cMsgArrPtr,
 			unsafe.Pointer(&msgLens[0]),
 			C.size_t(len(msgs)),
+			&cDidErr,
 		),
 	}
+	if cDidErr {
+		return nil, errFromC()
+	}
 	runtime.SetFinalizer(&sk, func(sk *PrivateKey) { sk.free() })
-	return &sk
+	return &sk, nil
 }
 
 // ThresholdPublicKeyRecover recovers G1Element (public key) from the set of shared G1Element with a list of messages
 // this function is a binding of bls::Threshold::PublicKeyRecover
-func ThresholdPublicKeyRecover(pks []*G1Element, msgs [][]byte) *G1Element {
+func ThresholdPublicKeyRecover(pks []*G1Element, msgs [][]byte) (*G1Element, error) {
 	cArrPtr := C.AllocPtrArray(C.size_t(len(pks)))
 	for i, pk := range pks {
 		C.SetPtrArray(cArrPtr, unsafe.Pointer(pk.val), C.int(i))
@@ -93,6 +110,7 @@ func ThresholdPublicKeyRecover(pks []*G1Element, msgs [][]byte) *G1Element {
 	defer C.FreePtrArray(cArrPtr)
 	cMsgArrPtr, msgLens := cAllocMsgs(msgs)
 	defer C.FreePtrArray(cMsgArrPtr)
+	var cDidErr C.bool
 	pk := G1Element{
 		val: C.CThresholdPublicKeyRecover(
 			cArrPtr,
@@ -100,15 +118,19 @@ func ThresholdPublicKeyRecover(pks []*G1Element, msgs [][]byte) *G1Element {
 			cMsgArrPtr,
 			unsafe.Pointer(&msgLens[0]),
 			C.size_t(len(msgs)),
+			&cDidErr,
 		),
 	}
+	if cDidErr {
+		return nil, errFromC()
+	}
 	runtime.SetFinalizer(&pk, func(pk *G1Element) { pk.free() })
-	return &pk
+	return &pk, nil
 }
 
 // ThresholdSignatureRecover recovers G2Element (signature) from the set of shared G2Element with a list of messages
 // this function is a binding of bls::Threshold::SignatureRecover
-func ThresholdSignatureRecover(sigs []*G2Element, msgs [][]byte) *G2Element {
+func ThresholdSignatureRecover(sigs []*G2Element, msgs [][]byte) (*G2Element, error) {
 	cArrPtr := C.AllocPtrArray(C.size_t(len(sigs)))
 	for i, sig := range sigs {
 		C.SetPtrArray(cArrPtr, unsafe.Pointer(sig.val), C.int(i))
@@ -116,6 +138,7 @@ func ThresholdSignatureRecover(sigs []*G2Element, msgs [][]byte) *G2Element {
 	defer C.FreePtrArray(cArrPtr)
 	cMsgArrPtr, msgLens := cAllocMsgs(msgs)
 	defer C.FreePtrArray(cMsgArrPtr)
+	var cDidErr C.bool
 	sig := G2Element{
 		val: C.CThresholdSignatureRecover(
 			cArrPtr,
@@ -123,10 +146,14 @@ func ThresholdSignatureRecover(sigs []*G2Element, msgs [][]byte) *G2Element {
 			cMsgArrPtr,
 			unsafe.Pointer(&msgLens[0]),
 			C.size_t(len(msgs)),
+			&cDidErr,
 		),
 	}
+	if cDidErr {
+		return nil, errFromC()
+	}
 	runtime.SetFinalizer(&sig, func(sig *G2Element) { sig.free() })
-	return &sig
+	return &sig, nil
 }
 
 // ThresholdSign signs of the data with PrivateKey

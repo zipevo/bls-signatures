@@ -20,75 +20,127 @@
 #include "blschia.h"
 #include "threshold.h"
 #include "utils.hpp"
+#include "error.h"
 
-CPrivateKey CThresholdPrivateKeyShare(void** sks, const size_t sksLen, const void* id, size_t idLen) {
-    return new bls::PrivateKey(
-        bls::Threshold::PrivateKeyShare(
-            toBLSVector<bls::PrivateKey>(sks, sksLen),
-            bls::Bytes((uint8_t*)id, idLen)
-        )
-    );
+CPrivateKey CThresholdPrivateKeyShare(void** sks, const size_t sksLen, const void* id, size_t idLen, bool* didErr) {
+    bls::PrivateKey* sk = nullptr;
+    try {
+        sk = new bls::PrivateKey(
+            bls::Threshold::PrivateKeyShare(
+                toBLSVector<bls::PrivateKey>(sks, sksLen),
+                bls::Bytes((uint8_t*)id, idLen)
+            )
+        );
+    } catch(const std::exception& ex) {
+        gErrMsg = ex.what();
+        *didErr = true;
+        return nullptr;
+    }
+    return sk;
 }
 
 CPrivateKey CThresholdPrivateKeyRecover(void** sks,
                                         const size_t sksLen,
                                         void** msgs,
                                         const void* msgsLens,
-                                        const size_t msgsLen) {
+                                        const size_t msgsLen,
+                                        bool* didErr) {
     const size_t* msgLensPtr = (size_t*)msgsLens;
     const std::vector<bls::PrivateKey> vecPrivKeys = toBLSVector<bls::PrivateKey>(sks, sksLen);
     const std::vector<size_t> vecMsgsLens = std::vector<size_t>(msgLensPtr, msgLensPtr + msgsLen);
     const std::vector<bls::Bytes> vecMsgs = toVectorBytes(msgs, msgsLen, vecMsgsLens);
-    return new bls::PrivateKey(
-        bls::Threshold::PrivateKeyRecover(vecPrivKeys, vecMsgs)
-    );
+    bls::PrivateKey* sk = nullptr;
+    try {
+        sk = new bls::PrivateKey(
+            bls::Threshold::PrivateKeyRecover(vecPrivKeys, vecMsgs)
+        );
+    } catch(const std::exception& ex) {
+        gErrMsg = ex.what();
+        *didErr = true;
+        return nullptr;
+    }
+    return sk;
 }
 
-CG1Element CThresholdPublicKeyShare(void** pks, const size_t pksLen, const void* id, size_t idLen) {
-    return new bls::G1Element(
-        bls::Threshold::PublicKeyShare(
-            toBLSVector<bls::G1Element>(pks, pksLen),
-            bls::Bytes((uint8_t*)id, idLen)
-        )
-    );
+CG1Element CThresholdPublicKeyShare(void** pks, const size_t pksLen, const void* id, size_t idLen, bool* didErr) {
+    bls::G1Element* el = nullptr;
+    try {
+        el = new bls::G1Element(
+            bls::Threshold::PublicKeyShare(
+                toBLSVector<bls::G1Element>(pks, pksLen),
+                bls::Bytes((uint8_t*)id, idLen)
+            )
+        );
+    } catch(const std::exception& ex) {
+        gErrMsg = ex.what();
+        *didErr = true;
+        return nullptr;
+    }
+    return el;
 }
 
 CG1Element CThresholdPublicKeyRecover(void** pks,
                                       size_t pksLen,
                                       void** msgs,
                                       const void* msgsLens,
-                                      const size_t msgsLen) {
+                                      const size_t msgsLen,
+                                      bool* didErr) {
     const size_t* msgLensPtr = (size_t*)msgsLens;
     const std::vector<bls::G1Element> vecPubKeys = toBLSVector<bls::G1Element>(pks, pksLen);
     const std::vector<size_t> vecMsgsLens = std::vector<size_t>(msgLensPtr, msgLensPtr + msgsLen);
     const std::vector<bls::Bytes> vecMsgs = toVectorBytes(msgs, msgsLen, vecMsgsLens);
-    return new bls::G1Element(
-        bls::Threshold::PublicKeyRecover(vecPubKeys, vecMsgs)
-    );
+    bls::G1Element* el = nullptr;
+    try {
+        el = new bls::G1Element(
+            bls::Threshold::PublicKeyRecover(vecPubKeys, vecMsgs)
+        );
+    } catch(const std::exception& ex) {
+        gErrMsg = ex.what();
+        *didErr = true;
+        return nullptr;
+    }
+    return el;
 }
 
-CG2Element CThresholdSignatureShare(void** sigs, const size_t sigsLen, const void* id, const size_t idLen) {
-    return new bls::G2Element(
-        bls::Threshold::SignatureShare(
-            toBLSVector<bls::G2Element>(sigs, sigsLen),
-            bls::Bytes((uint8_t*)id, idLen)
-        )
-    );
+CG2Element CThresholdSignatureShare(void** sigs, const size_t sigsLen, const void* id, const size_t idLen, bool* didErr) {
+    bls::G2Element* el = nullptr;
+    try {
+        el = new bls::G2Element(
+            bls::Threshold::SignatureShare(
+                toBLSVector<bls::G2Element>(sigs, sigsLen),
+                bls::Bytes((uint8_t*)id, idLen)
+            )
+        );
+    } catch(const std::exception& ex) {
+        gErrMsg = ex.what();
+        *didErr = true;
+        return nullptr;
+    }
+    return el;
 }
 
 CG2Element CThresholdSignatureRecover(void** sigs,
                                       const size_t sigsLen,
                                       void** msgs,
                                       const void* msgsLens,
-                                      const size_t msgsLen) {
+                                      const size_t msgsLen,
+                                      bool* didErr) {
     const size_t* msgLensPtr = (size_t*)msgsLens;
     const std::vector<size_t> vecMsgsLens = std::vector<size_t>(msgLensPtr, msgLensPtr + msgsLen);
-    return new bls::G2Element(
-        bls::Threshold::SignatureRecover(
-            toBLSVector<bls::G2Element>(sigs, sigsLen),
-            toVectorBytes(msgs, msgsLen, vecMsgsLens)
-        )
-    );
+    bls::G2Element* el = nullptr;
+    try {
+        el = new bls::G2Element(
+            bls::Threshold::SignatureRecover(
+                toBLSVector<bls::G2Element>(sigs, sigsLen),
+                toVectorBytes(msgs, msgsLen, vecMsgsLens)
+            )
+        );
+    } catch(const std::exception& ex) {
+        gErrMsg = ex.what();
+        *didErr = true;
+        return nullptr;
+    }
+    return el;
 }
 
 CG2Element CThresholdSign(const CPrivateKey sk, const void* msg, size_t msgLen) {
