@@ -1,7 +1,8 @@
 BUILD="$(PWD)/.."
 
 CGO_CXXFLAGS="-I$(BUILD)/build/_deps/relic-src/include -I$(BUILD)/build/_deps/relic-build/include -I$(BUILD)/src -std=c++14"
-CGO_LDFLAGS="-L$(BUILD)/build/_deps/relic-build/lib -L$(BUILD)/build/src -lbls -lrelic_s -lblstmp"
+CGO_LDFLAGS="-L$(BUILD)/build/_deps/relic-build/lib -L$(BUILD)/build/src -lbls-dash -lblstmp -lrelic_s"
+
 GO="go"
 COVERAGE_OUTPUT ?= coverage.out
 
