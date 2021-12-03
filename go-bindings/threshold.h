@@ -23,32 +23,31 @@
 extern "C" {
 #endif
 
-CPrivateKey CThresholdPrivateKeyShare(void** sks, const size_t sksLen, const void* id, size_t idLen, bool* didErr);
+const int HashSize = 32;
+
+CPrivateKey CThresholdPrivateKeyShare(void** sks, const size_t sksLen, const void* hash, bool* didErr);
 CPrivateKey CThresholdPrivateKeyRecover(void** sks,
                                         const size_t sksLen,
-                                        void** msgs,
-                                        const void* msgsLens,
-                                        const size_t msgsLen,
+                                        void** hashes,
+                                        const size_t hashesLen,
                                         bool* didErr);
 
-CG1Element CThresholdPublicKeyShare(void** pks, const size_t pksLen, const void* id, size_t idLen, bool* didErr);
+CG1Element CThresholdPublicKeyShare(void** pks, const size_t pksLen, const void* hash, bool* didErr);
 CG1Element CThresholdPublicKeyRecover(void** pks,
-                                      size_t pksLen,
-                                      void** msgs,
-                                      const void* msgsLens,
-                                      const size_t msgsLen,
+                                      const size_t pksLen,
+                                      void** hashes,
+                                      const size_t hashesLen,
                                       bool* didErr);
 
-CG2Element CThresholdSignatureShare(void** sigs, const size_t sigsLen, const void* id, const size_t idLen, bool* didErr);
+CG2Element CThresholdSignatureShare(void** sigs, const size_t sigsLen, const void* hash, bool* didErr);
 CG2Element CThresholdSignatureRecover(void** sigs,
                                       const size_t sigsLen,
-                                      void** msgs,
-                                      const void* msgsLens,
-                                      const size_t msgsLen,
+                                      void** hashes,
+                                      const size_t hashesLen,
                                       bool* didErr);
 
-CG2Element CThresholdSign(const CPrivateKey sk, const void* msg, size_t msgLen);
-bool CThresholdVerify(const CG1Element pk, const void* msg, size_t msgLen, const CG2Element sig);
+CG2Element CThresholdSign(const CPrivateKey sk, const void* hash);
+bool CThresholdVerify(const CG1Element pk, const void* hash, const CG2Element sig);
 
 #ifdef __cplusplus
 }

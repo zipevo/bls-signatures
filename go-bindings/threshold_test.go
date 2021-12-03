@@ -8,11 +8,11 @@ import (
 
 func TestThreshold(t *testing.T) {
 	n, m := 5, 3
-	var ids [][]byte
+	var hashes []Hash
 	for i := 0; i < n; i++ {
-		ids = append(ids, genSeed(byte(i+1)))
+		hashes = append(hashes, genHash(byte(i+1)))
 	}
-	hash := genSeed(100)
+	hash := genHash(100)
 	pks := make([]*G1Element, m)
 	sigs := make([]*G2Element, m)
 	sks := make([]*PrivateKey, m)
@@ -28,25 +28,25 @@ func TestThreshold(t *testing.T) {
 	pkShares := make([]*G1Element, n)
 	sigShares := make([]*G2Element, n)
 	for i := 0; i < n; i++ {
-		skShares[i], _ = ThresholdPrivateKeyShare(sks, ids[i])
-		pkShares[i], _ = ThresholdPublicKeyShare(pks, ids[i])
-		sigShares[i], _ = ThresholdSignatureShare(sigs, ids[i])
+		skShares[i], _ = ThresholdPrivateKeyShare(sks, hashes[i])
+		pkShares[i], _ = ThresholdPublicKeyShare(pks, hashes[i])
+		sigShares[i], _ = ThresholdSignatureShare(sigs, hashes[i])
 		assert.True(t, mustGetG1(skShares[i]).EqualTo(pkShares[i]))
 		sigShare2 := ThresholdSign(skShares[i], hash)
 		assert.True(t, sigShares[i].EqualTo(sigShare2))
 		assert.True(t, ThresholdVerify(pkShares[i], hash, sigShares[i]))
 	}
 
-	recSk, _ := ThresholdPrivateKeyRecover(skShares[:m-1], ids[:m-1])
-	recPk, _ := ThresholdPublicKeyRecover(pkShares[:m-1], ids[:m-1])
-	recSig, _ := ThresholdSignatureRecover(sigShares[:m-1], ids[:m-1])
+	recSk, _ := ThresholdPrivateKeyRecover(skShares[:m-1], hashes[:m-1])
+	recPk, _ := ThresholdPublicKeyRecover(pkShares[:m-1], hashes[:m-1])
+	recSig, _ := ThresholdSignatureRecover(sigShares[:m-1], hashes[:m-1])
 	assert.False(t, recSk.EqualTo(sks[0]))
 	assert.False(t, recPk.EqualTo(pks[0]))
 	assert.False(t, recSig.EqualTo(sig))
 
-	recSk, _ = ThresholdPrivateKeyRecover(skShares[:m], ids[:m])
-	recPk, _ = ThresholdPublicKeyRecover(pkShares[:m], ids[:m])
-	recSig, _ = ThresholdSignatureRecover(sigShares[:m], ids[:m])
+	recSk, _ = ThresholdPrivateKeyRecover(skShares[:m], hashes[:m])
+	recPk, _ = ThresholdPublicKeyRecover(pkShares[:m], hashes[:m])
+	recSig, _ = ThresholdSignatureRecover(sigShares[:m], hashes[:m])
 	assert.True(t, recSk.EqualTo(sks[0]))
 	assert.True(t, recPk.EqualTo(pks[0]))
 	assert.True(t, recSig.EqualTo(sig))
@@ -66,4 +66,10 @@ func mustPrivateKeyFromBytes(data []byte, modOrder bool) *PrivateKey {
 		panic(err)
 	}
 	return sk
+}
+
+func genHash(v byte) [HashSize]byte {
+	var hash Hash
+	copy(hash[:], genSeed(v))
+	return hash
 }
