@@ -24,7 +24,7 @@ import (
 	"unsafe"
 )
 
-// HashSize ...
+// HashSize is the allowed size of a hash
 const HashSize = 32
 
 // Hash represents 32 byte of hash data
