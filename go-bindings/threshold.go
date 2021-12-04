@@ -15,6 +15,7 @@
 package blschia
 
 // #cgo LDFLAGS: -lbls-dash
+// #cgo CXXFLAGS: -std=c++14
 // #include <stdlib.h>
 // #include "threshold.h"
 // #include "blschia.h"
