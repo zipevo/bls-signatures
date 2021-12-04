@@ -14,6 +14,7 @@
 
 package blschia
 
+// #cgo LDFLAGS: -lbls-dash
 // #include <stdbool.h>
 // #include <stdlib.h>
 // #include "privatekey.h"

@@ -14,6 +14,7 @@
 
 package blschia
 
+// #cgo LDFLAGS: -lbls-dash
 // #include "blschia.h"
 // #include <string.h>
 import "C"
