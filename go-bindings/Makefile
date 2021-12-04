@@ -1,11 +1,22 @@
-CGO_LDFLAGS="-L$(PWD)/../build"
+SRC="$(PWD)/../src"
+BUILD_DIR="$(PWD)/../build"
+CACHE_DIR="$(PWD)/cache"
+
+CGO_LDFLAGS="-L$(BUILD_DIR)"
+CGO_CXXFLAGS="-I$(CACHE_DIR) -std=c++14"
 
 GO="go"
 COVERAGE_OUTPUT ?= coverage.out
 
 .PHONY: default vet test
 
-default: vet test
+default: prepare vet test
+
+prepare:
+	mkdir -p $(CACHE_DIR)/bls-dash
+	cp -r $(BUILD_DIR)/_deps/relic-src/include/* $(CACHE_DIR)
+	cp -r $(BUILD_DIR)/_deps/relic-build/include/* $(CACHE_DIR)
+	cp -r $(SRC)/* $(CACHE_DIR)/bls-dash
 
 fmt:  ## Run go fmt to format Go files
 	$(GO) fmt
