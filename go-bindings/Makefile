@@ -3,7 +3,7 @@ BUILD_DIR=$(PWD)/../build
 CACHE_DIR=$(PWD)/cache
 
 CGO_LDFLAGS="-L$(BUILD_DIR)"
-CGO_CXXFLAGS="-I$(CACHE_DIR) -std=c++14"
+CGO_CXXFLAGS="-I$(CACHE_DIR)"
 
 GO="go"
 COVERAGE_OUTPUT ?= coverage.out
