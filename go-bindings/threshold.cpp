@@ -55,9 +55,7 @@ CPrivateKey CThresholdPrivateKeyRecover(void** sks,
                                         const size_t hashesLen,
                                         bool* didErr) {
     bls::PrivateKey* sk = nullptr;
-
     std::vector<bls::Bytes> pop = toVectorHashes(hashes, hashesLen);
-
     try {
         sk = new bls::PrivateKey(
             bls::Threshold::PrivateKeyRecover(
