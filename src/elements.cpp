@@ -64,8 +64,9 @@ G1Element G1Element::FromBytes(const Bytes& bytes, bool fLegacy)
             }
 
             if (fZerosOnly) {
-            throw std::invalid_argument("G1 non-infinity element can't have only zeros");
-        }if (bytes[0] & 0x20) {  // sign bit
+                throw std::invalid_argument("G1 non-infinity element can't have only zeros");
+            }
+            if (bytes[0] & 0x20) {  // sign bit
                 buffer[0] = 0x03;
             } else {
                 buffer[0] = 0x02;
