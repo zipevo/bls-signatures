@@ -233,7 +233,7 @@ func (s *BasicSchemeMPL) free() {
 	C.CBasicSchemeMPLFree(s.val)
 }
 
-// AugSchemeMPL represents bls::AugSchemeMPL (augmented scheme using)
+// AugSchemeMPL represents bls::AugSchemeMPL
 // augmented should be enough for most use cases
 type AugSchemeMPL struct {
 	coreMPL
