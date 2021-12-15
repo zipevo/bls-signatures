@@ -46,6 +46,7 @@ CPrivateKey CThresholdPrivateKeyShare(void** sks, const size_t sksLen, const voi
         *didErr = true;
         return nullptr;
     }
+    *didErr = false;
     return sk;
 }
 
@@ -68,6 +69,7 @@ CPrivateKey CThresholdPrivateKeyRecover(void** sks,
         *didErr = true;
         return nullptr;
     }
+    *didErr = false;
     return sk;
 }
 
@@ -85,6 +87,7 @@ CG1Element CThresholdPublicKeyShare(void** pks, const size_t pksLen, const void*
         *didErr = true;
         return nullptr;
     }
+    *didErr = false;
     return el;
 }
 
@@ -106,6 +109,7 @@ CG1Element CThresholdPublicKeyRecover(void** pks,
         *didErr = true;
         return nullptr;
     }
+    *didErr = false;
     return el;
 }
 
@@ -123,6 +127,7 @@ CG2Element CThresholdSignatureShare(void** sigs, const size_t sigsLen, const voi
         *didErr = true;
         return nullptr;
     }
+    *didErr = false;
     return el;
 }
 
@@ -144,6 +149,7 @@ CG2Element CThresholdSignatureRecover(void** sigs,
         *didErr = true;
         return nullptr;
     }
+    *didErr = false;
     return el;
 }
 

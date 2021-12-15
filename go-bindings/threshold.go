@@ -29,10 +29,10 @@ import (
 )
 
 // HashSize is the allowed size of a hash
-const HashSize = 32
+const HashSize = sha256.Size
 
 // Hash represents 32 byte of hash data
-type Hash [32]byte
+type Hash [HashSize]byte
 
 var errWrongHexStringValue = errors.New("a hex string must contain 32 bytes")
 
