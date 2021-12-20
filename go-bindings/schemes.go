@@ -14,7 +14,7 @@
 
 package blschia
 
-// #cgo LDFLAGS: -lbls-dash
+// #cgo LDFLAGS: -lbls-dash -lrelic_s -lsodium
 // #cgo CXXFLAGS: -std=c++14
 // #include <stdbool.h>
 // #include <stdlib.h>

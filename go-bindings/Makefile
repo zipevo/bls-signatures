@@ -2,7 +2,7 @@ SRC_DIR=$(PWD)/../src
 BUILD_DIR=$(PWD)/../build
 CACHE_DIR=$(PWD)/cache
 
-CGO_LDFLAGS="-L$(BUILD_DIR)"
+CGO_LDFLAGS="-L$(CACHE_DIR)/lib -lbls-dash -lrelic_s -lgmp"
 CGO_CXXFLAGS="-I$(CACHE_DIR)"
 
 GO="go"
@@ -15,6 +15,8 @@ default: prepare vet test clean
 prepare:
 ifeq ("$(wildcard $(CACHE_DIR))", "")
 	@mkdir -p $(CACHE_DIR)/bls-dash
+	@mkdir -p $(CACHE_DIR)/lib
+	@find $(BUILD_DIR) -name "*.a" -exec cp {} $(CACHE_DIR)/lib \;
 	@cp -r $(BUILD_DIR)/_deps/relic-src/include/* $(CACHE_DIR)
 	@cp -r $(BUILD_DIR)/_deps/relic-build/include/* $(CACHE_DIR)
 	@cp -r $(SRC_DIR)/* $(CACHE_DIR)/bls-dash
