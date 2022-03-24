@@ -80,13 +80,17 @@ PrivateKey PrivateKey::FromByteVector(const std::vector<uint8_t> bytes, bool mod
 // Construct a private key from a bytearray.
 PrivateKey PrivateKey::RandomPrivateKey()
 {
-    uint8_t buf[32];
-    bn_t r;
-    bn_new(r);
-    bn_rand(r, RLC_POS, 256);
-    bn_write_bin(buf, 32, r);
-    std::vector<uint8_t> ret(buf, buf + 32);
-    return PrivateKey::FromBytes(Bytes(ret), true);
+    bn_t *r = Util::SecAlloc<bn_t>(1);
+    bn_new(*r);
+    bn_rand(*r, RLC_POS, 256);
+    PrivateKey k;
+    bn_copy(k.keydata, *r);
+    bn_t ord;
+    bn_new(ord);
+    g1_get_ord(ord);
+    bn_mod_basic(k.keydata, k.keydata, ord);
+    Util::SecFree(r);
+    return k;
 }
 
 PrivateKey::PrivateKey() {
