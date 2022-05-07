@@ -21,13 +21,13 @@ namespace bls {
 
 const size_t G1Element::SIZE;
 
-G1Element G1Element::FromBytes(const Bytes& bytes, bool fLegacy) {
+G1Element G1Element::FromBytes(Bytes const bytes, bool fLegacy) {
     G1Element ele = G1Element::FromBytesUnchecked(bytes, fLegacy);
     ele.CheckValid();
     return ele;
 }
 
-G1Element G1Element::FromBytesUnchecked(const Bytes& bytes, bool fLegacy)
+G1Element G1Element::FromBytesUnchecked(Bytes const bytes, bool fLegacy)
 {
     if (bytes.size() != SIZE) {
         throw std::invalid_argument("G1Element::FromBytes: Invalid size");
@@ -89,11 +89,6 @@ G1Element G1Element::FromBytesUnchecked(const Bytes& bytes, bool fLegacy)
 G1Element G1Element::FromByteVector(const std::vector<uint8_t>& bytevec, bool fLegacy)
 {
     return G1Element::FromBytes(Bytes(bytevec), fLegacy);
-}
-
-G1Element G1Element::FromByteVectorUnchecked(const std::vector<uint8_t>& bytevec, bool fLegacy)
-{
-    return G1Element::FromBytesUnchecked(Bytes(bytevec), fLegacy);
 }
 
 G1Element G1Element::FromNative(const g1_t element)
@@ -232,13 +227,13 @@ G1Element operator*(const bn_t& k, const G1Element& a) { return a * k; }
 
 const size_t G2Element::SIZE;
 
-G2Element G2Element::FromBytes(const Bytes& bytes, const bool fLegacy) {
+G2Element G2Element::FromBytes(Bytes const bytes, const bool fLegacy) {
     G2Element ele = G2Element::FromBytesUnchecked(bytes, fLegacy);
     ele.CheckValid();
     return ele;
 }
 
-G2Element G2Element::FromBytesUnchecked(const Bytes& bytes, const bool fLegacy)
+G2Element G2Element::FromBytesUnchecked(Bytes const bytes, const bool fLegacy)
 {
     if (bytes.size() != SIZE) {
         throw std::invalid_argument("G2Element::FromBytes: Invalid size");
@@ -304,12 +299,6 @@ G2Element G2Element::FromByteVector(const std::vector<uint8_t>& bytevec, bool fL
 {
     return G2Element::FromBytes(Bytes(bytevec), fLegacy);
 }
-
-G2Element G2Element::FromByteVectorUnchecked(const std::vector<uint8_t>& bytevec, bool fLegacy)
-{
-    return G2Element::FromBytesUnchecked(Bytes(bytevec), fLegacy);
-}
-
 
 G2Element G2Element::FromNative(const g2_t element)
 {
