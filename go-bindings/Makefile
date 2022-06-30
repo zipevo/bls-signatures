@@ -1,9 +1,5 @@
 SRC_DIR=$(PWD)/../src
 BUILD_DIR=$(PWD)/../build
-CACHE_DIR=$(PWD)/cache
-
-CGO_LDFLAGS="-L$(CACHE_DIR)/lib -lbls-dash -lrelic_s -lgmp"
-CGO_CXXFLAGS="-I$(CACHE_DIR)"
 
 GO="go"
 COVERAGE_OUTPUT ?= coverage.out
@@ -12,15 +8,23 @@ COVERAGE_OUTPUT ?= coverage.out
 
 default: prepare vet test clean
 
+MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+CURR_DIR := $(dir $(MAKEFILE_PATH))
+
+CGO_ENABLED := 1
+
+CGO_LDFLAGS ?= "-L$(CURR_DIR)../build/_deps/sodium-build \
+-L$(CURR_DIR)../build/_deps/relic-build/lib \
+-L$(CURR_DIR)../build/src \
+-lbls-dash -lrelic_s -lgmp"
+
+CGO_CXXFLAGS ?= "-I$(CURR_DIR)../build/_deps/relic-src/include \
+-I$(CURR_DIR)../build/_deps/relic-build/include \
+-I$(CURR_DIR)../build/src"
+
 prepare:
-ifeq ("$(wildcard $(CACHE_DIR))", "")
-	@mkdir -p $(CACHE_DIR)/bls-dash
-	@mkdir -p $(CACHE_DIR)/lib
-	@find $(BUILD_DIR) -name "*.a" -exec cp {} $(CACHE_DIR)/lib \;
-	@cp -r $(BUILD_DIR)/_deps/relic-src/include/* $(CACHE_DIR)
-	@cp -r $(BUILD_DIR)/_deps/relic-build/include/* $(CACHE_DIR)
-	@cp -r $(SRC_DIR)/* $(CACHE_DIR)/bls-dash
-endif
+	@mkdir -p ../build/src/bls-dash
+	cp -rv ../src/* ../build/src/bls-dash
 
 fmt:  ## Run go fmt to format Go files
 	$(GO) fmt
@@ -43,4 +47,3 @@ help: ## Show This Help
 clean: ## Clean up transient (generated) files
 	$(GO) clean
 	rm -f $(COVERAGE_OUTPUT)
-	rm -rf $(CACHE_DIR)
