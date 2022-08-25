@@ -16,6 +16,8 @@ blspy.*.so
 .pytest_chache/
 .eggs/
 cmake-build-debug/
+Cargo.lock
+target
 
 js_build
 node_modules

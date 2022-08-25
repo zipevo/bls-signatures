@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "rust-bindings_autocxx",
+    "rust-bindings_bindgen",
+]
