@@ -33,6 +33,7 @@ fn main() {
         .cpp(true)
         .define("_LIBCPP_HAS_NO_THREADS", Some("1"))
         .flag_if_supported("-std=c++14")
+        // .flag_if_supported("-ffreestanding")
         .includes([
                       abs("../build/_deps/relic-src/include").as_str(),
                       abs("../build/_deps/relic-build/include").as_str(),
@@ -64,9 +65,6 @@ fn main() {
     println!("cargo:rustc-link-search={}", abs("../build/src"));
     println!("cargo:rustc-link-lib=bls-dash");
 
-    // The bindgen::Builder is the main entry point
-    // to bindgen, and lets you build up options for
-    // the resulting bindings.
     let bindings = bindgen::Builder::default()
         // The input header we would like to generate
         // bindings for.
