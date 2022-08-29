@@ -2,7 +2,13 @@ use std::{env, fs};
 use std::path::{Path, PathBuf};
 use miette::IntoDiagnostic;
 
+fn abs(path: &str) -> String {
+    let path_buf = PathBuf::from(path);
 
+    let path_abs = fs::canonicalize(&path_buf).expect("should provide valid abs path");
+
+    path_abs.to_str().expect("should convert path to string").to_owned()
+}
 
 fn main() -> miette::Result<()> {
     // let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
@@ -33,36 +39,36 @@ fn main() -> miette::Result<()> {
     //
     // // Link BLS signatures library and dependencies
     //
-    println!("cargo:rustc-link-search=../build/_deps/sodium-build");
-    println!("cargo:rustc-link-lib=sodium");
+    println!("cargo:rustc-link-search={}", abs("../js_build/_deps/sodium-build"));
+    println!("cargo:rustc-link-lib=static=sodium");
 
-    println!("cargo:rustc-link-search=../build/_deps/relic-build/lib");
-    println!("cargo:rustc-link-lib=relic_s");
+    println!("cargo:rustc-link-search={}", abs("../js_build/_deps/relic-build/lib"));
+    println!("cargo:rustc-link-lib=static=relic_s");
 
     println!("cargo:rustc-link-search=/opt/homebrew/lib");
-    println!("cargo:rustc-link-lib=gmp");
+    println!("cargo:rustc-link-lib=static=gmp");
 
-    println!("cargo:rustc-link-search=../build/src");
-    println!("cargo:rustc-link-lib=bls-dash");
+    println!("cargo:rustc-link-search={}", abs("../js_build/src"));
+    println!("cargo:rustc-link-lib=static=bls-dash");
 
     // println!("cargo:rustc-link-args=");
     // println!("cargo:rustc-flags='-C relocation-model=pic -C link-arg=-shared -C link-arg=--imported-memory -C link-arg=--no-fatal-warnings'");
     //
     let include_paths = [
         std::path::PathBuf::from("../src"),
-        std::path::PathBuf::from("../build/_deps/relic-src/include"),
-        std::path::PathBuf::from("../build/_deps/relic-build/include"),
-        std::path::PathBuf::from("../build/src"),
+        std::path::PathBuf::from("../js_build/_deps/relic-src/include"),
+        std::path::PathBuf::from("../js_build/_deps/relic-build/include"),
+        std::path::PathBuf::from("../js_build/src"),
         // std::path::PathBuf::from("/usr/include"),
         // std::path::PathBuf::from("/opt/homebrew/opt/llvm/include"),
 
         // TODO Read from compiler_depend.make
 
-        std::path::PathBuf::from("/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/"),
-        std::path::PathBuf::from("/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/"),
+        // std::path::PathBuf::from("/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/"),
+        // std::path::PathBuf::from("/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/"),
 
-        // std::path::PathBuf::from("/opt/homebrew/Cellar/emscripten/3.1.19/libexec/cache/sysroot/include/c++/v1/"),
-        // std::path::PathBuf::from("/opt/homebrew/Cellar/emscripten/3.1.19/libexec/cache/sysroot/include/"),
+        std::path::PathBuf::from("/opt/homebrew/Cellar/emscripten/3.1.19/libexec/cache/sysroot/include/c++/v1/"),
+        std::path::PathBuf::from("/opt/homebrew/Cellar/emscripten/3.1.19/libexec/cache/sysroot/include/"),
 
         std::path::PathBuf::from("/opt/homebrew/include/"), // TODO gmp.h Use CMake generated files to get this path
     ];

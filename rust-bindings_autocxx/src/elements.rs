@@ -2,13 +2,21 @@ use crate::bindings::BLS;
 use crate::bindings::PrivateKey;
 use crate::bindings::G1Element;
 use crate::bindings::Util;
-use crate::bindings::Bytes;
+// use crate::bindings::Bytes;
 
 use autocxx::prelude::*;
 
-// pub struct G1Element {
-//     internal: CG1Element
-// }
+pub struct G1Element2 {
+    // internal: CG1Element
+
+}
+
+impl G1Element2 {
+    pub fn do_something() {
+        BLS::CheckRelicErrors();
+    }
+}
+
 //
 // impl From<Vec<u8>> for G1Element {
 //     fn from(bytes: Vec<u8>) -> Self {

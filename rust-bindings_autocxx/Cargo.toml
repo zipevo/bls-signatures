@@ -4,6 +4,9 @@ version = "1.2.4"
 build = "build.rs"
 edition = "2018"
 
+[lib]
+crate-type = ["cdylib"]
+
 [dependencies]
 autocxx = "0.22"
 cxx = "1.0"

@@ -1,8 +1,12 @@
-#![allow(non_upper_case_globals)]
-#![allow(non_camel_case_types)]
-#![allow(non_snake_case)]
+mod bindings;
 
-include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+pub fn allocate(size: usize) -> u8 {
+    unsafe {
+        bindings::AllocPtrArray(size);
+    }
+
+    1
+}
 
 #[cfg(test)]
 mod tests {
@@ -10,8 +14,6 @@ mod tests {
 
     #[test]
     fn test() {
-        unsafe {
-            AllocPtrArray(32);
-        }
+        assert_eq!(allocate(32), 1);
     }
 }
