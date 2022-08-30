@@ -16,8 +16,8 @@ impl<Storage> __BindgenBitfieldUnit<Storage> {
     }
 }
 impl<Storage> __BindgenBitfieldUnit<Storage>
-    where
-        Storage: AsRef<[u8]> + AsMut<[u8]>,
+where
+    Storage: AsRef<[u8]> + AsMut<[u8]>,
 {
     #[inline]
     pub fn get_bit(&self, index: usize) -> bool {
@@ -633,10 +633,10 @@ fn bindgen_test_layout___mbstate_t() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__mbstate_t),
-            "::",
-            stringify!(__mbstate8)
+                "Offset of field: ",
+                stringify!(__mbstate_t),
+                "::",
+                stringify!(__mbstate8)
             )
         );
     }
@@ -650,10 +650,10 @@ fn bindgen_test_layout___mbstate_t() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__mbstate_t),
-            "::",
-            stringify!(_mbstateL)
+                "Offset of field: ",
+                stringify!(__mbstate_t),
+                "::",
+                stringify!(_mbstateL)
             )
         );
     }
@@ -718,10 +718,10 @@ fn bindgen_test_layout___darwin_pthread_handler_rec() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_pthread_handler_rec),
-            "::",
-            stringify!(__routine)
+                "Offset of field: ",
+                stringify!(__darwin_pthread_handler_rec),
+                "::",
+                stringify!(__routine)
             )
         );
     }
@@ -735,10 +735,10 @@ fn bindgen_test_layout___darwin_pthread_handler_rec() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_pthread_handler_rec),
-            "::",
-            stringify!(__arg)
+                "Offset of field: ",
+                stringify!(__darwin_pthread_handler_rec),
+                "::",
+                stringify!(__arg)
             )
         );
     }
@@ -752,10 +752,10 @@ fn bindgen_test_layout___darwin_pthread_handler_rec() {
             },
             16usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_pthread_handler_rec),
-            "::",
-            stringify!(__next)
+                "Offset of field: ",
+                stringify!(__darwin_pthread_handler_rec),
+                "::",
+                stringify!(__next)
             )
         );
     }
@@ -788,10 +788,10 @@ fn bindgen_test_layout__opaque_pthread_attr_t() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_attr_t),
-            "::",
-            stringify!(__sig)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_attr_t),
+                "::",
+                stringify!(__sig)
             )
         );
     }
@@ -805,10 +805,10 @@ fn bindgen_test_layout__opaque_pthread_attr_t() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_attr_t),
-            "::",
-            stringify!(__opaque)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_attr_t),
+                "::",
+                stringify!(__opaque)
             )
         );
     }
@@ -841,10 +841,10 @@ fn bindgen_test_layout__opaque_pthread_cond_t() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_cond_t),
-            "::",
-            stringify!(__sig)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_cond_t),
+                "::",
+                stringify!(__sig)
             )
         );
     }
@@ -858,10 +858,10 @@ fn bindgen_test_layout__opaque_pthread_cond_t() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_cond_t),
-            "::",
-            stringify!(__opaque)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_cond_t),
+                "::",
+                stringify!(__opaque)
             )
         );
     }
@@ -894,10 +894,10 @@ fn bindgen_test_layout__opaque_pthread_condattr_t() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_condattr_t),
-            "::",
-            stringify!(__sig)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_condattr_t),
+                "::",
+                stringify!(__sig)
             )
         );
     }
@@ -911,10 +911,10 @@ fn bindgen_test_layout__opaque_pthread_condattr_t() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_condattr_t),
-            "::",
-            stringify!(__opaque)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_condattr_t),
+                "::",
+                stringify!(__opaque)
             )
         );
     }
@@ -947,10 +947,10 @@ fn bindgen_test_layout__opaque_pthread_mutex_t() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_mutex_t),
-            "::",
-            stringify!(__sig)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_mutex_t),
+                "::",
+                stringify!(__sig)
             )
         );
     }
@@ -964,10 +964,10 @@ fn bindgen_test_layout__opaque_pthread_mutex_t() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_mutex_t),
-            "::",
-            stringify!(__opaque)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_mutex_t),
+                "::",
+                stringify!(__opaque)
             )
         );
     }
@@ -1000,10 +1000,10 @@ fn bindgen_test_layout__opaque_pthread_mutexattr_t() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_mutexattr_t),
-            "::",
-            stringify!(__sig)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_mutexattr_t),
+                "::",
+                stringify!(__sig)
             )
         );
     }
@@ -1017,10 +1017,10 @@ fn bindgen_test_layout__opaque_pthread_mutexattr_t() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_mutexattr_t),
-            "::",
-            stringify!(__opaque)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_mutexattr_t),
+                "::",
+                stringify!(__opaque)
             )
         );
     }
@@ -1053,10 +1053,10 @@ fn bindgen_test_layout__opaque_pthread_once_t() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_once_t),
-            "::",
-            stringify!(__sig)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_once_t),
+                "::",
+                stringify!(__sig)
             )
         );
     }
@@ -1070,10 +1070,10 @@ fn bindgen_test_layout__opaque_pthread_once_t() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_once_t),
-            "::",
-            stringify!(__opaque)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_once_t),
+                "::",
+                stringify!(__opaque)
             )
         );
     }
@@ -1106,10 +1106,10 @@ fn bindgen_test_layout__opaque_pthread_rwlock_t() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_rwlock_t),
-            "::",
-            stringify!(__sig)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_rwlock_t),
+                "::",
+                stringify!(__sig)
             )
         );
     }
@@ -1123,10 +1123,10 @@ fn bindgen_test_layout__opaque_pthread_rwlock_t() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_rwlock_t),
-            "::",
-            stringify!(__opaque)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_rwlock_t),
+                "::",
+                stringify!(__opaque)
             )
         );
     }
@@ -1159,10 +1159,10 @@ fn bindgen_test_layout__opaque_pthread_rwlockattr_t() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_rwlockattr_t),
-            "::",
-            stringify!(__sig)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_rwlockattr_t),
+                "::",
+                stringify!(__sig)
             )
         );
     }
@@ -1176,10 +1176,10 @@ fn bindgen_test_layout__opaque_pthread_rwlockattr_t() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_rwlockattr_t),
-            "::",
-            stringify!(__opaque)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_rwlockattr_t),
+                "::",
+                stringify!(__opaque)
             )
         );
     }
@@ -1213,10 +1213,10 @@ fn bindgen_test_layout__opaque_pthread_t() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_t),
-            "::",
-            stringify!(__sig)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_t),
+                "::",
+                stringify!(__sig)
             )
         );
     }
@@ -1230,10 +1230,10 @@ fn bindgen_test_layout__opaque_pthread_t() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_t),
-            "::",
-            stringify!(__cleanup_stack)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_t),
+                "::",
+                stringify!(__cleanup_stack)
             )
         );
     }
@@ -1247,10 +1247,10 @@ fn bindgen_test_layout__opaque_pthread_t() {
             },
             16usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_opaque_pthread_t),
-            "::",
-            stringify!(__opaque)
+                "Offset of field: ",
+                stringify!(_opaque_pthread_t),
+                "::",
+                stringify!(__opaque)
             )
         );
     }
@@ -1319,10 +1319,10 @@ fn bindgen_test_layout___darwin_arm_exception_state() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_exception_state),
-            "::",
-            stringify!(__exception)
+                "Offset of field: ",
+                stringify!(__darwin_arm_exception_state),
+                "::",
+                stringify!(__exception)
             )
         );
     }
@@ -1336,10 +1336,10 @@ fn bindgen_test_layout___darwin_arm_exception_state() {
             },
             4usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_exception_state),
-            "::",
-            stringify!(__fsr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_exception_state),
+                "::",
+                stringify!(__fsr)
             )
         );
     }
@@ -1353,10 +1353,10 @@ fn bindgen_test_layout___darwin_arm_exception_state() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_exception_state),
-            "::",
-            stringify!(__far)
+                "Offset of field: ",
+                stringify!(__darwin_arm_exception_state),
+                "::",
+                stringify!(__far)
             )
         );
     }
@@ -1390,10 +1390,10 @@ fn bindgen_test_layout___darwin_arm_exception_state64() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_exception_state64),
-            "::",
-            stringify!(__far)
+                "Offset of field: ",
+                stringify!(__darwin_arm_exception_state64),
+                "::",
+                stringify!(__far)
             )
         );
     }
@@ -1407,10 +1407,10 @@ fn bindgen_test_layout___darwin_arm_exception_state64() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_exception_state64),
-            "::",
-            stringify!(__esr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_exception_state64),
+                "::",
+                stringify!(__esr)
             )
         );
     }
@@ -1424,10 +1424,10 @@ fn bindgen_test_layout___darwin_arm_exception_state64() {
             },
             12usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_exception_state64),
-            "::",
-            stringify!(__exception)
+                "Offset of field: ",
+                stringify!(__darwin_arm_exception_state64),
+                "::",
+                stringify!(__exception)
             )
         );
     }
@@ -1463,10 +1463,10 @@ fn bindgen_test_layout___darwin_arm_thread_state() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_thread_state),
-            "::",
-            stringify!(__r)
+                "Offset of field: ",
+                stringify!(__darwin_arm_thread_state),
+                "::",
+                stringify!(__r)
             )
         );
     }
@@ -1480,10 +1480,10 @@ fn bindgen_test_layout___darwin_arm_thread_state() {
             },
             52usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_thread_state),
-            "::",
-            stringify!(__sp)
+                "Offset of field: ",
+                stringify!(__darwin_arm_thread_state),
+                "::",
+                stringify!(__sp)
             )
         );
     }
@@ -1497,10 +1497,10 @@ fn bindgen_test_layout___darwin_arm_thread_state() {
             },
             56usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_thread_state),
-            "::",
-            stringify!(__lr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_thread_state),
+                "::",
+                stringify!(__lr)
             )
         );
     }
@@ -1514,10 +1514,10 @@ fn bindgen_test_layout___darwin_arm_thread_state() {
             },
             60usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_thread_state),
-            "::",
-            stringify!(__pc)
+                "Offset of field: ",
+                stringify!(__darwin_arm_thread_state),
+                "::",
+                stringify!(__pc)
             )
         );
     }
@@ -1531,10 +1531,10 @@ fn bindgen_test_layout___darwin_arm_thread_state() {
             },
             64usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_thread_state),
-            "::",
-            stringify!(__cpsr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_thread_state),
+                "::",
+                stringify!(__cpsr)
             )
         );
     }
@@ -1572,10 +1572,10 @@ fn bindgen_test_layout___darwin_arm_thread_state64() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_thread_state64),
-            "::",
-            stringify!(__x)
+                "Offset of field: ",
+                stringify!(__darwin_arm_thread_state64),
+                "::",
+                stringify!(__x)
             )
         );
     }
@@ -1589,10 +1589,10 @@ fn bindgen_test_layout___darwin_arm_thread_state64() {
             },
             232usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_thread_state64),
-            "::",
-            stringify!(__fp)
+                "Offset of field: ",
+                stringify!(__darwin_arm_thread_state64),
+                "::",
+                stringify!(__fp)
             )
         );
     }
@@ -1606,10 +1606,10 @@ fn bindgen_test_layout___darwin_arm_thread_state64() {
             },
             240usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_thread_state64),
-            "::",
-            stringify!(__lr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_thread_state64),
+                "::",
+                stringify!(__lr)
             )
         );
     }
@@ -1623,10 +1623,10 @@ fn bindgen_test_layout___darwin_arm_thread_state64() {
             },
             248usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_thread_state64),
-            "::",
-            stringify!(__sp)
+                "Offset of field: ",
+                stringify!(__darwin_arm_thread_state64),
+                "::",
+                stringify!(__sp)
             )
         );
     }
@@ -1640,10 +1640,10 @@ fn bindgen_test_layout___darwin_arm_thread_state64() {
             },
             256usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_thread_state64),
-            "::",
-            stringify!(__pc)
+                "Offset of field: ",
+                stringify!(__darwin_arm_thread_state64),
+                "::",
+                stringify!(__pc)
             )
         );
     }
@@ -1657,10 +1657,10 @@ fn bindgen_test_layout___darwin_arm_thread_state64() {
             },
             264usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_thread_state64),
-            "::",
-            stringify!(__cpsr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_thread_state64),
+                "::",
+                stringify!(__cpsr)
             )
         );
     }
@@ -1674,10 +1674,10 @@ fn bindgen_test_layout___darwin_arm_thread_state64() {
             },
             268usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_thread_state64),
-            "::",
-            stringify!(__pad)
+                "Offset of field: ",
+                stringify!(__darwin_arm_thread_state64),
+                "::",
+                stringify!(__pad)
             )
         );
     }
@@ -1710,10 +1710,10 @@ fn bindgen_test_layout___darwin_arm_vfp_state() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_vfp_state),
-            "::",
-            stringify!(__r)
+                "Offset of field: ",
+                stringify!(__darwin_arm_vfp_state),
+                "::",
+                stringify!(__r)
             )
         );
     }
@@ -1727,10 +1727,10 @@ fn bindgen_test_layout___darwin_arm_vfp_state() {
             },
             256usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_vfp_state),
-            "::",
-            stringify!(__fpscr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_vfp_state),
+                "::",
+                stringify!(__fpscr)
             )
         );
     }
@@ -1765,10 +1765,10 @@ fn bindgen_test_layout___darwin_arm_neon_state64() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_neon_state64),
-            "::",
-            stringify!(__v)
+                "Offset of field: ",
+                stringify!(__darwin_arm_neon_state64),
+                "::",
+                stringify!(__v)
             )
         );
     }
@@ -1782,10 +1782,10 @@ fn bindgen_test_layout___darwin_arm_neon_state64() {
             },
             512usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_neon_state64),
-            "::",
-            stringify!(__fpsr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_neon_state64),
+                "::",
+                stringify!(__fpsr)
             )
         );
     }
@@ -1799,10 +1799,10 @@ fn bindgen_test_layout___darwin_arm_neon_state64() {
             },
             516usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_neon_state64),
-            "::",
-            stringify!(__fpcr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_neon_state64),
+                "::",
+                stringify!(__fpcr)
             )
         );
     }
@@ -1837,10 +1837,10 @@ fn bindgen_test_layout___darwin_arm_neon_state() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_neon_state),
-            "::",
-            stringify!(__v)
+                "Offset of field: ",
+                stringify!(__darwin_arm_neon_state),
+                "::",
+                stringify!(__v)
             )
         );
     }
@@ -1854,10 +1854,10 @@ fn bindgen_test_layout___darwin_arm_neon_state() {
             },
             256usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_neon_state),
-            "::",
-            stringify!(__fpsr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_neon_state),
+                "::",
+                stringify!(__fpsr)
             )
         );
     }
@@ -1871,10 +1871,10 @@ fn bindgen_test_layout___darwin_arm_neon_state() {
             },
             260usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_neon_state),
-            "::",
-            stringify!(__fpcr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_neon_state),
+                "::",
+                stringify!(__fpcr)
             )
         );
     }
@@ -1906,10 +1906,10 @@ fn bindgen_test_layout___arm_pagein_state() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__arm_pagein_state),
-            "::",
-            stringify!(__pagein_error)
+                "Offset of field: ",
+                stringify!(__arm_pagein_state),
+                "::",
+                stringify!(__pagein_error)
             )
         );
     }
@@ -1944,10 +1944,10 @@ fn bindgen_test_layout___arm_legacy_debug_state() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__arm_legacy_debug_state),
-            "::",
-            stringify!(__bvr)
+                "Offset of field: ",
+                stringify!(__arm_legacy_debug_state),
+                "::",
+                stringify!(__bvr)
             )
         );
     }
@@ -1961,10 +1961,10 @@ fn bindgen_test_layout___arm_legacy_debug_state() {
             },
             64usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__arm_legacy_debug_state),
-            "::",
-            stringify!(__bcr)
+                "Offset of field: ",
+                stringify!(__arm_legacy_debug_state),
+                "::",
+                stringify!(__bcr)
             )
         );
     }
@@ -1978,10 +1978,10 @@ fn bindgen_test_layout___arm_legacy_debug_state() {
             },
             128usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__arm_legacy_debug_state),
-            "::",
-            stringify!(__wvr)
+                "Offset of field: ",
+                stringify!(__arm_legacy_debug_state),
+                "::",
+                stringify!(__wvr)
             )
         );
     }
@@ -1995,10 +1995,10 @@ fn bindgen_test_layout___arm_legacy_debug_state() {
             },
             192usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__arm_legacy_debug_state),
-            "::",
-            stringify!(__wcr)
+                "Offset of field: ",
+                stringify!(__arm_legacy_debug_state),
+                "::",
+                stringify!(__wcr)
             )
         );
     }
@@ -2034,10 +2034,10 @@ fn bindgen_test_layout___darwin_arm_debug_state32() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_debug_state32),
-            "::",
-            stringify!(__bvr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_debug_state32),
+                "::",
+                stringify!(__bvr)
             )
         );
     }
@@ -2051,10 +2051,10 @@ fn bindgen_test_layout___darwin_arm_debug_state32() {
             },
             64usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_debug_state32),
-            "::",
-            stringify!(__bcr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_debug_state32),
+                "::",
+                stringify!(__bcr)
             )
         );
     }
@@ -2068,10 +2068,10 @@ fn bindgen_test_layout___darwin_arm_debug_state32() {
             },
             128usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_debug_state32),
-            "::",
-            stringify!(__wvr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_debug_state32),
+                "::",
+                stringify!(__wvr)
             )
         );
     }
@@ -2085,10 +2085,10 @@ fn bindgen_test_layout___darwin_arm_debug_state32() {
             },
             192usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_debug_state32),
-            "::",
-            stringify!(__wcr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_debug_state32),
+                "::",
+                stringify!(__wcr)
             )
         );
     }
@@ -2102,10 +2102,10 @@ fn bindgen_test_layout___darwin_arm_debug_state32() {
             },
             256usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_debug_state32),
-            "::",
-            stringify!(__mdscr_el1)
+                "Offset of field: ",
+                stringify!(__darwin_arm_debug_state32),
+                "::",
+                stringify!(__mdscr_el1)
             )
         );
     }
@@ -2141,10 +2141,10 @@ fn bindgen_test_layout___darwin_arm_debug_state64() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_debug_state64),
-            "::",
-            stringify!(__bvr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_debug_state64),
+                "::",
+                stringify!(__bvr)
             )
         );
     }
@@ -2158,10 +2158,10 @@ fn bindgen_test_layout___darwin_arm_debug_state64() {
             },
             128usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_debug_state64),
-            "::",
-            stringify!(__bcr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_debug_state64),
+                "::",
+                stringify!(__bcr)
             )
         );
     }
@@ -2175,10 +2175,10 @@ fn bindgen_test_layout___darwin_arm_debug_state64() {
             },
             256usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_debug_state64),
-            "::",
-            stringify!(__wvr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_debug_state64),
+                "::",
+                stringify!(__wvr)
             )
         );
     }
@@ -2192,10 +2192,10 @@ fn bindgen_test_layout___darwin_arm_debug_state64() {
             },
             384usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_debug_state64),
-            "::",
-            stringify!(__wcr)
+                "Offset of field: ",
+                stringify!(__darwin_arm_debug_state64),
+                "::",
+                stringify!(__wcr)
             )
         );
     }
@@ -2209,10 +2209,10 @@ fn bindgen_test_layout___darwin_arm_debug_state64() {
             },
             512usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_debug_state64),
-            "::",
-            stringify!(__mdscr_el1)
+                "Offset of field: ",
+                stringify!(__darwin_arm_debug_state64),
+                "::",
+                stringify!(__mdscr_el1)
             )
         );
     }
@@ -2244,10 +2244,10 @@ fn bindgen_test_layout___darwin_arm_cpmu_state64() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_arm_cpmu_state64),
-            "::",
-            stringify!(__ctrs)
+                "Offset of field: ",
+                stringify!(__darwin_arm_cpmu_state64),
+                "::",
+                stringify!(__ctrs)
             )
         );
     }
@@ -2281,10 +2281,10 @@ fn bindgen_test_layout___darwin_mcontext32() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_mcontext32),
-            "::",
-            stringify!(__es)
+                "Offset of field: ",
+                stringify!(__darwin_mcontext32),
+                "::",
+                stringify!(__es)
             )
         );
     }
@@ -2298,10 +2298,10 @@ fn bindgen_test_layout___darwin_mcontext32() {
             },
             12usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_mcontext32),
-            "::",
-            stringify!(__ss)
+                "Offset of field: ",
+                stringify!(__darwin_mcontext32),
+                "::",
+                stringify!(__ss)
             )
         );
     }
@@ -2315,10 +2315,10 @@ fn bindgen_test_layout___darwin_mcontext32() {
             },
             80usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_mcontext32),
-            "::",
-            stringify!(__fs)
+                "Offset of field: ",
+                stringify!(__darwin_mcontext32),
+                "::",
+                stringify!(__fs)
             )
         );
     }
@@ -2353,10 +2353,10 @@ fn bindgen_test_layout___darwin_mcontext64() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_mcontext64),
-            "::",
-            stringify!(__es)
+                "Offset of field: ",
+                stringify!(__darwin_mcontext64),
+                "::",
+                stringify!(__es)
             )
         );
     }
@@ -2370,10 +2370,10 @@ fn bindgen_test_layout___darwin_mcontext64() {
             },
             16usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_mcontext64),
-            "::",
-            stringify!(__ss)
+                "Offset of field: ",
+                stringify!(__darwin_mcontext64),
+                "::",
+                stringify!(__ss)
             )
         );
     }
@@ -2387,10 +2387,10 @@ fn bindgen_test_layout___darwin_mcontext64() {
             },
             288usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_mcontext64),
-            "::",
-            stringify!(__ns)
+                "Offset of field: ",
+                stringify!(__darwin_mcontext64),
+                "::",
+                stringify!(__ns)
             )
         );
     }
@@ -2426,10 +2426,10 @@ fn bindgen_test_layout___darwin_sigaltstack() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_sigaltstack),
-            "::",
-            stringify!(ss_sp)
+                "Offset of field: ",
+                stringify!(__darwin_sigaltstack),
+                "::",
+                stringify!(ss_sp)
             )
         );
     }
@@ -2443,10 +2443,10 @@ fn bindgen_test_layout___darwin_sigaltstack() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_sigaltstack),
-            "::",
-            stringify!(ss_size)
+                "Offset of field: ",
+                stringify!(__darwin_sigaltstack),
+                "::",
+                stringify!(ss_size)
             )
         );
     }
@@ -2460,10 +2460,10 @@ fn bindgen_test_layout___darwin_sigaltstack() {
             },
             16usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_sigaltstack),
-            "::",
-            stringify!(ss_flags)
+                "Offset of field: ",
+                stringify!(__darwin_sigaltstack),
+                "::",
+                stringify!(ss_flags)
             )
         );
     }
@@ -2501,10 +2501,10 @@ fn bindgen_test_layout___darwin_ucontext() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_ucontext),
-            "::",
-            stringify!(uc_onstack)
+                "Offset of field: ",
+                stringify!(__darwin_ucontext),
+                "::",
+                stringify!(uc_onstack)
             )
         );
     }
@@ -2518,10 +2518,10 @@ fn bindgen_test_layout___darwin_ucontext() {
             },
             4usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_ucontext),
-            "::",
-            stringify!(uc_sigmask)
+                "Offset of field: ",
+                stringify!(__darwin_ucontext),
+                "::",
+                stringify!(uc_sigmask)
             )
         );
     }
@@ -2535,10 +2535,10 @@ fn bindgen_test_layout___darwin_ucontext() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_ucontext),
-            "::",
-            stringify!(uc_stack)
+                "Offset of field: ",
+                stringify!(__darwin_ucontext),
+                "::",
+                stringify!(uc_stack)
             )
         );
     }
@@ -2552,10 +2552,10 @@ fn bindgen_test_layout___darwin_ucontext() {
             },
             32usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_ucontext),
-            "::",
-            stringify!(uc_link)
+                "Offset of field: ",
+                stringify!(__darwin_ucontext),
+                "::",
+                stringify!(uc_link)
             )
         );
     }
@@ -2569,10 +2569,10 @@ fn bindgen_test_layout___darwin_ucontext() {
             },
             40usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_ucontext),
-            "::",
-            stringify!(uc_mcsize)
+                "Offset of field: ",
+                stringify!(__darwin_ucontext),
+                "::",
+                stringify!(uc_mcsize)
             )
         );
     }
@@ -2586,10 +2586,10 @@ fn bindgen_test_layout___darwin_ucontext() {
             },
             48usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__darwin_ucontext),
-            "::",
-            stringify!(uc_mcontext)
+                "Offset of field: ",
+                stringify!(__darwin_ucontext),
+                "::",
+                stringify!(uc_mcontext)
             )
         );
     }
@@ -2625,10 +2625,10 @@ fn bindgen_test_layout_sigval() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigval),
-            "::",
-            stringify!(sival_int)
+                "Offset of field: ",
+                stringify!(sigval),
+                "::",
+                stringify!(sival_int)
             )
         );
     }
@@ -2642,10 +2642,10 @@ fn bindgen_test_layout_sigval() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigval),
-            "::",
-            stringify!(sival_ptr)
+                "Offset of field: ",
+                stringify!(sigval),
+                "::",
+                stringify!(sival_ptr)
             )
         );
     }
@@ -2681,10 +2681,10 @@ fn bindgen_test_layout_sigevent() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigevent),
-            "::",
-            stringify!(sigev_notify)
+                "Offset of field: ",
+                stringify!(sigevent),
+                "::",
+                stringify!(sigev_notify)
             )
         );
     }
@@ -2698,10 +2698,10 @@ fn bindgen_test_layout_sigevent() {
             },
             4usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigevent),
-            "::",
-            stringify!(sigev_signo)
+                "Offset of field: ",
+                stringify!(sigevent),
+                "::",
+                stringify!(sigev_signo)
             )
         );
     }
@@ -2715,10 +2715,10 @@ fn bindgen_test_layout_sigevent() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigevent),
-            "::",
-            stringify!(sigev_value)
+                "Offset of field: ",
+                stringify!(sigevent),
+                "::",
+                stringify!(sigev_value)
             )
         );
     }
@@ -2732,10 +2732,10 @@ fn bindgen_test_layout_sigevent() {
             },
             16usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigevent),
-            "::",
-            stringify!(sigev_notify_function)
+                "Offset of field: ",
+                stringify!(sigevent),
+                "::",
+                stringify!(sigev_notify_function)
             )
         );
     }
@@ -2749,10 +2749,10 @@ fn bindgen_test_layout_sigevent() {
             },
             24usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigevent),
-            "::",
-            stringify!(sigev_notify_attributes)
+                "Offset of field: ",
+                stringify!(sigevent),
+                "::",
+                stringify!(sigev_notify_attributes)
             )
         );
     }
@@ -2793,10 +2793,10 @@ fn bindgen_test_layout___siginfo() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__siginfo),
-            "::",
-            stringify!(si_signo)
+                "Offset of field: ",
+                stringify!(__siginfo),
+                "::",
+                stringify!(si_signo)
             )
         );
     }
@@ -2810,10 +2810,10 @@ fn bindgen_test_layout___siginfo() {
             },
             4usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__siginfo),
-            "::",
-            stringify!(si_errno)
+                "Offset of field: ",
+                stringify!(__siginfo),
+                "::",
+                stringify!(si_errno)
             )
         );
     }
@@ -2827,10 +2827,10 @@ fn bindgen_test_layout___siginfo() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__siginfo),
-            "::",
-            stringify!(si_code)
+                "Offset of field: ",
+                stringify!(__siginfo),
+                "::",
+                stringify!(si_code)
             )
         );
     }
@@ -2844,10 +2844,10 @@ fn bindgen_test_layout___siginfo() {
             },
             12usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__siginfo),
-            "::",
-            stringify!(si_pid)
+                "Offset of field: ",
+                stringify!(__siginfo),
+                "::",
+                stringify!(si_pid)
             )
         );
     }
@@ -2861,10 +2861,10 @@ fn bindgen_test_layout___siginfo() {
             },
             16usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__siginfo),
-            "::",
-            stringify!(si_uid)
+                "Offset of field: ",
+                stringify!(__siginfo),
+                "::",
+                stringify!(si_uid)
             )
         );
     }
@@ -2878,10 +2878,10 @@ fn bindgen_test_layout___siginfo() {
             },
             20usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__siginfo),
-            "::",
-            stringify!(si_status)
+                "Offset of field: ",
+                stringify!(__siginfo),
+                "::",
+                stringify!(si_status)
             )
         );
     }
@@ -2895,10 +2895,10 @@ fn bindgen_test_layout___siginfo() {
             },
             24usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__siginfo),
-            "::",
-            stringify!(si_addr)
+                "Offset of field: ",
+                stringify!(__siginfo),
+                "::",
+                stringify!(si_addr)
             )
         );
     }
@@ -2912,10 +2912,10 @@ fn bindgen_test_layout___siginfo() {
             },
             32usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__siginfo),
-            "::",
-            stringify!(si_value)
+                "Offset of field: ",
+                stringify!(__siginfo),
+                "::",
+                stringify!(si_value)
             )
         );
     }
@@ -2929,10 +2929,10 @@ fn bindgen_test_layout___siginfo() {
             },
             40usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__siginfo),
-            "::",
-            stringify!(si_band)
+                "Offset of field: ",
+                stringify!(__siginfo),
+                "::",
+                stringify!(si_band)
             )
         );
     }
@@ -2946,10 +2946,10 @@ fn bindgen_test_layout___siginfo() {
             },
             48usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__siginfo),
-            "::",
-            stringify!(__pad)
+                "Offset of field: ",
+                stringify!(__siginfo),
+                "::",
+                stringify!(__pad)
             )
         );
     }
@@ -2989,10 +2989,10 @@ fn bindgen_test_layout___sigaction_u() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__sigaction_u),
-            "::",
-            stringify!(__sa_handler)
+                "Offset of field: ",
+                stringify!(__sigaction_u),
+                "::",
+                stringify!(__sa_handler)
             )
         );
     }
@@ -3006,10 +3006,10 @@ fn bindgen_test_layout___sigaction_u() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__sigaction_u),
-            "::",
-            stringify!(__sa_sigaction)
+                "Offset of field: ",
+                stringify!(__sigaction_u),
+                "::",
+                stringify!(__sa_sigaction)
             )
         );
     }
@@ -3052,10 +3052,10 @@ fn bindgen_test_layout___sigaction() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__sigaction),
-            "::",
-            stringify!(__sigaction_u)
+                "Offset of field: ",
+                stringify!(__sigaction),
+                "::",
+                stringify!(__sigaction_u)
             )
         );
     }
@@ -3069,10 +3069,10 @@ fn bindgen_test_layout___sigaction() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__sigaction),
-            "::",
-            stringify!(sa_tramp)
+                "Offset of field: ",
+                stringify!(__sigaction),
+                "::",
+                stringify!(sa_tramp)
             )
         );
     }
@@ -3086,10 +3086,10 @@ fn bindgen_test_layout___sigaction() {
             },
             16usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__sigaction),
-            "::",
-            stringify!(sa_mask)
+                "Offset of field: ",
+                stringify!(__sigaction),
+                "::",
+                stringify!(sa_mask)
             )
         );
     }
@@ -3103,10 +3103,10 @@ fn bindgen_test_layout___sigaction() {
             },
             20usize,
             concat!(
-            "Offset of field: ",
-            stringify!(__sigaction),
-            "::",
-            stringify!(sa_flags)
+                "Offset of field: ",
+                stringify!(__sigaction),
+                "::",
+                stringify!(sa_flags)
             )
         );
     }
@@ -3140,10 +3140,10 @@ fn bindgen_test_layout_sigaction() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigaction),
-            "::",
-            stringify!(__sigaction_u)
+                "Offset of field: ",
+                stringify!(sigaction),
+                "::",
+                stringify!(__sigaction_u)
             )
         );
     }
@@ -3157,10 +3157,10 @@ fn bindgen_test_layout_sigaction() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigaction),
-            "::",
-            stringify!(sa_mask)
+                "Offset of field: ",
+                stringify!(sigaction),
+                "::",
+                stringify!(sa_mask)
             )
         );
     }
@@ -3174,10 +3174,10 @@ fn bindgen_test_layout_sigaction() {
             },
             12usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigaction),
-            "::",
-            stringify!(sa_flags)
+                "Offset of field: ",
+                stringify!(sigaction),
+                "::",
+                stringify!(sa_flags)
             )
         );
     }
@@ -3212,10 +3212,10 @@ fn bindgen_test_layout_sigvec() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigvec),
-            "::",
-            stringify!(sv_handler)
+                "Offset of field: ",
+                stringify!(sigvec),
+                "::",
+                stringify!(sv_handler)
             )
         );
     }
@@ -3229,10 +3229,10 @@ fn bindgen_test_layout_sigvec() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigvec),
-            "::",
-            stringify!(sv_mask)
+                "Offset of field: ",
+                stringify!(sigvec),
+                "::",
+                stringify!(sv_mask)
             )
         );
     }
@@ -3246,10 +3246,10 @@ fn bindgen_test_layout_sigvec() {
             },
             12usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigvec),
-            "::",
-            stringify!(sv_flags)
+                "Offset of field: ",
+                stringify!(sigvec),
+                "::",
+                stringify!(sv_flags)
             )
         );
     }
@@ -3282,10 +3282,10 @@ fn bindgen_test_layout_sigstack() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigstack),
-            "::",
-            stringify!(ss_sp)
+                "Offset of field: ",
+                stringify!(sigstack),
+                "::",
+                stringify!(ss_sp)
             )
         );
     }
@@ -3299,10 +3299,10 @@ fn bindgen_test_layout_sigstack() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(sigstack),
-            "::",
-            stringify!(ss_onstack)
+                "Offset of field: ",
+                stringify!(sigstack),
+                "::",
+                stringify!(ss_onstack)
             )
         );
     }
@@ -3346,10 +3346,10 @@ fn bindgen_test_layout_timeval() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(timeval),
-            "::",
-            stringify!(tv_sec)
+                "Offset of field: ",
+                stringify!(timeval),
+                "::",
+                stringify!(tv_sec)
             )
         );
     }
@@ -3363,10 +3363,10 @@ fn bindgen_test_layout_timeval() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(timeval),
-            "::",
-            stringify!(tv_usec)
+                "Offset of field: ",
+                stringify!(timeval),
+                "::",
+                stringify!(tv_usec)
             )
         );
     }
@@ -3414,10 +3414,10 @@ fn bindgen_test_layout_rusage() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_utime)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_utime)
             )
         );
     }
@@ -3431,10 +3431,10 @@ fn bindgen_test_layout_rusage() {
             },
             16usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_stime)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_stime)
             )
         );
     }
@@ -3448,10 +3448,10 @@ fn bindgen_test_layout_rusage() {
             },
             32usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_maxrss)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_maxrss)
             )
         );
     }
@@ -3465,10 +3465,10 @@ fn bindgen_test_layout_rusage() {
             },
             40usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_ixrss)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_ixrss)
             )
         );
     }
@@ -3482,10 +3482,10 @@ fn bindgen_test_layout_rusage() {
             },
             48usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_idrss)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_idrss)
             )
         );
     }
@@ -3499,10 +3499,10 @@ fn bindgen_test_layout_rusage() {
             },
             56usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_isrss)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_isrss)
             )
         );
     }
@@ -3516,10 +3516,10 @@ fn bindgen_test_layout_rusage() {
             },
             64usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_minflt)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_minflt)
             )
         );
     }
@@ -3533,10 +3533,10 @@ fn bindgen_test_layout_rusage() {
             },
             72usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_majflt)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_majflt)
             )
         );
     }
@@ -3550,10 +3550,10 @@ fn bindgen_test_layout_rusage() {
             },
             80usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_nswap)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_nswap)
             )
         );
     }
@@ -3567,10 +3567,10 @@ fn bindgen_test_layout_rusage() {
             },
             88usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_inblock)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_inblock)
             )
         );
     }
@@ -3584,10 +3584,10 @@ fn bindgen_test_layout_rusage() {
             },
             96usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_oublock)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_oublock)
             )
         );
     }
@@ -3601,10 +3601,10 @@ fn bindgen_test_layout_rusage() {
             },
             104usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_msgsnd)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_msgsnd)
             )
         );
     }
@@ -3618,10 +3618,10 @@ fn bindgen_test_layout_rusage() {
             },
             112usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_msgrcv)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_msgrcv)
             )
         );
     }
@@ -3635,10 +3635,10 @@ fn bindgen_test_layout_rusage() {
             },
             120usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_nsignals)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_nsignals)
             )
         );
     }
@@ -3652,10 +3652,10 @@ fn bindgen_test_layout_rusage() {
             },
             128usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_nvcsw)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_nvcsw)
             )
         );
     }
@@ -3669,10 +3669,10 @@ fn bindgen_test_layout_rusage() {
             },
             136usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage),
-            "::",
-            stringify!(ru_nivcsw)
+                "Offset of field: ",
+                stringify!(rusage),
+                "::",
+                stringify!(ru_nivcsw)
             )
         );
     }
@@ -3715,10 +3715,10 @@ fn bindgen_test_layout_rusage_info_v0() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v0),
-            "::",
-            stringify!(ri_uuid)
+                "Offset of field: ",
+                stringify!(rusage_info_v0),
+                "::",
+                stringify!(ri_uuid)
             )
         );
     }
@@ -3732,10 +3732,10 @@ fn bindgen_test_layout_rusage_info_v0() {
             },
             16usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v0),
-            "::",
-            stringify!(ri_user_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v0),
+                "::",
+                stringify!(ri_user_time)
             )
         );
     }
@@ -3749,10 +3749,10 @@ fn bindgen_test_layout_rusage_info_v0() {
             },
             24usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v0),
-            "::",
-            stringify!(ri_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v0),
+                "::",
+                stringify!(ri_system_time)
             )
         );
     }
@@ -3766,10 +3766,10 @@ fn bindgen_test_layout_rusage_info_v0() {
             },
             32usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v0),
-            "::",
-            stringify!(ri_pkg_idle_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v0),
+                "::",
+                stringify!(ri_pkg_idle_wkups)
             )
         );
     }
@@ -3783,10 +3783,10 @@ fn bindgen_test_layout_rusage_info_v0() {
             },
             40usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v0),
-            "::",
-            stringify!(ri_interrupt_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v0),
+                "::",
+                stringify!(ri_interrupt_wkups)
             )
         );
     }
@@ -3800,10 +3800,10 @@ fn bindgen_test_layout_rusage_info_v0() {
             },
             48usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v0),
-            "::",
-            stringify!(ri_pageins)
+                "Offset of field: ",
+                stringify!(rusage_info_v0),
+                "::",
+                stringify!(ri_pageins)
             )
         );
     }
@@ -3817,10 +3817,10 @@ fn bindgen_test_layout_rusage_info_v0() {
             },
             56usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v0),
-            "::",
-            stringify!(ri_wired_size)
+                "Offset of field: ",
+                stringify!(rusage_info_v0),
+                "::",
+                stringify!(ri_wired_size)
             )
         );
     }
@@ -3834,10 +3834,10 @@ fn bindgen_test_layout_rusage_info_v0() {
             },
             64usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v0),
-            "::",
-            stringify!(ri_resident_size)
+                "Offset of field: ",
+                stringify!(rusage_info_v0),
+                "::",
+                stringify!(ri_resident_size)
             )
         );
     }
@@ -3851,10 +3851,10 @@ fn bindgen_test_layout_rusage_info_v0() {
             },
             72usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v0),
-            "::",
-            stringify!(ri_phys_footprint)
+                "Offset of field: ",
+                stringify!(rusage_info_v0),
+                "::",
+                stringify!(ri_phys_footprint)
             )
         );
     }
@@ -3868,10 +3868,10 @@ fn bindgen_test_layout_rusage_info_v0() {
             },
             80usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v0),
-            "::",
-            stringify!(ri_proc_start_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v0),
+                "::",
+                stringify!(ri_proc_start_abstime)
             )
         );
     }
@@ -3885,10 +3885,10 @@ fn bindgen_test_layout_rusage_info_v0() {
             },
             88usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v0),
-            "::",
-            stringify!(ri_proc_exit_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v0),
+                "::",
+                stringify!(ri_proc_exit_abstime)
             )
         );
     }
@@ -3936,10 +3936,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_uuid)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_uuid)
             )
         );
     }
@@ -3953,10 +3953,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             16usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_user_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_user_time)
             )
         );
     }
@@ -3970,10 +3970,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             24usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_system_time)
             )
         );
     }
@@ -3987,10 +3987,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             32usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_pkg_idle_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_pkg_idle_wkups)
             )
         );
     }
@@ -4004,10 +4004,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             40usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_interrupt_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_interrupt_wkups)
             )
         );
     }
@@ -4021,10 +4021,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             48usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_pageins)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_pageins)
             )
         );
     }
@@ -4038,10 +4038,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             56usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_wired_size)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_wired_size)
             )
         );
     }
@@ -4055,10 +4055,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             64usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_resident_size)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_resident_size)
             )
         );
     }
@@ -4072,10 +4072,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             72usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_phys_footprint)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_phys_footprint)
             )
         );
     }
@@ -4089,10 +4089,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             80usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_proc_start_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_proc_start_abstime)
             )
         );
     }
@@ -4106,10 +4106,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             88usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_proc_exit_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_proc_exit_abstime)
             )
         );
     }
@@ -4123,10 +4123,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             96usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_child_user_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_child_user_time)
             )
         );
     }
@@ -4140,10 +4140,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             104usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_child_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_child_system_time)
             )
         );
     }
@@ -4157,10 +4157,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             112usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_child_pkg_idle_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_child_pkg_idle_wkups)
             )
         );
     }
@@ -4174,10 +4174,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             120usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_child_interrupt_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_child_interrupt_wkups)
             )
         );
     }
@@ -4191,10 +4191,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             128usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_child_pageins)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_child_pageins)
             )
         );
     }
@@ -4208,10 +4208,10 @@ fn bindgen_test_layout_rusage_info_v1() {
             },
             136usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v1),
-            "::",
-            stringify!(ri_child_elapsed_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v1),
+                "::",
+                stringify!(ri_child_elapsed_abstime)
             )
         );
     }
@@ -4261,10 +4261,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_uuid)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_uuid)
             )
         );
     }
@@ -4278,10 +4278,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             16usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_user_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_user_time)
             )
         );
     }
@@ -4295,10 +4295,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             24usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_system_time)
             )
         );
     }
@@ -4312,10 +4312,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             32usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_pkg_idle_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_pkg_idle_wkups)
             )
         );
     }
@@ -4329,10 +4329,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             40usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_interrupt_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_interrupt_wkups)
             )
         );
     }
@@ -4346,10 +4346,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             48usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_pageins)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_pageins)
             )
         );
     }
@@ -4363,10 +4363,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             56usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_wired_size)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_wired_size)
             )
         );
     }
@@ -4380,10 +4380,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             64usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_resident_size)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_resident_size)
             )
         );
     }
@@ -4397,10 +4397,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             72usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_phys_footprint)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_phys_footprint)
             )
         );
     }
@@ -4414,10 +4414,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             80usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_proc_start_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_proc_start_abstime)
             )
         );
     }
@@ -4431,10 +4431,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             88usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_proc_exit_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_proc_exit_abstime)
             )
         );
     }
@@ -4448,10 +4448,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             96usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_child_user_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_child_user_time)
             )
         );
     }
@@ -4465,10 +4465,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             104usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_child_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_child_system_time)
             )
         );
     }
@@ -4482,10 +4482,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             112usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_child_pkg_idle_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_child_pkg_idle_wkups)
             )
         );
     }
@@ -4499,10 +4499,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             120usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_child_interrupt_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_child_interrupt_wkups)
             )
         );
     }
@@ -4516,10 +4516,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             128usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_child_pageins)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_child_pageins)
             )
         );
     }
@@ -4533,10 +4533,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             136usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_child_elapsed_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_child_elapsed_abstime)
             )
         );
     }
@@ -4550,10 +4550,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             144usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_diskio_bytesread)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_diskio_bytesread)
             )
         );
     }
@@ -4567,10 +4567,10 @@ fn bindgen_test_layout_rusage_info_v2() {
             },
             152usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v2),
-            "::",
-            stringify!(ri_diskio_byteswritten)
+                "Offset of field: ",
+                stringify!(rusage_info_v2),
+                "::",
+                stringify!(ri_diskio_byteswritten)
             )
         );
     }
@@ -4629,10 +4629,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_uuid)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_uuid)
             )
         );
     }
@@ -4646,10 +4646,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             16usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_user_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_user_time)
             )
         );
     }
@@ -4663,10 +4663,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             24usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_system_time)
             )
         );
     }
@@ -4680,10 +4680,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             32usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_pkg_idle_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_pkg_idle_wkups)
             )
         );
     }
@@ -4697,10 +4697,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             40usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_interrupt_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_interrupt_wkups)
             )
         );
     }
@@ -4714,10 +4714,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             48usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_pageins)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_pageins)
             )
         );
     }
@@ -4731,10 +4731,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             56usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_wired_size)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_wired_size)
             )
         );
     }
@@ -4748,10 +4748,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             64usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_resident_size)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_resident_size)
             )
         );
     }
@@ -4765,10 +4765,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             72usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_phys_footprint)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_phys_footprint)
             )
         );
     }
@@ -4782,10 +4782,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             80usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_proc_start_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_proc_start_abstime)
             )
         );
     }
@@ -4799,10 +4799,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             88usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_proc_exit_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_proc_exit_abstime)
             )
         );
     }
@@ -4816,10 +4816,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             96usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_child_user_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_child_user_time)
             )
         );
     }
@@ -4833,10 +4833,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             104usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_child_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_child_system_time)
             )
         );
     }
@@ -4850,10 +4850,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             112usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_child_pkg_idle_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_child_pkg_idle_wkups)
             )
         );
     }
@@ -4867,10 +4867,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             120usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_child_interrupt_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_child_interrupt_wkups)
             )
         );
     }
@@ -4884,10 +4884,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             128usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_child_pageins)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_child_pageins)
             )
         );
     }
@@ -4901,10 +4901,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             136usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_child_elapsed_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_child_elapsed_abstime)
             )
         );
     }
@@ -4918,10 +4918,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             144usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_diskio_bytesread)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_diskio_bytesread)
             )
         );
     }
@@ -4935,10 +4935,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             152usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_diskio_byteswritten)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_diskio_byteswritten)
             )
         );
     }
@@ -4952,10 +4952,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             160usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_cpu_time_qos_default)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_cpu_time_qos_default)
             )
         );
     }
@@ -4969,10 +4969,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             168usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_cpu_time_qos_maintenance)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_cpu_time_qos_maintenance)
             )
         );
     }
@@ -4986,10 +4986,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             176usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_cpu_time_qos_background)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_cpu_time_qos_background)
             )
         );
     }
@@ -5003,10 +5003,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             184usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_cpu_time_qos_utility)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_cpu_time_qos_utility)
             )
         );
     }
@@ -5020,10 +5020,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             192usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_cpu_time_qos_legacy)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_cpu_time_qos_legacy)
             )
         );
     }
@@ -5037,10 +5037,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             200usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_cpu_time_qos_user_initiated)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_cpu_time_qos_user_initiated)
             )
         );
     }
@@ -5055,10 +5055,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             208usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_cpu_time_qos_user_interactive)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_cpu_time_qos_user_interactive)
             )
         );
     }
@@ -5072,10 +5072,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             216usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_billed_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_billed_system_time)
             )
         );
     }
@@ -5089,10 +5089,10 @@ fn bindgen_test_layout_rusage_info_v3() {
             },
             224usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v3),
-            "::",
-            stringify!(ri_serviced_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v3),
+                "::",
+                stringify!(ri_serviced_system_time)
             )
         );
     }
@@ -5159,10 +5159,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_uuid)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_uuid)
             )
         );
     }
@@ -5176,10 +5176,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             16usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_user_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_user_time)
             )
         );
     }
@@ -5193,10 +5193,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             24usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_system_time)
             )
         );
     }
@@ -5210,10 +5210,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             32usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_pkg_idle_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_pkg_idle_wkups)
             )
         );
     }
@@ -5227,10 +5227,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             40usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_interrupt_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_interrupt_wkups)
             )
         );
     }
@@ -5244,10 +5244,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             48usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_pageins)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_pageins)
             )
         );
     }
@@ -5261,10 +5261,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             56usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_wired_size)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_wired_size)
             )
         );
     }
@@ -5278,10 +5278,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             64usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_resident_size)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_resident_size)
             )
         );
     }
@@ -5295,10 +5295,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             72usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_phys_footprint)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_phys_footprint)
             )
         );
     }
@@ -5312,10 +5312,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             80usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_proc_start_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_proc_start_abstime)
             )
         );
     }
@@ -5329,10 +5329,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             88usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_proc_exit_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_proc_exit_abstime)
             )
         );
     }
@@ -5346,10 +5346,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             96usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_child_user_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_child_user_time)
             )
         );
     }
@@ -5363,10 +5363,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             104usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_child_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_child_system_time)
             )
         );
     }
@@ -5380,10 +5380,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             112usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_child_pkg_idle_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_child_pkg_idle_wkups)
             )
         );
     }
@@ -5397,10 +5397,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             120usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_child_interrupt_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_child_interrupt_wkups)
             )
         );
     }
@@ -5414,10 +5414,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             128usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_child_pageins)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_child_pageins)
             )
         );
     }
@@ -5431,10 +5431,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             136usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_child_elapsed_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_child_elapsed_abstime)
             )
         );
     }
@@ -5448,10 +5448,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             144usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_diskio_bytesread)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_diskio_bytesread)
             )
         );
     }
@@ -5465,10 +5465,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             152usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_diskio_byteswritten)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_diskio_byteswritten)
             )
         );
     }
@@ -5482,10 +5482,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             160usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_cpu_time_qos_default)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_cpu_time_qos_default)
             )
         );
     }
@@ -5499,10 +5499,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             168usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_cpu_time_qos_maintenance)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_cpu_time_qos_maintenance)
             )
         );
     }
@@ -5516,10 +5516,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             176usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_cpu_time_qos_background)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_cpu_time_qos_background)
             )
         );
     }
@@ -5533,10 +5533,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             184usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_cpu_time_qos_utility)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_cpu_time_qos_utility)
             )
         );
     }
@@ -5550,10 +5550,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             192usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_cpu_time_qos_legacy)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_cpu_time_qos_legacy)
             )
         );
     }
@@ -5567,10 +5567,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             200usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_cpu_time_qos_user_initiated)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_cpu_time_qos_user_initiated)
             )
         );
     }
@@ -5585,10 +5585,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             208usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_cpu_time_qos_user_interactive)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_cpu_time_qos_user_interactive)
             )
         );
     }
@@ -5602,10 +5602,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             216usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_billed_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_billed_system_time)
             )
         );
     }
@@ -5619,10 +5619,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             224usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_serviced_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_serviced_system_time)
             )
         );
     }
@@ -5636,10 +5636,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             232usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_logical_writes)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_logical_writes)
             )
         );
     }
@@ -5653,10 +5653,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             240usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_lifetime_max_phys_footprint)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_lifetime_max_phys_footprint)
             )
         );
     }
@@ -5670,10 +5670,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             248usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_instructions)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_instructions)
             )
         );
     }
@@ -5687,10 +5687,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             256usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_cycles)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_cycles)
             )
         );
     }
@@ -5704,10 +5704,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             264usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_billed_energy)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_billed_energy)
             )
         );
     }
@@ -5721,10 +5721,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             272usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_serviced_energy)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_serviced_energy)
             )
         );
     }
@@ -5738,10 +5738,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             280usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_interval_max_phys_footprint)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_interval_max_phys_footprint)
             )
         );
     }
@@ -5755,10 +5755,10 @@ fn bindgen_test_layout_rusage_info_v4() {
             },
             288usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v4),
-            "::",
-            stringify!(ri_runnable_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v4),
+                "::",
+                stringify!(ri_runnable_time)
             )
         );
     }
@@ -5826,10 +5826,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_uuid)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_uuid)
             )
         );
     }
@@ -5843,10 +5843,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             16usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_user_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_user_time)
             )
         );
     }
@@ -5860,10 +5860,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             24usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_system_time)
             )
         );
     }
@@ -5877,10 +5877,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             32usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_pkg_idle_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_pkg_idle_wkups)
             )
         );
     }
@@ -5894,10 +5894,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             40usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_interrupt_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_interrupt_wkups)
             )
         );
     }
@@ -5911,10 +5911,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             48usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_pageins)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_pageins)
             )
         );
     }
@@ -5928,10 +5928,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             56usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_wired_size)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_wired_size)
             )
         );
     }
@@ -5945,10 +5945,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             64usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_resident_size)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_resident_size)
             )
         );
     }
@@ -5962,10 +5962,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             72usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_phys_footprint)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_phys_footprint)
             )
         );
     }
@@ -5979,10 +5979,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             80usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_proc_start_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_proc_start_abstime)
             )
         );
     }
@@ -5996,10 +5996,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             88usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_proc_exit_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_proc_exit_abstime)
             )
         );
     }
@@ -6013,10 +6013,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             96usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_child_user_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_child_user_time)
             )
         );
     }
@@ -6030,10 +6030,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             104usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_child_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_child_system_time)
             )
         );
     }
@@ -6047,10 +6047,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             112usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_child_pkg_idle_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_child_pkg_idle_wkups)
             )
         );
     }
@@ -6064,10 +6064,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             120usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_child_interrupt_wkups)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_child_interrupt_wkups)
             )
         );
     }
@@ -6081,10 +6081,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             128usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_child_pageins)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_child_pageins)
             )
         );
     }
@@ -6098,10 +6098,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             136usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_child_elapsed_abstime)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_child_elapsed_abstime)
             )
         );
     }
@@ -6115,10 +6115,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             144usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_diskio_bytesread)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_diskio_bytesread)
             )
         );
     }
@@ -6132,10 +6132,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             152usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_diskio_byteswritten)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_diskio_byteswritten)
             )
         );
     }
@@ -6149,10 +6149,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             160usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_cpu_time_qos_default)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_cpu_time_qos_default)
             )
         );
     }
@@ -6166,10 +6166,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             168usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_cpu_time_qos_maintenance)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_cpu_time_qos_maintenance)
             )
         );
     }
@@ -6183,10 +6183,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             176usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_cpu_time_qos_background)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_cpu_time_qos_background)
             )
         );
     }
@@ -6200,10 +6200,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             184usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_cpu_time_qos_utility)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_cpu_time_qos_utility)
             )
         );
     }
@@ -6217,10 +6217,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             192usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_cpu_time_qos_legacy)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_cpu_time_qos_legacy)
             )
         );
     }
@@ -6234,10 +6234,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             200usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_cpu_time_qos_user_initiated)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_cpu_time_qos_user_initiated)
             )
         );
     }
@@ -6252,10 +6252,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             208usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_cpu_time_qos_user_interactive)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_cpu_time_qos_user_interactive)
             )
         );
     }
@@ -6269,10 +6269,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             216usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_billed_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_billed_system_time)
             )
         );
     }
@@ -6286,10 +6286,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             224usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_serviced_system_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_serviced_system_time)
             )
         );
     }
@@ -6303,10 +6303,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             232usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_logical_writes)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_logical_writes)
             )
         );
     }
@@ -6320,10 +6320,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             240usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_lifetime_max_phys_footprint)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_lifetime_max_phys_footprint)
             )
         );
     }
@@ -6337,10 +6337,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             248usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_instructions)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_instructions)
             )
         );
     }
@@ -6354,10 +6354,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             256usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_cycles)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_cycles)
             )
         );
     }
@@ -6371,10 +6371,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             264usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_billed_energy)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_billed_energy)
             )
         );
     }
@@ -6388,10 +6388,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             272usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_serviced_energy)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_serviced_energy)
             )
         );
     }
@@ -6405,10 +6405,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             280usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_interval_max_phys_footprint)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_interval_max_phys_footprint)
             )
         );
     }
@@ -6422,10 +6422,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             288usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_runnable_time)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_runnable_time)
             )
         );
     }
@@ -6439,10 +6439,10 @@ fn bindgen_test_layout_rusage_info_v5() {
             },
             296usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rusage_info_v5),
-            "::",
-            stringify!(ri_flags)
+                "Offset of field: ",
+                stringify!(rusage_info_v5),
+                "::",
+                stringify!(ri_flags)
             )
         );
     }
@@ -6476,10 +6476,10 @@ fn bindgen_test_layout_rlimit() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rlimit),
-            "::",
-            stringify!(rlim_cur)
+                "Offset of field: ",
+                stringify!(rlimit),
+                "::",
+                stringify!(rlim_cur)
             )
         );
     }
@@ -6493,10 +6493,10 @@ fn bindgen_test_layout_rlimit() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(rlimit),
-            "::",
-            stringify!(rlim_max)
+                "Offset of field: ",
+                stringify!(rlimit),
+                "::",
+                stringify!(rlim_max)
             )
         );
     }
@@ -6529,10 +6529,10 @@ fn bindgen_test_layout_proc_rlimit_control_wakeupmon() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(proc_rlimit_control_wakeupmon),
-            "::",
-            stringify!(wm_flags)
+                "Offset of field: ",
+                stringify!(proc_rlimit_control_wakeupmon),
+                "::",
+                stringify!(wm_flags)
             )
         );
     }
@@ -6546,10 +6546,10 @@ fn bindgen_test_layout_proc_rlimit_control_wakeupmon() {
             },
             4usize,
             concat!(
-            "Offset of field: ",
-            stringify!(proc_rlimit_control_wakeupmon),
-            "::",
-            stringify!(wm_rate)
+                "Offset of field: ",
+                stringify!(proc_rlimit_control_wakeupmon),
+                "::",
+                stringify!(wm_rate)
             )
         );
     }
@@ -6613,10 +6613,10 @@ fn bindgen_test_layout__OSUnalignedU16() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_OSUnalignedU16),
-            "::",
-            stringify!(__val)
+                "Offset of field: ",
+                stringify!(_OSUnalignedU16),
+                "::",
+                stringify!(__val)
             )
         );
     }
@@ -6648,10 +6648,10 @@ fn bindgen_test_layout__OSUnalignedU32() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_OSUnalignedU32),
-            "::",
-            stringify!(__val)
+                "Offset of field: ",
+                stringify!(_OSUnalignedU32),
+                "::",
+                stringify!(__val)
             )
         );
     }
@@ -6683,10 +6683,10 @@ fn bindgen_test_layout__OSUnalignedU64() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(_OSUnalignedU64),
-            "::",
-            stringify!(__val)
+                "Offset of field: ",
+                stringify!(_OSUnalignedU64),
+                "::",
+                stringify!(__val)
             )
         );
     }
@@ -6888,10 +6888,10 @@ fn bindgen_test_layout_wait() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(wait),
-            "::",
-            stringify!(w_status)
+                "Offset of field: ",
+                stringify!(wait),
+                "::",
+                stringify!(w_status)
             )
         );
     }
@@ -6987,10 +6987,10 @@ fn bindgen_test_layout_div_t() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(div_t),
-            "::",
-            stringify!(quot)
+                "Offset of field: ",
+                stringify!(div_t),
+                "::",
+                stringify!(quot)
             )
         );
     }
@@ -7004,10 +7004,10 @@ fn bindgen_test_layout_div_t() {
             },
             4usize,
             concat!(
-            "Offset of field: ",
-            stringify!(div_t),
-            "::",
-            stringify!(rem)
+                "Offset of field: ",
+                stringify!(div_t),
+                "::",
+                stringify!(rem)
             )
         );
     }
@@ -7040,10 +7040,10 @@ fn bindgen_test_layout_ldiv_t() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(ldiv_t),
-            "::",
-            stringify!(quot)
+                "Offset of field: ",
+                stringify!(ldiv_t),
+                "::",
+                stringify!(quot)
             )
         );
     }
@@ -7057,10 +7057,10 @@ fn bindgen_test_layout_ldiv_t() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(ldiv_t),
-            "::",
-            stringify!(rem)
+                "Offset of field: ",
+                stringify!(ldiv_t),
+                "::",
+                stringify!(rem)
             )
         );
     }
@@ -7093,10 +7093,10 @@ fn bindgen_test_layout_lldiv_t() {
             },
             0usize,
             concat!(
-            "Offset of field: ",
-            stringify!(lldiv_t),
-            "::",
-            stringify!(quot)
+                "Offset of field: ",
+                stringify!(lldiv_t),
+                "::",
+                stringify!(quot)
             )
         );
     }
@@ -7110,10 +7110,10 @@ fn bindgen_test_layout_lldiv_t() {
             },
             8usize,
             concat!(
-            "Offset of field: ",
-            stringify!(lldiv_t),
-            "::",
-            stringify!(rem)
+                "Offset of field: ",
+                stringify!(lldiv_t),
+                "::",
+                stringify!(rem)
             )
         );
     }
