@@ -42,8 +42,6 @@ fn main() {
 
     fs::create_dir_all(BUILD_PATH).expect("can't create build directory");
 
-    let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
-
     let cmake_output = create_cross_cmake_command()
         .current_dir(abs(BUILD_PATH))
         .arg("-DBUILD_BLS_PYTHON_BINDINGS=0")
@@ -57,9 +55,12 @@ fn main() {
     io::stdout()
         .write_all(&cmake_output.stdout)
         .expect("should write output");
+
     io::stderr()
         .write_all(&cmake_output.stderr)
         .expect("should write output");
+
+    assert!(cmake_output.status.success());
 
     // Build deps for bls-signatures
     let build_output = Command::new("cmake")
@@ -75,6 +76,8 @@ fn main() {
     io::stderr()
         .write_all(&build_output.stderr)
         .expect("should write output");
+
+    assert!(build_output.status.success());
 
     // Collect include paths
     let include_paths_file_path = PathBuf::from(BUILD_PATH).join("include_paths.txt");
@@ -100,6 +103,7 @@ fn main() {
         src.as_str(),
     ]);
 
+    // Build c binding
     let mut cc = cc::Build::new();
 
     let cpp_files: Vec<_> = glob::glob("c_binding/*.cpp")
@@ -107,51 +111,42 @@ fn main() {
         .filter_map(Result::ok)
         .collect();
 
-    // let include_paths = [
-    //     relic_src.as_str(),
-    //     relic_build.as_str(),
-    //     build_src.as_str(),
-    //     src.as_str(),
-    //
-    //     "/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/",
-    //     "/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/",
-    //
-    //     // "/opt/homebrew/Cellar/emscripten/3.1.19/libexec/cache/sysroot/include/c++/v1/",
-    //     // "/opt/homebrew/Cellar/emscripten/3.1.19/libexec/cache/sysroot/include/",
-    //     "/opt/homebrew/opt/llvm/include",
-    //     "/usr/include",
-    //     "/opt/homebrew/include/",
-    // ];
-
     cc.files(cpp_files)
         .includes(&include_paths)
+        .cpp(true)
         .flag_if_supported("-std=c++14");
-    // .define("BLSALLOC_SODIUM", Some("1"))
-    // .define("SODIUM_STATIC", Some("1"));
+
+    let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
+
+    // Fix homebrew LLVM installation issue
+    if env::consts::OS == "macos" && target_arch == "wasm32" {
+        cc.archiver("llvm-ar");
+    }
 
     if target_arch.eq("wasm32") {
         cc.flag_if_supported("-ffreestanding")
             .define("_LIBCPP_HAS_NO_THREADS", Some("1"));
-    } else {
-        cc.cpp(true);
     }
 
     if !cfg!(debug_assertions) {
         cc.opt_level(2);
     }
 
-    cc.compile("bls-go-binding");
+    cc.compile("bls-dash-sys");
 
+    // Link dependencies
     println!(
         "cargo:rustc-link-search={}",
         abs("../build/_deps/sodium-build")
     );
+
     println!("cargo:rustc-link-lib=static=sodium");
 
     println!(
         "cargo:rustc-link-search={}",
         abs("../build/_deps/relic-build/lib")
     );
+
     println!("cargo:rustc-link-lib=static=relic_s");
 
     // Link GMP if exists
@@ -178,7 +173,7 @@ fn main() {
     println!("cargo:rustc-link-search={}", abs("../build/src"));
     println!("cargo:rustc-link-lib=static=bls-dash");
 
-    // Create and write binding to src/bindings.rs
+    // Generate rust code for c binding to src/lib.rs
     if env::var("GENERATE_BINDING").is_ok() {
         let bindings = bindgen::Builder::default()
             .header("wrapper.h")
@@ -187,13 +182,16 @@ fn main() {
             .clang_args(include_paths.iter().map(|path| String::from("-I") + path))
             .size_t_is_usize(true)
             .parse_callbacks(Box::new(bindgen::CargoCallbacks))
-            .raw_line("#![allow(non_upper_case_globals)]\n#![allow(non_camel_case_types)]\n#![allow(non_snake_case)]")
+            .disable_header_comment()
+            .raw_line("#![allow(non_upper_case_globals)]")
+            .raw_line("#![allow(non_camel_case_types)]")
+            .raw_line("#![allow(non_snake_case)]")
             .generate()
             .expect("Unable to generate bindings");
 
         let current_dir = env::current_dir().expect("should get current dir");
 
-        let out_path = current_dir.join(PathBuf::from("src/bindings.rs"));
+        let out_path = current_dir.join(PathBuf::from("src/lib.rs"));
 
         bindings
             .write_to_file(out_path)
