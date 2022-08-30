@@ -14,6 +14,7 @@ endif()
 
 project(BLS)
 
+set(BUILD_BLS_JS_BINDINGS "1" CACHE STRING "")
 set(BUILD_BLS_PYTHON_BINDINGS "1" CACHE STRING "")
 set(BUILD_BLS_TESTS "1" CACHE STRING "")
 set(BUILD_BLS_BENCHMARKS "1" CACHE STRING "")
@@ -133,8 +134,22 @@ FetchContent_MakeAvailable(relic)
 
 add_subdirectory(src)
 
+
+# Write include paths for rust binding
 if(EMSCRIPTEN)
-#  add_subdirectory(js-bindings)
+  file(APPEND "${CMAKE_CURRENT_LIST_DIR}/build/include_paths.txt" "${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}/c++/v1/;")
+endif()
+
+file(APPEND "${CMAKE_CURRENT_LIST_DIR}/build/include_paths.txt" "${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES};")
+
+if(GMP_INCLUDES)
+  file(APPEND "${CMAKE_CURRENT_LIST_DIR}/build/include_paths.txt" "${GMP_INCLUDES};")
+endif()
+
+if(EMSCRIPTEN)
+  if(BUILD_BLS_JS_BINDINGS)
+    add_subdirectory(js-bindings)
+  endif()
 else()
   # emscripten can't build python bindings, it produces only javascript
   # add_subdirectory(contrib/pybind11)
