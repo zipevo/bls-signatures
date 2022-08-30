@@ -71,6 +71,7 @@ fn main() {
     io::stdout()
         .write_all(&build_output.stdout)
         .expect("should write output");
+
     io::stderr()
         .write_all(&build_output.stderr)
         .expect("should write output");
@@ -105,21 +106,23 @@ fn main() {
         .expect("can't get list of cpp files")
         .filter_map(Result::ok)
         .collect();
-    // [
-    //     abs("../js_build/_deps/relic-src/include").as_str(),
-    //     abs("../js_build/_deps/relic-build/include").as_str(),
-    //     abs("../js_build/src").as_str(),
+
+    // let include_paths = [
+    //     relic_src.as_str(),
+    //     relic_build.as_str(),
+    //     build_src.as_str(),
+    //     src.as_str(),
     //
-    //     // "/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/",
-    //     // "/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/",
+    //     "/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/c++/v1/",
+    //     "/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/",
     //
-    //     "/opt/homebrew/Cellar/emscripten/3.1.19/libexec/cache/sysroot/include/c++/v1/",
-    //     "/opt/homebrew/Cellar/emscripten/3.1.19/libexec/cache/sysroot/include/",
+    //     // "/opt/homebrew/Cellar/emscripten/3.1.19/libexec/cache/sysroot/include/c++/v1/",
+    //     // "/opt/homebrew/Cellar/emscripten/3.1.19/libexec/cache/sysroot/include/",
     //     "/opt/homebrew/opt/llvm/include",
     //     "/usr/include",
     //     "/opt/homebrew/include/",
-    // ]
-    //
+    // ];
+
     cc.files(cpp_files)
         .includes(&include_paths)
         .flag_if_supported("-std=c++14");
@@ -151,38 +154,49 @@ fn main() {
     );
     println!("cargo:rustc-link-lib=static=relic_s");
 
-    println!("cargo:rustc-link-search=/usr/lib");
-    println!("cargo:rustc-link-lib=static=gmp");
+    // Link GMP if exists
+    let gmp_libraries_file_path = PathBuf::from(BUILD_PATH).join("gmp_libraries.txt");
+
+    if gmp_libraries_file_path.exists() {
+        let gmp_libraries_string = fs::read_to_string(gmp_libraries_file_path)
+            .expect("should read gmp includes from file");
+
+        let gmp_libraries_path = PathBuf::from(gmp_libraries_string);
+
+        let gmp_libraries_parent_path = gmp_libraries_path
+            .parent()
+            .expect("can't get gmp libraries parent dir");
+
+        println!(
+            "cargo:rustc-link-search={}",
+            gmp_libraries_parent_path.display()
+        );
+
+        println!("cargo:rustc-link-lib=static=gmp");
+    }
 
     println!("cargo:rustc-link-search={}", abs("../build/src"));
     println!("cargo:rustc-link-lib=static=bls-dash");
 
-    // // Create and write binding to src/bindings.rs
-    // if env::var("GENERATE_BINDING").is_ok() {
-    //     let bindings = bindgen::Builder::default()
-    //         // The input header we would like to generate
-    //         // bindings for.
-    //         .header("wrapper.h")
-    //         // .detect_include_paths(true)
-    //         // .dynamic_link_require_all(true)
-    //         .clang_args(include_paths.iter().map(|path| String::from("-I") + path))
-    //         .size_t_is_usize(true)
-    //         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
-    //         .generate()
-    //         .expect("Unable to generate bindings");
-    //
-    //     let current_dir = env::current_dir().expect("should get current dir");
-    //
-    //         /*
-    //     #![allow(non_upper_case_globals)]
-    // #![allow(non_camel_case_types)]
-    // #![allow(non_snake_case)]
-    //      */
-    //
-    //     let out_path = current_dir.join(PathBuf::from("src/bindings.rs"));
-    //
-    //     bindings
-    //         .write_to_file(out_path)
-    //         .expect("Couldn't write bindings!");
-    // }
+    // Create and write binding to src/bindings.rs
+    if env::var("GENERATE_BINDING").is_ok() {
+        let bindings = bindgen::Builder::default()
+            .header("wrapper.h")
+            // .detect_include_paths(true)
+            // .dynamic_link_require_all(true)
+            .clang_args(include_paths.iter().map(|path| String::from("-I") + path))
+            .size_t_is_usize(true)
+            .parse_callbacks(Box::new(bindgen::CargoCallbacks))
+            .raw_line("#![allow(non_upper_case_globals)]\n#![allow(non_camel_case_types)]\n#![allow(non_snake_case)]")
+            .generate()
+            .expect("Unable to generate bindings");
+
+        let current_dir = env::current_dir().expect("should get current dir");
+
+        let out_path = current_dir.join(PathBuf::from("src/bindings.rs"));
+
+        bindings
+            .write_to_file(out_path)
+            .expect("Couldn't write bindings!");
+    }
 }

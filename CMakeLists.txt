@@ -3,6 +3,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_STANDARD 99)
 
+# TODO: Should support both x86 and arm64
+set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "")
+
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -142,8 +145,9 @@ endif()
 
 file(APPEND "${CMAKE_CURRENT_LIST_DIR}/build/include_paths.txt" "${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES};")
 
-if(GMP_INCLUDES)
-  file(APPEND "${CMAKE_CURRENT_LIST_DIR}/build/include_paths.txt" "${GMP_INCLUDES};")
+# gmp includes
+if(GMP_LIBRARIES)
+  file(APPEND "${CMAKE_CURRENT_LIST_DIR}/build/gmp_libraries.txt" "${GMP_LIBRARIES}")
 endif()
 
 if(EMSCRIPTEN)
