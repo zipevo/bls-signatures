@@ -1,19 +1,19 @@
-use std::{env, fs, io};
-use std::borrow::{Borrow, BorrowMut};
-use std::collections::HashSet;
-use std::env::args;
-use std::fs::File;
-use std::io::{BufRead, BufReader, Write};
-use std::ops::Deref;
+use std::io::Write;
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::Command;
+use std::{env, fs, io};
 
 fn abs(path: &str) -> String {
     let path_buf = PathBuf::from(path);
 
-    let path_abs = path_buf.canonicalize().expect("should provide valid abs path");
+    let path_abs = path_buf
+        .canonicalize()
+        .expect("should provide valid abs path");
 
-    path_abs.to_str().expect("should convert path to string").to_owned()
+    path_abs
+        .to_str()
+        .expect("should convert path to string")
+        .to_owned()
 }
 
 fn create_cross_cmake_command() -> Command {
@@ -36,7 +36,10 @@ const BUILD_PATH: &str = "../build";
 
 fn main() {
     // Run cmake
-    fs::remove_dir_all(BUILD_PATH).expect("can't clean build directory");
+    if Path::new(BUILD_PATH).exists() {
+        fs::remove_dir_all(BUILD_PATH).expect("can't clean build directory");
+    }
+
     fs::create_dir_all(BUILD_PATH).expect("can't create build directory");
 
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
@@ -51,8 +54,12 @@ fn main() {
         .output()
         .expect("can't run cmake");
 
-    io::stdout().write_all(&cmake_output.stdout).expect("should write output");
-    io::stderr().write_all(&cmake_output.stderr).expect("should write output");
+    io::stdout()
+        .write_all(&cmake_output.stdout)
+        .expect("should write output");
+    io::stderr()
+        .write_all(&cmake_output.stderr)
+        .expect("should write output");
 
     // Build deps for bls-signatures
     let build_output = Command::new("cmake")
@@ -61,17 +68,22 @@ fn main() {
         .output()
         .expect("can't build bls-signatures deps");
 
-    io::stdout().write_all(&build_output.stdout).expect("should write output");
-    io::stderr().write_all(&build_output.stderr).expect("should write output");
+    io::stdout()
+        .write_all(&build_output.stdout)
+        .expect("should write output");
+    io::stderr()
+        .write_all(&build_output.stderr)
+        .expect("should write output");
 
     // Collect include paths
-    let include_paths_file_path = PathBuf::from(BUILD_PATH)
-        .join("include_paths.txt");
+    let include_paths_file_path = PathBuf::from(BUILD_PATH).join("include_paths.txt");
 
-    let include_paths = fs::read_to_string(include_paths_file_path)
-        .expect("should read include paths from file");
+    let include_paths =
+        fs::read_to_string(include_paths_file_path).expect("should read include paths from file");
 
-    let mut include_paths: Vec<_> = include_paths.split(';').into_iter()
+    let mut include_paths: Vec<_> = include_paths
+        .split(';')
+        .into_iter()
         .filter(|path| !path.is_empty())
         .collect();
 
@@ -90,7 +102,9 @@ fn main() {
     let mut cc = cc::Build::new();
 
     let cpp_files: Vec<_> = glob::glob("c_binding/*.cpp")
-        .expect("can't get list of cpp files").filter_map(Result::ok).collect();
+        .expect("can't get list of cpp files")
+        .filter_map(Result::ok)
+        .collect();
     // [
     //     abs("../js_build/_deps/relic-src/include").as_str(),
     //     abs("../js_build/_deps/relic-build/include").as_str(),
@@ -109,8 +123,8 @@ fn main() {
     cc.files(cpp_files)
         .includes(&include_paths)
         .flag_if_supported("-std=c++14");
-        // .define("BLSALLOC_SODIUM", Some("1"))
-        // .define("SODIUM_STATIC", Some("1"));
+    // .define("BLSALLOC_SODIUM", Some("1"))
+    // .define("SODIUM_STATIC", Some("1"));
 
     if target_arch.eq("wasm32") {
         cc.flag_if_supported("-ffreestanding")
@@ -125,10 +139,16 @@ fn main() {
 
     cc.compile("bls-go-binding");
 
-    println!("cargo:rustc-link-search={}", abs("../build/_deps/sodium-build"));
+    println!(
+        "cargo:rustc-link-search={}",
+        abs("../build/_deps/sodium-build")
+    );
     println!("cargo:rustc-link-lib=static=sodium");
 
-    println!("cargo:rustc-link-search={}", abs("../build/_deps/relic-build/lib"));
+    println!(
+        "cargo:rustc-link-search={}",
+        abs("../build/_deps/relic-build/lib")
+    );
     println!("cargo:rustc-link-lib=static=relic_s");
 
     println!("cargo:rustc-link-search=/opt/homebrew/lib");
