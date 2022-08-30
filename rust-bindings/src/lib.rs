@@ -1,14 +1,33 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use bls_dash_sys::bindings;
 
     #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+    fn it_works_somehow() {
+        let seed = b"seedweed";
+        unsafe {
+            let scheme = bindings::NewCAugSchemeMPL();
+            let mut did_err = false;
+            let sk = bindings::CCoreMPLKeyGen(
+                scheme,
+                seed.as_ptr() as *const _,
+                seed.len(),
+                &mut did_err as *mut _,
+            );
+            let pk = bindings::CPrivateKeyGetG1Element(sk, &mut did_err);
+
+            let message = b"Evgeny owns 1337 dash no cap";
+            // let sig =
+            //     bindings::CCoreMPLSign(scheme, sk, message.as_ptr() as *const _, message.len());
+
+            // let verify = bindings::CCoreMPLVerify(
+            //     scheme,
+            //     pk,
+            //     message.as_ptr() as *const _,
+            //     message.len(),
+            //     sig,
+            // );
+            // assert!(verify);
+        }
     }
 }

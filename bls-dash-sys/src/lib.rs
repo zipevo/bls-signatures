@@ -1,6 +1,4 @@
-// TODO: use bindgen within a build.rs script and
-// do `include!(concat!(env!("OUT_DIR"), "/bindings.rs"));`
-mod bindings;
+pub mod bindings;
 
 pub fn allocate(size: usize) -> u8 {
     unsafe {

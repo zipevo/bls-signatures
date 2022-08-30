@@ -151,7 +151,7 @@ fn main() {
     );
     println!("cargo:rustc-link-lib=static=relic_s");
 
-    println!("cargo:rustc-link-search=/opt/homebrew/lib");
+    println!("cargo:rustc-link-search=/usr/lib");
     println!("cargo:rustc-link-lib=static=gmp");
 
     println!("cargo:rustc-link-search={}", abs("../build/src"));
