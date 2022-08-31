@@ -3,8 +3,5 @@ name = "bls-signatures"
 version = "1.2.4"
 edition = "2021"
 
-[lib]
-crate-type = ["cdylib"]
-
 [dependencies]
 bls-dash-sys = { path = "../bls-dash-sys" }
