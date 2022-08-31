@@ -1,4 +1,4 @@
-use bls_dash_sys::bindings;
+use bls_dash_sys as sys;
 
 #[test]
 fn bls_dash_linked_sign_verify_simple() {
@@ -6,10 +6,10 @@ fn bls_dash_linked_sign_verify_simple() {
     let bad_seed = b"weedseedweedseedweedseedweedseed";
 
     unsafe {
-        let scheme = bindings::NewCAugSchemeMPL();
+        let scheme = sys::NewCAugSchemeMPL();
         let mut did_err = false;
 
-        let sk = bindings::CCoreMPLKeyGen(
+        let sk = sys::CCoreMPLKeyGen(
             scheme,
             seed.as_ptr() as *const _,
             seed.len(),
@@ -17,10 +17,10 @@ fn bls_dash_linked_sign_verify_simple() {
         );
         assert!(!did_err);
 
-        let pk = bindings::CPrivateKeyGetG1Element(sk, &mut did_err as *mut _);
+        let pk = sys::CPrivateKeyGetG1Element(sk, &mut did_err as *mut _);
         assert!(!did_err);
 
-        let sk2 = bindings::CCoreMPLKeyGen(
+        let sk2 = sys::CCoreMPLKeyGen(
             scheme,
             bad_seed.as_ptr() as *const _,
             bad_seed.len(),
@@ -28,17 +28,17 @@ fn bls_dash_linked_sign_verify_simple() {
         );
         assert!(!did_err);
 
-        let pk2 = bindings::CPrivateKeyGetG1Element(sk2, &mut did_err as *mut _);
+        let pk2 = sys::CPrivateKeyGetG1Element(sk2, &mut did_err as *mut _);
         assert!(!did_err);
 
         let message = b"Evgeny owns 1337 dash no cap";
-        let sig = bindings::CCoreMPLSign(scheme, sk, message.as_ptr() as *const _, message.len());
+        let sig = sys::CCoreMPLSign(scheme, sk, message.as_ptr() as *const _, message.len());
 
         let verify =
-            bindings::CCoreMPLVerify(scheme, pk, message.as_ptr() as *const _, message.len(), sig);
+            sys::CCoreMPLVerify(scheme, pk, message.as_ptr() as *const _, message.len(), sig);
         assert!(verify);
 
-        let verify_bad = bindings::CCoreMPLVerify(
+        let verify_bad = sys::CCoreMPLVerify(
             scheme,
             pk2,
             message.as_ptr() as *const _,
@@ -47,11 +47,11 @@ fn bls_dash_linked_sign_verify_simple() {
         );
         assert!(!verify_bad);
 
-        bindings::CG2ElementFree(sig);
-        bindings::CG1ElementFree(pk2);
-        bindings::CPrivateKeyFree(sk2);
-        bindings::CG1ElementFree(pk);
-        bindings::CPrivateKeyFree(sk);
-        bindings::CAugSchemeMPLFree(scheme);
+        sys::CG2ElementFree(sig);
+        sys::CG1ElementFree(pk2);
+        sys::CPrivateKeyFree(sk2);
+        sys::CG1ElementFree(pk);
+        sys::CPrivateKeyFree(sk);
+        sys::CAugSchemeMPLFree(scheme);
     }
 }
