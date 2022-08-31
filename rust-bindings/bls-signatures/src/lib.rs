@@ -1,12 +1,12 @@
 mod elements;
 mod private_key;
-mod utils;
 mod schemes;
+mod utils;
+
+use std::{error::Error, fmt::Display};
 
 pub use elements::{G1Element, G2Element};
 pub use private_key::PrivateKey;
-
-use std::{error::Error, fmt::Display};
 
 #[derive(Debug)]
 pub struct BlsError {
