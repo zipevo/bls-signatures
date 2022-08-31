@@ -31,8 +31,6 @@ fn handle_command_output(output: Output) {
     assert!(output.status.success());
 }
 
-const BUILD_PATH: &str = "../build";
-
 fn main() {
     let bls_dash_build_path = Path::new("../build")
         .canonicalize()
@@ -74,7 +72,7 @@ fn main() {
 
     let build_output = Command::new("cmake")
         .args(["--build", ".", "--", "-j", "6"])
-        .current_dir(BUILD_PATH)
+        .current_dir(&bls_dash_build_path)
         .output()
         .expect("can't build bls-signatures deps");
 
@@ -184,26 +182,11 @@ fn main() {
 
         let bindings = bindgen::Builder::default()
             .header(c_binding_path.join("blschia.h").to_str().unwrap())
-            // .header(c_binding_path.join("error.h"))
             .header(c_binding_path.join("elements.h").to_str().unwrap())
             .header(c_binding_path.join("privatekey.h").to_str().unwrap())
             .header(c_binding_path.join("schemes.h").to_str().unwrap())
             .header(c_binding_path.join("threshold.h").to_str().unwrap())
-            // .header(c_binding_path.join("utils.h"))
-            // .clang_arg("-xc++")
             .size_t_is_usize(true)
-            // /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/c++/v1;
-            // /Library/Developer/CommandLineTools/usr/lib/clang/13.1.6/include;
-            // /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include;
-            // /Library/Developer/CommandLineTools/usr/include;
-            // /opt/homebrew/include;
-            // .clang_args([
-            // "-I/Library/Developer/CommandLineTools/usr/include/c++/v1",
-            // "-I/Library/Developer/CommandLineTools/usr/lib/clang/13.1.6/include",
-            // "-I/opt/homebrew/Cellar/llvm/14.0.6_1/include", // "-I/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include",
-            // "-I/Library/Developer/CommandLineTools/usr/include",
-            // "-I/opt/homebrew/include",
-            // ])
             .parse_callbacks(Box::new(bindgen::CargoCallbacks))
             .disable_header_comment()
             .raw_line("#![allow(non_upper_case_globals)]")
