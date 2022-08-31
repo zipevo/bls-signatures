@@ -5,11 +5,11 @@ use bls_dash_sys::{CCoreMPLKeyGen, CPrivateKeyFree, CPrivateKeyGetG1Element};
 use crate::{schemes::Scheme, utils::c_err_to_result, BlsError, G1Element};
 
 pub struct PrivateKey {
-    private_key: *mut c_void,
+    pub(crate) private_key: *mut c_void,
 }
 
 impl PrivateKey {
-    pub fn key_gen(scheme: impl Scheme, seed: &[u8]) -> Result<Self, BlsError> {
+    pub fn key_gen(scheme: &impl Scheme, seed: &[u8]) -> Result<Self, BlsError> {
         Ok(PrivateKey {
             private_key: c_err_to_result(|did_err| unsafe {
                 CCoreMPLKeyGen(

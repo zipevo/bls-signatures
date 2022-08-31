@@ -1,6 +1,6 @@
 use std::{ffi::c_void, marker::PhantomData};
 
-use bls_dash_sys::{CG1ElementFree, CG1ElementFromBytes};
+use bls_dash_sys::{CG1ElementFree, CG1ElementFromBytes, CG2ElementFree};
 
 use crate::{utils::c_err_to_result, BlsError};
 
@@ -39,5 +39,11 @@ impl Drop for G1Element<'_> {
 }
 
 pub struct G2Element {
-    element: *mut c_void,
+    pub(crate) element: *mut c_void,
+}
+
+impl Drop for G2Element {
+    fn drop(&mut self) {
+        unsafe { CG2ElementFree(self.element) }
+    }
 }
