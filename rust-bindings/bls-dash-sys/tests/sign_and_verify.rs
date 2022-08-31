@@ -1,7 +1,7 @@
 use bls_dash_sys as sys;
 
 #[test]
-fn bls_dash_linked_sign_verify_simple() {
+fn sign_and_verify() {
     let seed = b"seedweedseedweedseedweedseedweed";
     let bad_seed = b"weedseedweedseedweedseedweedseed";
 

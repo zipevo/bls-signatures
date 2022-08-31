@@ -32,17 +32,18 @@ fn handle_command_output(output: Output) {
 }
 
 fn main() {
-    let bls_dash_build_path = Path::new("../build")
+    let root_path = Path::new("../..")
         .canonicalize()
         .expect("can't get abs path");
 
-    let bls_dash_src_path = Path::new("../src")
-        .canonicalize()
-        .expect("can't get abs path");
+    let bls_dash_build_path = root_path.join("build");
+    let bls_dash_src_path = root_path.join("src");
+    let c_bindings_path = root_path.join("rust-bindings/bls-dash-sys/c-bindings");
 
-    let c_binding_path = Path::new("c_binding")
-        .canonicalize()
-        .expect("can't get abs path");
+    println!("root {}", root_path.display());
+    println!("bls_dash_build_path {}", bls_dash_build_path.display());
+    println!("bls_dash_src_path {}", bls_dash_src_path.display());
+    println!("c_bindings_path {}", c_bindings_path.display());
 
     // Run cmake
 
@@ -103,7 +104,7 @@ fn main() {
 
     let mut cc = cc::Build::new();
 
-    let cpp_files_mask = c_binding_path.join("*.cpp");
+    let cpp_files_mask = c_bindings_path.join("*.cpp");
 
     let cpp_files: Vec<_> = glob::glob(cpp_files_mask.to_str().unwrap())
         .expect("can't get list of cpp files")
@@ -177,34 +178,34 @@ fn main() {
     }
 
     // Generate rust code for c binding to src/lib.rs
-    if env::var("GENERATE_C_BINDING").is_ok() {
-        println!("Generate C binding for rust:");
+    println!("Generate C binding for rust:");
 
-        let bindings = bindgen::Builder::default()
-            .header(c_binding_path.join("blschia.h").to_str().unwrap())
-            .header(c_binding_path.join("elements.h").to_str().unwrap())
-            .header(c_binding_path.join("privatekey.h").to_str().unwrap())
-            .header(c_binding_path.join("schemes.h").to_str().unwrap())
-            .header(c_binding_path.join("threshold.h").to_str().unwrap())
-            .size_t_is_usize(true)
-            .parse_callbacks(Box::new(bindgen::CargoCallbacks))
-            .disable_header_comment()
-            .raw_line("#![allow(non_upper_case_globals)]")
-            .raw_line("#![allow(non_camel_case_types)]")
-            .raw_line("#![allow(non_snake_case)]")
-            .generate()
-            .expect("Unable to generate bindings");
+    let mut builder = bindgen::Builder::default()
+        .header(c_bindings_path.join("blschia.h").to_str().unwrap())
+        .header(c_bindings_path.join("elements.h").to_str().unwrap())
+        .header(c_bindings_path.join("privatekey.h").to_str().unwrap())
+        .header(c_bindings_path.join("schemes.h").to_str().unwrap())
+        .header(c_bindings_path.join("threshold.h").to_str().unwrap())
+        .size_t_is_usize(true)
+        .parse_callbacks(Box::new(bindgen::CargoCallbacks));
 
-        let current_dir = env::current_dir().expect("should get current dir");
-
-        let out_path = current_dir.join(PathBuf::from("src/lib.rs"));
-
-        bindings
-            .write_to_file(out_path)
-            .expect("Couldn't write bindings!");
+    if target_arch == "wasm32" {
+        builder = builder.clang_args(
+            include_paths
+                .iter()
+                .map(|path| format!("-I{}", path.display())),
+        );
     }
 
+    let bindings = builder.generate().expect("Unable to generate bindings");
+
+    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+
+    bindings
+        .write_to_file(out_path.join("bindings.rs"))
+        .expect("couldn't write bindings");
+
     // Rerun build if files changed
-    println!("cargo:rerun-if-changed={}", c_binding_path.display());
+    println!("cargo:rerun-if-changed={}", c_bindings_path.display());
     println!("cargo:rerun-if-changed={}", bls_dash_src_path.display());
 }
