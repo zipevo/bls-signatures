@@ -36,6 +36,9 @@ const BUILD_PATH: &str = "../build";
 
 fn main() {
     // Run cmake
+
+    println!("Run cmake:");
+
     if Path::new(BUILD_PATH).exists() {
         fs::remove_dir_all(BUILD_PATH).expect("can't clean build directory");
     }
@@ -63,6 +66,9 @@ fn main() {
     assert!(cmake_output.status.success());
 
     // Build deps for bls-signatures
+
+    println!("Build dependencies:");
+
     let build_output = Command::new("cmake")
         .args(["--build", ".", "--", "-j", "6"])
         .current_dir(BUILD_PATH)
@@ -104,6 +110,9 @@ fn main() {
     ]);
 
     // Build c binding
+
+    println!("Build C binding:");
+
     let mut cc = cc::Build::new();
 
     let cpp_files: Vec<_> = glob::glob("c_binding/*.cpp")
@@ -174,13 +183,31 @@ fn main() {
     println!("cargo:rustc-link-lib=static=bls-dash");
 
     // Generate rust code for c binding to src/lib.rs
-    if env::var("GENERATE_BINDING").is_ok() {
+    if env::var("GENERATE_C_BINDING").is_ok() {
+        println!("Generate C binding for rust:");
+
         let bindings = bindgen::Builder::default()
-            .header("wrapper.h")
-            // .detect_include_paths(true)
-            // .dynamic_link_require_all(true)
-            .clang_args(include_paths.iter().map(|path| String::from("-I") + path))
+            .header("c_binding/blschia.h")
+            // .header("c_binding/error.h")
+            .header("c_binding/elements.h")
+            .header("c_binding/privatekey.h")
+            .header("c_binding/schemes.h")
+            .header("c_binding/threshold.h")
+            // .header("c_binding/utils.hpp")
+            // .clang_arg("-xc++")
             .size_t_is_usize(true)
+            // /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/c++/v1;
+            // /Library/Developer/CommandLineTools/usr/lib/clang/13.1.6/include;
+            // /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include;
+            // /Library/Developer/CommandLineTools/usr/include;
+            // /opt/homebrew/include;
+            // .clang_args([
+            // "-I/Library/Developer/CommandLineTools/usr/include/c++/v1",
+            // "-I/Library/Developer/CommandLineTools/usr/lib/clang/13.1.6/include",
+            // "-I/opt/homebrew/Cellar/llvm/14.0.6_1/include", // "-I/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include",
+            // "-I/Library/Developer/CommandLineTools/usr/include",
+            // "-I/opt/homebrew/include",
+            // ])
             .parse_callbacks(Box::new(bindgen::CargoCallbacks))
             .disable_header_comment()
             .raw_line("#![allow(non_upper_case_globals)]")
