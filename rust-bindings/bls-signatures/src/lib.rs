@@ -34,8 +34,16 @@ mod tests {
         let bad_seed = b"weedseedweedseedweedseedweedseed";
 
         let scheme = AugSchemeMPL::new();
-        let private_key =
+
+        let private_key_before =
             PrivateKey::key_gen(&scheme, seed).expect("unable to generate private key");
+
+        // Also test private key serialization
+        let private_key_bytes = private_key_before.serialize();
+        let private_key = PrivateKey::from_bytes(private_key_bytes.as_slice(), false)
+            .expect("cannot build private key from bytes");
+        drop(private_key_bytes);
+
         let public_key = private_key
             .get_g1_element()
             .expect("unable to get public key");
