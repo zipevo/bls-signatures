@@ -1,7 +1,9 @@
-use std::io::Write;
-use std::path::{Path, PathBuf};
-use std::process::{Command, Output};
-use std::{env, fs, io};
+use std::{
+    env, fs, io,
+    io::Write,
+    path::{Path, PathBuf},
+    process::{Command, Output},
+};
 
 fn create_cross_cmake_command() -> Command {
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
