@@ -36,7 +36,7 @@ impl Scheme for AugSchemeMPL {
             element: unsafe {
                 CAugSchemeMPLSign(
                     self.scheme,
-                    private_key.private_key as *mut _,
+                    private_key.as_mut_ptr(),
                     message.as_ptr() as *const _,
                     message.len(),
                 )

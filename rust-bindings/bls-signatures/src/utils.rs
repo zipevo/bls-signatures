@@ -31,12 +31,15 @@ impl SecAlloc {
     pub(crate) fn new(len: usize) -> Self {
         SecAlloc {
             c_sec_alloc: unsafe { SecAllocBytes(len) },
-            len
+            len,
         }
     }
 
     pub(crate) unsafe fn from_ptr(ptr: *mut u8, len: usize) -> Self {
-        SecAlloc { c_sec_alloc: ptr, len }
+        SecAlloc {
+            c_sec_alloc: ptr,
+            len,
+        }
     }
 
     pub(crate) fn as_mut_ptr(&mut self) -> *mut u8 {
