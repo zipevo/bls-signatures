@@ -1,8 +1,10 @@
 use std::ffi::c_void;
 
 use bls_dash_sys::{
-    CAugSchemeMPLFree, CAugSchemeMPLSign, CAugSchemeMPLVerify, CCoreMPLAggregatePubKeys,
-    CCoreMPLAggregateSigs, CCoreMPLAggregateVerify, CCoreMPLKeyGen, NewCAugSchemeMPL,
+    CAugSchemeMPLAggregateVerify, CAugSchemeMPLFree, CAugSchemeMPLSign, CAugSchemeMPLVerify,
+    CBasicSchemeMPLAggregateVerify, CBasicSchemeMPLFree, CCoreMPLAggregatePubKeys,
+    CCoreMPLAggregateSigs, CCoreMPLAggregateVerify, CCoreMPLKeyGen, CCoreMPLSign, CCoreMPLVerify,
+    NewCAugSchemeMPL, NewCBasicSchemeMPL,
 };
 
 use crate::{private_key::PrivateKey, BlsError, G1Element, G2Element};
@@ -51,31 +53,110 @@ pub trait Scheme {
         public_keys: impl IntoIterator<Item = &'a G1Element>,
         messages: impl IntoIterator<Item = &'a [u8]>,
         signature: &G2Element,
-    ) -> bool {
-        let mut g1_pointers = public_keys
-            .into_iter()
-            .map(|g1| g1.c_element)
-            .collect::<Vec<_>>();
+    ) -> bool;
+}
 
-        let mut messages_pointers = Vec::new();
-        let mut messages_lenghtes = Vec::new();
+struct AggregateVerifyArgs {
+    g1_pointers: Vec<*mut c_void>,
+    messages_pointers: Vec<*const u8>,
+    messages_lengthes: Vec<usize>,
+}
 
-        for m in messages.into_iter() {
-            messages_pointers.push(m.as_ptr());
-            messages_lenghtes.push(m.len());
+fn prepare_aggregate_verify_args<'a>(
+    public_keys: impl IntoIterator<Item = &'a G1Element>,
+    messages: impl IntoIterator<Item = &'a [u8]>,
+) -> AggregateVerifyArgs {
+    let g1_pointers = public_keys
+        .into_iter()
+        .map(|g1| g1.c_element)
+        .collect::<Vec<_>>();
+
+    let mut messages_pointers = Vec::new();
+    let mut messages_lengthes = Vec::new();
+
+    for m in messages.into_iter() {
+        messages_pointers.push(m.as_ptr());
+        messages_lengthes.push(m.len());
+    }
+
+    AggregateVerifyArgs {
+        g1_pointers,
+        messages_pointers,
+        messages_lengthes,
+    }
+}
+
+pub struct BasicSchemeMPL {
+    scheme: *mut c_void,
+}
+
+impl BasicSchemeMPL {
+    pub fn new() -> Self {
+        BasicSchemeMPL {
+            scheme: unsafe { NewCBasicSchemeMPL() },
         }
+    }
+}
+
+impl Scheme for BasicSchemeMPL {
+    fn as_mut_ptr(&self) -> *mut c_void {
+        self.scheme
+    }
+
+    fn sign(&self, private_key: &PrivateKey, message: &[u8]) -> G2Element {
+        G2Element {
+            c_element: unsafe {
+                CCoreMPLSign(
+                    self.scheme,
+                    private_key.as_mut_ptr(),
+                    message.as_ptr() as *const _,
+                    message.len(),
+                )
+            },
+        }
+    }
+
+    fn verify(&self, public_key: &G1Element, message: &[u8], signature: &G2Element) -> bool {
+        unsafe {
+            CCoreMPLVerify(
+                self.scheme,
+                public_key.c_element,
+                message.as_ptr() as *const _,
+                message.len(),
+                signature.c_element,
+            )
+        }
+    }
+
+    fn aggregate_verify<'a>(
+        &self,
+        public_keys: impl IntoIterator<Item = &'a G1Element>,
+        messages: impl IntoIterator<Item = &'a [u8]>,
+        signature: &G2Element,
+    ) -> bool {
+        let AggregateVerifyArgs {
+            mut g1_pointers,
+            mut messages_pointers,
+            mut messages_lengthes,
+        } = prepare_aggregate_verify_args(public_keys, messages);
 
         unsafe {
-            CCoreMPLAggregateVerify(
+            CBasicSchemeMPLAggregateVerify(
                 self.as_mut_ptr(),
                 g1_pointers.as_mut_ptr(),
                 g1_pointers.len(),
                 messages_pointers.as_mut_ptr() as *mut _,
-                messages_lenghtes.as_mut_ptr() as *mut _,
+                messages_lengthes.as_mut_ptr() as *mut _,
                 messages_pointers.len(),
                 signature.c_element,
             )
         }
+    }
+}
+
+impl Drop for BasicSchemeMPL {
+    fn drop(&mut self) {
+        unsafe { CBasicSchemeMPLFree(self.scheme) }
     }
 }
 
@@ -116,6 +197,31 @@ impl Scheme for AugSchemeMPL {
                 public_key.c_element,
                 message.as_ptr() as *const _,
                 message.len(),
+                signature.c_element,
+            )
+        }
+    }
+
+    fn aggregate_verify<'a>(
+        &self,
+        public_keys: impl IntoIterator<Item = &'a G1Element>,
+        messages: impl IntoIterator<Item = &'a [u8]>,
+        signature: &G2Element,
+    ) -> bool {
+        let AggregateVerifyArgs {
+            mut g1_pointers,
+            mut messages_pointers,
+            mut messages_lengthes,
+        } = prepare_aggregate_verify_args(public_keys, messages);
+
+        unsafe {
+            CAugSchemeMPLAggregateVerify(
+                self.as_mut_ptr(),
+                g1_pointers.as_mut_ptr(),
+                g1_pointers.len(),
+                messages_pointers.as_mut_ptr() as *mut _,
+                messages_lengthes.as_mut_ptr() as *mut _,
+                messages_pointers.len(),
                 signature.c_element,
             )
         }
