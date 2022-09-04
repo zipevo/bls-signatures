@@ -1,7 +1,8 @@
 use std::ffi::c_void;
 
 use bls_dash_sys::{
-    CAugSchemeMPLFree, CAugSchemeMPLSign, CAugSchemeMPLVerify, CCoreMPLKeyGen, NewCAugSchemeMPL,
+    CAugSchemeMPLFree, CAugSchemeMPLSign, CAugSchemeMPLVerify, CCoreMPLAggregatePubKeys,
+    CCoreMPLAggregateSigs, CCoreMPLAggregateVerify, CCoreMPLKeyGen, NewCAugSchemeMPL,
 };
 
 use crate::{private_key::PrivateKey, BlsError, G1Element, G2Element};
@@ -12,6 +13,70 @@ pub trait Scheme {
     fn sign(&self, private_key: &PrivateKey, message: &[u8]) -> G2Element;
 
     fn verify(&self, public_key: &G1Element, message: &[u8], signature: &G2Element) -> bool;
+
+    fn aggregate_public_keys<'a>(
+        &self,
+        public_keys: impl IntoIterator<Item = &'a G1Element>,
+    ) -> G1Element {
+        let mut g1_pointers = public_keys
+            .into_iter()
+            .map(|g1| g1.c_element)
+            .collect::<Vec<_>>();
+        G1Element {
+            c_element: unsafe {
+                CCoreMPLAggregatePubKeys(
+                    self.as_mut_ptr(),
+                    g1_pointers.as_mut_ptr(),
+                    g1_pointers.len(),
+                )
+            },
+        }
+    }
+
+    fn aggregate_sigs<'a>(&self, sigs: impl IntoIterator<Item = &'a G2Element>) -> G2Element {
+        let mut g2_pointers = sigs.into_iter().map(|g2| g2.c_element).collect::<Vec<_>>();
+        G2Element {
+            c_element: unsafe {
+                CCoreMPLAggregateSigs(
+                    self.as_mut_ptr(),
+                    g2_pointers.as_mut_ptr(),
+                    g2_pointers.len(),
+                )
+            },
+        }
+    }
+
+    fn aggregate_verify<'a>(
+        &self,
+        public_keys: impl IntoIterator<Item = &'a G1Element>,
+        messages: impl IntoIterator<Item = &'a [u8]>,
+        signature: &G2Element,
+    ) -> bool {
+        let mut g1_pointers = public_keys
+            .into_iter()
+            .map(|g1| g1.c_element)
+            .collect::<Vec<_>>();
+
+        let mut messages_pointers = Vec::new();
+        let mut messages_lenghtes = Vec::new();
+
+        for m in messages.into_iter() {
+            messages_pointers.push(m.as_ptr());
+            messages_lenghtes.push(m.len());
+        }
+
+        unsafe {
+            CCoreMPLAggregateVerify(
+                self.as_mut_ptr(),
+                g1_pointers.as_mut_ptr(),
+                g1_pointers.len(),
+                messages_pointers.as_mut_ptr() as *mut _,
+                messages_lenghtes.as_mut_ptr() as *mut _,
+                messages_pointers.len(),
+                signature.c_element,
+            )
+        }
+    }
 }
 
 pub struct AugSchemeMPL {
@@ -60,5 +125,53 @@ impl Scheme for AugSchemeMPL {
 impl Drop for AugSchemeMPL {
     fn drop(&mut self) {
         unsafe { CAugSchemeMPLFree(self.scheme) }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn verify_aggregate() {
+        let seed1 = b"seedweedseedweedseedweedseedweed";
+        let seed2 = b"weedseedweedseedweedseedweedseed";
+        let seed3 = b"seedseedseedseedweedweedweedweed";
+
+        let scheme = AugSchemeMPL::new();
+
+        let private_key_1 =
+            PrivateKey::key_gen(&scheme, seed1).expect("unable to generate private key");
+        let private_key_2 =
+            PrivateKey::key_gen(&scheme, seed2).expect("unable to generate private key");
+        let private_key_3 =
+            PrivateKey::key_gen(&scheme, seed3).expect("unable to generate private key");
+
+        let public_key_1 = private_key_1
+            .get_g1_element()
+            .expect("unable to get public key");
+        let public_key_2 = private_key_2
+            .get_g1_element()
+            .expect("unable to get public key");
+        let public_key_3 = private_key_3
+            .get_g1_element()
+            .expect("unable to get public key");
+
+        let message_1 = b"ayya";
+        let message_2 = b"ayyb";
+        let message_3 = b"ayyc";
+
+        let signature_1 = scheme.sign(&private_key_1, message_1);
+        let signature_2 = scheme.sign(&private_key_2, message_2);
+        let signature_3 = scheme.sign(&private_key_3, message_3);
+
+        let signature_agg = scheme.aggregate_sigs([&signature_1, &signature_2, &signature_3]);
+
+        let verify = scheme.aggregate_verify(
+            [&public_key_1, &public_key_2, &public_key_3],
+            [message_1.as_ref(), message_2.as_ref(), message_3.as_ref()],
+            &signature_agg,
+        );
+        assert!(verify);
     }
 }
