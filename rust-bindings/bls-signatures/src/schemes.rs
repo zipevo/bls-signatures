@@ -33,7 +33,7 @@ impl Scheme for AugSchemeMPL {
 
     fn sign(&self, private_key: &PrivateKey, message: &[u8]) -> G2Element {
         G2Element {
-            element: unsafe {
+            c_element: unsafe {
                 CAugSchemeMPLSign(
                     self.scheme,
                     private_key.as_mut_ptr(),
@@ -48,10 +48,10 @@ impl Scheme for AugSchemeMPL {
         unsafe {
             CAugSchemeMPLVerify(
                 self.scheme,
-                public_key.element,
+                public_key.c_element,
                 message.as_ptr() as *const _,
                 message.len(),
-                signature.element,
+                signature.c_element,
             )
         }
     }

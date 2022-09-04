@@ -24,6 +24,8 @@ impl PartialEq for PrivateKey {
     }
 }
 
+impl Eq for PrivateKey {}
+
 impl PrivateKey {
     pub(crate) fn as_mut_ptr(&self) -> *mut c_void {
         self.c_private_key
@@ -42,12 +44,11 @@ impl PrivateKey {
         })
     }
 
-    pub fn get_g1_element<'a>(&'a self) -> Result<G1Element<'a>, BlsError> {
+    pub fn get_g1_element<'a>(&'a self) -> Result<G1Element, BlsError> {
         Ok(G1Element {
-            element: c_err_to_result(|did_err| unsafe {
+            c_element: c_err_to_result(|did_err| unsafe {
                 CPrivateKeyGetG1Element(self.c_private_key, did_err)
             })?,
-            _bytes_lt: PhantomData,
         })
     }
 
