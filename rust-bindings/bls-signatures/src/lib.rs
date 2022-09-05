@@ -7,6 +7,7 @@ use std::{error::Error, fmt::Display};
 
 pub use elements::{G1Element, G2Element};
 pub use private_key::PrivateKey;
+pub use schemes::{AugSchemeMPL, BasicSchemeMPL, Scheme};
 
 #[derive(Debug)]
 pub struct BlsError {
