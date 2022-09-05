@@ -243,6 +243,7 @@ mod tests {
         let seed1 = b"seedweedseedweedseedweedseedweed";
         let seed2 = b"weedseedweedseedweedseedweedseed";
         let seed3 = b"seedseedseedseedweedweedweedweed";
+        let seed4 = b"weedweedweedweedweedweedweedweed";
 
         let scheme = AugSchemeMPL::new();
 
@@ -252,6 +253,8 @@ mod tests {
             PrivateKey::key_gen(&scheme, seed2).expect("unable to generate private key");
         let private_key_3 =
             PrivateKey::key_gen(&scheme, seed3).expect("unable to generate private key");
+        let private_key_4 =
+            PrivateKey::key_gen(&scheme, seed4).expect("unable to generate private key");
 
         let public_key_1 = private_key_1
             .get_g1_element()
@@ -262,14 +265,19 @@ mod tests {
         let public_key_3 = private_key_3
             .get_g1_element()
             .expect("unable to get public key");
+        let public_key_4 = private_key_4
+            .get_g1_element()
+            .expect("unable to get public key");
 
         let message_1 = b"ayya";
         let message_2 = b"ayyb";
         let message_3 = b"ayyc";
+        let message_4 = b"ayyd";
 
         let signature_1 = scheme.sign(&private_key_1, message_1);
         let signature_2 = scheme.sign(&private_key_2, message_2);
         let signature_3 = scheme.sign(&private_key_3, message_3);
+        let signature_4 = scheme.sign(&private_key_4, message_4);
 
         let signature_agg = scheme.aggregate_sigs([&signature_1, &signature_2, &signature_3]);
 
@@ -279,5 +287,19 @@ mod tests {
             &signature_agg,
         );
         assert!(verify);
+
+        // Arbitrary trees of aggregates
+        let signature_agg_final = scheme.aggregate_sigs([&signature_agg, &signature_4]);
+        let verify_final = scheme.aggregate_verify(
+            [&public_key_1, &public_key_2, &public_key_3, &public_key_4],
+            [
+                message_1.as_ref(),
+                message_2.as_ref(),
+                message_3.as_ref(),
+                message_4.as_ref(),
+            ],
+            &signature_agg_final,
+        );
+        assert!(verify_final);
     }
 }
