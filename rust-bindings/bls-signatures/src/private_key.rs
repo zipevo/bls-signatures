@@ -1,6 +1,7 @@
 use std::{ffi::c_void, marker::PhantomData};
 
 use bls_dash_sys::{
+    CCoreMPLDeriveChildPkUnhardened, CCoreMPLDeriveChildSk, CCoreMPLDeriveChildSkUnhardened,
     CCoreMPLKeyGen, CPrivateKeyFree, CPrivateKeyFromBytes, CPrivateKeyGetG1Element,
     CPrivateKeyIsEqual, CPrivateKeySerialize,
 };
@@ -78,6 +79,26 @@ impl PrivateKey {
             CPrivateKeyFromBytes(bytes.as_ptr() as *const c_void, mod_order, did_err)
         })?;
         Ok(PrivateKey { c_private_key })
+    }
+
+    pub fn derive_child_private_key(&self, scheme: &impl Scheme, index: u32) -> PrivateKey {
+        PrivateKey {
+            c_private_key: unsafe {
+                CCoreMPLDeriveChildSk(scheme.as_mut_ptr(), self.c_private_key, index)
+            },
+        }
+    }
+
+    pub fn derive_child_private_key_unhardened(
+        &self,
+        scheme: &impl Scheme,
+        index: u32,
+    ) -> PrivateKey {
+        PrivateKey {
+            c_private_key: unsafe {
+                CCoreMPLDeriveChildSkUnhardened(scheme.as_mut_ptr(), self.c_private_key, index)
+            },
+        }
     }
 }
 

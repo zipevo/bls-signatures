@@ -74,4 +74,28 @@ mod tests {
             Err(BlsError { msg }) if msg == "Seed size must be at least 32 bytes"
         ));
     }
+
+    #[test]
+    fn hd_keys_deterministic() {
+        let seed = b"seedweedseedweedseedweedseedweed";
+        let scheme = AugSchemeMPL::new();
+
+        let master_sk = PrivateKey::key_gen(&scheme, seed).expect("unable to generate private key");
+        let master_pk = master_sk
+            .get_g1_element()
+            .expect("unable to get public key");
+
+        let child_sk_u = master_sk.derive_child_private_key_unhardened(&scheme, 22);
+        let grandchild_sk_u = child_sk_u.derive_child_private_key_unhardened(&scheme, 0);
+
+        let child_pk_u = master_pk.derive_child_public_key_unhardened(&scheme, 22);
+        let grandchild_pk_u = child_pk_u.derive_child_public_key_unhardened(&scheme, 0);
+
+        assert_eq!(
+            grandchild_pk_u,
+            grandchild_sk_u
+                .get_g1_element()
+                .expect("cannot get public key")
+        );
+    }
 }

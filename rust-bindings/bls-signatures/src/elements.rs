@@ -1,11 +1,12 @@
 use std::ffi::c_void;
 
 use bls_dash_sys::{
-    CG1ElementFree, CG1ElementFromBytes, CG1ElementIsEqual, CG1ElementSerialize, CG2ElementFree,
-    CG2ElementFromBytes, CG2ElementIsEqual, CG2ElementSerialize,
+    CCoreMPLDeriveChildPkUnhardened, CG1ElementFree, CG1ElementFromBytes, CG1ElementIsEqual,
+    CG1ElementSerialize, CG2ElementFree, CG2ElementFromBytes, CG2ElementIsEqual,
+    CG2ElementSerialize,
 };
 
-use crate::{utils::c_err_to_result, BlsError};
+use crate::{schemes::Scheme, utils::c_err_to_result, BlsError};
 
 const G1_ELEMENT_SIZE: usize = 48; // TODO somehow extract it from bls library
 const G2_ELEMENT_SIZE: usize = 96; // TODO somehow extract it from bls library
@@ -45,6 +46,18 @@ impl G1Element {
         unsafe {
             let malloc_ptr = CG1ElementSerialize(self.c_element);
             Box::from_raw(malloc_ptr as *mut _)
+        }
+    }
+
+    pub fn derive_child_public_key_unhardened(
+        &self,
+        scheme: &impl Scheme,
+        index: u32,
+    ) -> G1Element {
+        G1Element {
+            c_element: unsafe {
+                CCoreMPLDeriveChildPkUnhardened(scheme.as_mut_ptr(), self.c_element, index)
+            },
         }
     }
 }
