@@ -4,7 +4,8 @@ use bls_dash_sys::{
     CAugSchemeMPLAggregateVerify, CAugSchemeMPLFree, CAugSchemeMPLSign, CAugSchemeMPLVerify,
     CBasicSchemeMPLAggregateVerify, CBasicSchemeMPLFree, CCoreMPLAggregatePubKeys,
     CCoreMPLAggregateSigs, CCoreMPLAggregateVerify, CCoreMPLKeyGen, CCoreMPLSign, CCoreMPLVerify,
-    NewCAugSchemeMPL, NewCBasicSchemeMPL,
+    CLegacySchemeMPLAggregateVerify, CLegacySchemeMPLSign, CLegacySchemeMPLVerify,
+    NewCAugSchemeMPL, NewCBasicSchemeMPL, NewCLegacySchemeMPL,
 };
 
 use crate::{private_key::PrivateKey, BlsError, G1Element, G2Element};
@@ -154,6 +155,74 @@ impl Scheme for BasicSchemeMPL {
     }
 }
 
+pub struct LegacySchemeMPL {
+    scheme: *mut c_void,
+}
+
+impl LegacySchemeMPL {
+    pub fn new() -> Self {
+        LegacySchemeMPL {
+            scheme: unsafe { NewCLegacySchemeMPL() },
+        }
+    }
+}
+
+impl Scheme for LegacySchemeMPL {
+    fn as_mut_ptr(&self) -> *mut c_void {
+        self.scheme
+    }
+
+    fn sign(&self, private_key: &PrivateKey, message: &[u8]) -> G2Element {
+        G2Element {
+            c_element: unsafe {
+                CLegacySchemeMPLSign(
+                    self.scheme,
+                    private_key.as_mut_ptr(),
+                    message.as_ptr() as *const _,
+                    message.len(),
+                )
+            },
+        }
+    }
+
+    fn verify(&self, public_key: &G1Element, message: &[u8], signature: &G2Element) -> bool {
+        unsafe {
+            CLegacySchemeMPLVerify(
+                self.scheme,
+                public_key.c_element,
+                message.as_ptr() as *const _,
+                message.len(),
+                signature.c_element,
+            )
+        }
+    }
+
+    fn aggregate_verify<'a>(
+        &self,
+        public_keys: impl IntoIterator<Item = &'a G1Element>,
+        messages: impl IntoIterator<Item = &'a [u8]>,
+        signature: &G2Element,
+    ) -> bool {
+        let AggregateVerifyArgs {
+            mut g1_pointers,
+            mut messages_pointers,
+            messages_lengths: mut messages_lengthes,
+        } = prepare_aggregate_verify_args(public_keys, messages);
+
+        unsafe {
+            CLegacySchemeMPLAggregateVerify(
+                self.as_mut_ptr(),
+                g1_pointers.as_mut_ptr(),
+                g1_pointers.len(),
+                messages_pointers.as_mut_ptr() as *mut _,
+                messages_lengthes.as_mut_ptr() as *mut _,
+                messages_pointers.len(),
+                signature.c_element,
+            )
+        }
+    }
+}
+
 impl Drop for BasicSchemeMPL {
     fn drop(&mut self) {
         unsafe { CBasicSchemeMPLFree(self.scheme) }
@@ -238,14 +307,11 @@ impl Drop for AugSchemeMPL {
 mod tests {
     use super::*;
 
-    #[test]
-    fn verify_aggregate() {
+    fn verify_aggregate(scheme: impl Scheme) {
         let seed1 = b"seedweedseedweedseedweedseedweed";
         let seed2 = b"weedseedweedseedweedseedweedseed";
         let seed3 = b"seedseedseedseedweedweedweedweed";
         let seed4 = b"weedweedweedweedweedweedweedweed";
-
-        let scheme = AugSchemeMPL::new();
 
         let private_key_1 =
             PrivateKey::key_gen(&scheme, seed1).expect("unable to generate private key");
@@ -301,5 +367,20 @@ mod tests {
             &signature_agg_final,
         );
         assert!(verify_final);
+    }
+
+    #[test]
+    fn verify_aggregate_aug() {
+        verify_aggregate(AugSchemeMPL::new());
+    }
+
+    #[test]
+    fn verify_aggregate_basic() {
+        verify_aggregate(BasicSchemeMPL::new());
+    }
+
+    #[test]
+    fn verify_aggregate_legacy() {
+        verify_aggregate(LegacySchemeMPL::new());
     }
 }
