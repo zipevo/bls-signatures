@@ -1,5 +1,8 @@
 use core::slice;
-use std::ffi::{c_void, CStr};
+use std::{
+    ffi::{c_void, CStr},
+    ops::Deref,
+};
 
 use bls_dash_sys::{GetLastErrorMsg, SecAllocBytes, SecFree};
 
@@ -51,7 +54,15 @@ impl SecureBox {
         unsafe { slice::from_raw_parts(self.c_sec_alloc, self.len) }
     }
 }
-// TODO: Deref
+
+impl Deref for SecureBox {
+    type Target = [u8];
+
+    fn deref(&self) -> &Self::Target {
+        self.as_slice()
+    }
+}
+
 impl Drop for SecureBox {
     fn drop(&mut self) {
         unsafe { SecFree(self.as_mut_ptr()) }
