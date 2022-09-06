@@ -49,6 +49,7 @@ void* CPrivateKeySerialize(const CPrivateKey sk) {
     const bls::PrivateKey* skPtr = (bls::PrivateKey*)sk;
     uint8_t* buffer = bls::Util::SecAlloc<uint8_t>(bls::PrivateKey::PRIVATE_KEY_SIZE);
     skPtr->Serialize(buffer);
+
     return (void*)buffer;
 }
 

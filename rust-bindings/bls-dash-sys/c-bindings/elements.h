@@ -27,27 +27,27 @@ typedef void* CPrivateKey;
 
 // G1Element
 int CG1ElementSize();
-CG1Element CG1ElementFromBytes(const void* data, bool* didErr);
+CG1Element CG1ElementFromBytes(const void* data, const bool legacy, bool* didErr);
 CG1Element CG1ElementGenerator();
 bool CG1ElementIsValid(const CG1Element el);
-uint32_t CG1ElementGetFingerprint(const CG1Element el);
+uint32_t CG1ElementGetFingerprint(const CG1Element el, const bool legacy);
 bool CG1ElementIsEqual(const CG1Element el1, const CG1Element el2);
 CG1Element CG1ElementAdd(const CG1Element el1, const CG1Element el2);
 CG1Element CG1ElementMul(const CG1Element el, const CPrivateKey sk);
 CG1Element CG1ElementNegate(const CG1Element el);
-void* CG1ElementSerialize(const CG1Element el);
+void* CG1ElementSerialize(const CG1Element el, const bool legacy);
 void CG1ElementFree(const CG1Element el);
 
 // G2Element
 int CG2ElementSize();
-CG2Element CG2ElementFromBytes(const void* data, bool* didErr);
+CG2Element CG2ElementFromBytes(const void* data, const bool legacy, bool* didErr);
 CG2Element CG2ElementGenerator();
 bool CG2ElementIsValid(const CG2Element el);
 bool CG2ElementIsEqual(const CG2Element el1, const CG2Element el2);
 CG2Element CG2ElementAdd(const CG2Element el1, const CG2Element el2);
 CG2Element CG2ElementMul(const CG2Element el, const CPrivateKey sk);
 CG2Element CG2ElementNegate(const CG2Element el);
-void* CG2ElementSerialize(const CG2Element el);
+void* CG2ElementSerialize(const CG2Element el, const bool legacy);
 void CG2ElementFree(const CG2Element el);
 
 #ifdef __cplusplus

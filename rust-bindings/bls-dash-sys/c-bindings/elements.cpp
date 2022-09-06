@@ -23,11 +23,11 @@ int CG1ElementSize() {
     return bls::G1Element::SIZE;
 }
 
-CG1Element CG1ElementFromBytes(const void* data, bool* didErr) {
+CG1Element CG1ElementFromBytes(const void* data, bool legacy, bool* didErr) {
     bls::G1Element* el = nullptr;
     try {
         el = new bls::G1Element(
-            bls::G1Element::FromBytes(bls::Bytes((uint8_t*)(data), bls::G1Element::SIZE))
+            bls::G1Element::FromBytes(bls::Bytes((uint8_t*)(data), bls::G1Element::SIZE), legacy)
         );
     } catch(const std::exception& ex) {
         gErrMsg = ex.what();
@@ -47,14 +47,14 @@ bool CG1ElementIsValid(const CG1Element el) {
     return elPtr->IsValid();
 }
 
-uint32_t CG1ElementGetFingerprint(const CG1Element el) {
+uint32_t CG1ElementGetFingerprint(const CG1Element el, const bool legacy) {
     const bls::G1Element* elPtr = (bls::G1Element*)el;
-    return elPtr->GetFingerprint();
+    return elPtr->GetFingerprint(legacy);
 }
 
-void* CG1ElementSerialize(const CG1Element el) {
+void* CG1ElementSerialize(const CG1Element el, const bool legacy) {
     const bls::G1Element* elPtr = (bls::G1Element*)el;
-    const std::vector<uint8_t> serialized = elPtr->Serialize();
+    const std::vector<uint8_t> serialized = elPtr->Serialize(legacy);
     uint8_t* buffer = (uint8_t*)malloc(bls::G1Element::SIZE);
     memcpy(buffer, serialized.data(), bls::G1Element::SIZE);
     return (void*)buffer;
@@ -93,11 +93,11 @@ int CG2ElementSize() {
     return bls::G2Element::SIZE;
 }
 
-CG2Element CG2ElementFromBytes(const void* data, bool* didErr) {
+CG2Element CG2ElementFromBytes(const void* data, const bool legacy, bool* didErr) {
     bls::G2Element* el = nullptr;
     try {
         el = new bls::G2Element(
-            bls::G2Element::FromBytes(bls::Bytes((uint8_t*)data, bls::G2Element::SIZE))
+            bls::G2Element::FromBytes(bls::Bytes((uint8_t*)data, bls::G2Element::SIZE), legacy)
         );
         *didErr = false;
     } catch(const std::exception& ex) {
@@ -117,9 +117,9 @@ bool CG2ElementIsValid(const CG2Element el) {
     return elPtr->IsValid();
 }
 
-void* CG2ElementSerialize(const CG2Element el) {
+void* CG2ElementSerialize(const CG2Element el, const bool legacy) {
     const bls::G2Element* elPtr = (bls::G2Element*)el;
-    const std::vector<uint8_t> serialized = elPtr->Serialize();
+    const std::vector<uint8_t> serialized = elPtr->Serialize(legacy);
     uint8_t* buffer = (uint8_t*)malloc(bls::G2Element::SIZE);
     memcpy(buffer, serialized.data(), bls::G2Element::SIZE);
     return (void*)buffer;

@@ -4,5 +4,8 @@ description = ""
 version = "1.2.4"
 edition = "2021"
 
+[features]
+legacy = []
+
 [dependencies]
 bls-dash-sys = { path = "../bls-dash-sys" }
