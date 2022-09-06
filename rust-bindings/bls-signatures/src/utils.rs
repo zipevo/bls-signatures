@@ -22,37 +22,38 @@ where
     }
 }
 
-pub struct SecAlloc {
+pub struct SecureBox {
     c_sec_alloc: *mut u8,
     len: usize,
 }
 
-impl SecAlloc {
+impl SecureBox {
     pub(crate) fn new(len: usize) -> Self {
-        SecAlloc {
+        SecureBox {
             c_sec_alloc: unsafe { SecAllocBytes(len) },
             len,
         }
     }
 
     pub(crate) unsafe fn from_ptr(ptr: *mut u8, len: usize) -> Self {
-        SecAlloc {
+        SecureBox {
             c_sec_alloc: ptr,
             len,
         }
     }
 
-    pub(crate) fn as_mut_ptr(&mut self) -> *mut u8 {
-        self.c_sec_alloc
+    // Somewhere it returns *mut c_void
+    pub(crate) fn as_mut_ptr(&mut self) -> *mut c_void {
+        self.c_sec_alloc as *mut c_void
     }
 
-    pub(crate) fn as_slice(&self) -> &[u8] {
+    pub fn as_slice(&self) -> &[u8] {
         unsafe { slice::from_raw_parts(self.c_sec_alloc, self.len) }
     }
 }
-
-impl Drop for SecAlloc {
+// TODO: Deref
+impl Drop for SecureBox {
     fn drop(&mut self) {
-        unsafe { SecFree(self.c_sec_alloc as *mut c_void) }
+        unsafe { SecFree(self.as_mut_ptr()) }
     }
 }

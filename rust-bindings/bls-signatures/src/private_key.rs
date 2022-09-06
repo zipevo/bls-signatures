@@ -8,7 +8,7 @@ use bls_dash_sys::{
 
 use crate::{
     schemes::Scheme,
-    utils::{c_err_to_result, SecAlloc},
+    utils::{c_err_to_result, SecureBox},
     BlsError, G1Element,
 };
 
@@ -53,11 +53,11 @@ impl PrivateKey {
         })
     }
 
-    pub fn serialize(&self) -> SecAlloc {
+    pub fn serialize(&self) -> SecureBox {
         // `CPrivateKeySerialize` internally securely allocates memory which we have to
         // wrap safely
         unsafe {
-            SecAlloc::from_ptr(
+            SecureBox::from_ptr(
                 CPrivateKeySerialize(self.c_private_key) as *mut u8,
                 PRIVATE_KEY_SIZE,
             )

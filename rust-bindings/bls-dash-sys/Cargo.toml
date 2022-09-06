@@ -1,5 +1,6 @@
 [package]
 name = "bls-dash-sys"
+description = ""
 version = "1.2.4"
 build = "build.rs"
 edition = "2021"

@@ -59,7 +59,7 @@ pub trait Scheme {
 struct AggregateVerifyArgs {
     g1_pointers: Vec<*mut c_void>,
     messages_pointers: Vec<*const u8>,
-    messages_lengthes: Vec<usize>,
+    messages_lengths: Vec<usize>,
 }
 
 fn prepare_aggregate_verify_args<'a>(
@@ -82,7 +82,7 @@ fn prepare_aggregate_verify_args<'a>(
     AggregateVerifyArgs {
         g1_pointers,
         messages_pointers,
-        messages_lengthes,
+        messages_lengths: messages_lengthes,
     }
 }
 
@@ -137,7 +137,7 @@ impl Scheme for BasicSchemeMPL {
         let AggregateVerifyArgs {
             mut g1_pointers,
             mut messages_pointers,
-            mut messages_lengthes,
+            messages_lengths: mut messages_lengthes,
         } = prepare_aggregate_verify_args(public_keys, messages);
 
         unsafe {
@@ -211,7 +211,7 @@ impl Scheme for AugSchemeMPL {
         let AggregateVerifyArgs {
             mut g1_pointers,
             mut messages_pointers,
-            mut messages_lengthes,
+            messages_lengths: mut messages_lengths,
         } = prepare_aggregate_verify_args(public_keys, messages);
 
         unsafe {
@@ -220,7 +220,7 @@ impl Scheme for AugSchemeMPL {
                 g1_pointers.as_mut_ptr(),
                 g1_pointers.len(),
                 messages_pointers.as_mut_ptr() as *mut _,
-                messages_lengthes.as_mut_ptr() as *mut _,
+                messages_lengths.as_mut_ptr() as *mut _,
                 messages_pointers.len(),
                 signature.c_element,
             )

@@ -188,6 +188,8 @@ fn main() {
         .header(c_bindings_path.join("privatekey.h").to_str().unwrap())
         .header(c_bindings_path.join("schemes.h").to_str().unwrap())
         .header(c_bindings_path.join("threshold.h").to_str().unwrap())
+        // .trust_clang_mangling(true)
+        // .wasm_import_module_name()
         .size_t_is_usize(true)
         .parse_callbacks(Box::new(bindgen::CargoCallbacks));
 
