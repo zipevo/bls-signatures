@@ -26,6 +26,7 @@ typedef void* CCoreMPL;
 typedef CCoreMPL CBasicSchemeMPL;
 typedef CCoreMPL CAugSchemeMPL;
 typedef CCoreMPL CPopSchemeMPL;
+typedef CCoreMPL CLegacySchemeMPL;
 
 // CoreMPL
 CPrivateKey CCoreMPLKeyGen(const CCoreMPL scheme, const void* seed, const size_t seedLen, bool* didErr);
@@ -93,6 +94,28 @@ bool CPopSchemeMPLFastAggregateVerify(const CPopSchemeMPL scheme,
                                       const size_t msgsLen,
                                       const CG2Element sig);
 void CPopSchemeMPLFree(CPopSchemeMPL scheme);
+
+// LegacySchemeMPL
+CLegacySchemeMPL NewCLegacySchemeMPL();
+CG2Element CLegacySchemeMPLSign(const CLegacySchemeMPL scheme, const CPrivateKey sk, const void* msg, const size_t msgLen);
+CG2Element CLegacySchemeMPLSignPrepend(const CLegacySchemeMPL scheme,
+                                    const CPrivateKey sk,
+                                    const void* msg,
+                                    const size_t msgLen,
+                                    const CG1Element prepPk);
+bool CLegacySchemeMPLVerify(const CLegacySchemeMPL scheme,
+                         const CG1Element pk,
+                         const void* msg,
+                         const size_t msgLen,
+                         const CG2Element sig);
+bool CLegacySchemeMPLAggregateVerify(const CLegacySchemeMPL scheme,
+                                  void** pks,
+                                  const size_t pksLen,
+                                  void** msgs,
+                                  const void* msgsLens,
+                                  const size_t msgsLen,
+                                  const CG2Element sig);
+void CLegacySchemeMPLFree(CLegacySchemeMPL scheme);
 
 #ifdef __cplusplus
 }

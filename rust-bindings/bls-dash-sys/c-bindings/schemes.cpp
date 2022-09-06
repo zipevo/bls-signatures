@@ -227,3 +227,49 @@ void CPopSchemeMPLFree(CPopSchemeMPL scheme) {
     bls::PopSchemeMPL* schemePtr = (bls::PopSchemeMPL*)scheme;
     delete schemePtr;
 }
+
+// LegacySchemeMPL
+CLegacySchemeMPL NewCLegacySchemeMPL() {
+    return new bls::LegacySchemeMPL();
+}
+
+CG2Element CLegacySchemeMPLSign(const CLegacySchemeMPL scheme, const CPrivateKey sk, const void* msg, const size_t msgLen) {
+    bls::LegacySchemeMPL* schemePtr = (bls::LegacySchemeMPL*)scheme;
+    const bls::PrivateKey* skPtr = (bls::PrivateKey*)sk;
+    return new bls::G2Element(
+        schemePtr->Sign(*skPtr, bls::Bytes((uint8_t*)msg, msgLen))
+    );
+}
+
+bool CLegacySchemeMPLVerify(const CLegacySchemeMPL scheme,
+                         const CG1Element pk,
+                         const void* msg,
+                         const size_t msgLen,
+                         const CG2Element sig) {
+    bls::LegacySchemeMPL* schemePtr = (bls::LegacySchemeMPL*)scheme;
+    const bls::G1Element* pkPtr = (bls::G1Element*)pk;
+    const uint8_t* msgPtr = (uint8_t*)msg;
+    const bls::G2Element* sigPtr = (bls::G2Element*)sig;
+    return schemePtr->Verify(*pkPtr, bls::Bytes(msgPtr, msgLen), *sigPtr);
+}
+
+bool CLegacySchemeMPLAggregateVerify(const CLegacySchemeMPL scheme,
+                                  void** pks,
+                                  const size_t pksLen,
+                                  void** msgs,
+                                  const void* msgsLens,
+                                  const size_t msgsLen,
+                                  const CG2Element sig) {
+    bls::LegacySchemeMPL* schemePtr = (bls::LegacySchemeMPL*)scheme;
+    const size_t* msgLensPtr = (size_t*)msgsLens;
+    const bls::G2Element* sigPtr = (bls::G2Element*)sig;
+    const std::vector<bls::G1Element> vecPubKeys = toBLSVector<bls::G1Element>(pks, pksLen);
+    const std::vector<size_t> vecMsgsLens = std::vector<size_t>(msgLensPtr, msgLensPtr + msgsLen);
+    const std::vector<bls::Bytes> vecMsgs = toVectorBytes(msgs, msgsLen, vecMsgsLens);
+    return schemePtr->AggregateVerify(vecPubKeys, vecMsgs, *sigPtr);
+}
+
+void CLegacySchemeMPLFree(CLegacySchemeMPL scheme) {
+    bls::LegacySchemeMPL* schemePtr = (bls::LegacySchemeMPL*)scheme;
+    delete schemePtr;
+}
