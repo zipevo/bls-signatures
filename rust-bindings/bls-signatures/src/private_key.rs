@@ -12,7 +12,7 @@ use crate::{
     BlsError, G1Element,
 };
 
-const PRIVATE_KEY_SIZE: usize = 32; // TODO somehow extract it from bls library
+pub const PRIVATE_KEY_SIZE: usize = 32; // TODO somehow extract it from bls library
 
 #[derive(Debug)]
 pub struct PrivateKey {

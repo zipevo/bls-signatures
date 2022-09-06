@@ -8,8 +8,8 @@ use bls_dash_sys::{
 
 use crate::{schemes::Scheme, utils::c_err_to_result, BlsError};
 
-const G1_ELEMENT_SIZE: usize = 48; // TODO somehow extract it from bls library
-const G2_ELEMENT_SIZE: usize = 96; // TODO somehow extract it from bls library
+pub const G1_ELEMENT_SIZE: usize = 48; // TODO somehow extract it from bls library
+pub const G2_ELEMENT_SIZE: usize = 96; // TODO somehow extract it from bls library
 
 #[derive(Debug)]
 pub struct G1Element {
