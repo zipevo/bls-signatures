@@ -204,7 +204,7 @@ On a 3.5 GHz i7 Mac, verification takes about 1.1ms per signature, and signing t
 ### Link the library to use it
 
 ```bash
-g++ -Wl,-no_pie -std=c++11  -Ibls-signatures/build/_deps/relic-src/include -Ibls-signatures/build/_deps/relic-build/include -Ibls-signatures/src -L./bls-signatures/build/ -l bls yourapp.cpp
+g++ -Wl,-no_pie -std=c++11  -Ibls-signatures/depends/relic/include -Ibls-signatures/build/depends/relic/include -Ibls-signatures/src -L./bls-signatures/build/ -l bls yourapp.cpp
 ```
 
 ## Notes on dependencies

@@ -18,8 +18,8 @@ target_include_directories(bls-dash
   PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     $<$<BOOL:${GMP_FOUND}>:${GMP_INCLUDES}>
-    ${relic_SOURCE_DIR}/include
-    ${relic_BINARY_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../depends/relic/include
+    ${CMAKE_CURRENT_BINARY_DIR}/../depends/relic/include
 )
 
 target_compile_definitions(bls-dash
@@ -33,8 +33,8 @@ target_link_libraries(bls-dash
     sodium
 )
 
-install(DIRECTORY ${relic_SOURCE_DIR}/include/ DESTINATION include/bls-dash)
-install(DIRECTORY ${relic_BINARY_DIR}/include/ DESTINATION include/bls-dash)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../depends/relic/include/ DESTINATION include/bls-dash)
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../depends/relic/include/ DESTINATION include/bls-dash)
 install(FILES ${HEADERS} DESTINATION include/bls-dash)
 install(FILES $<TARGET_FILE:bls-dash> DESTINATION lib)
 
