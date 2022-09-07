@@ -3,9 +3,9 @@ use std::ffi::c_void;
 use bls_dash_sys::{
     CAugSchemeMPLAggregateVerify, CAugSchemeMPLFree, CAugSchemeMPLSign, CAugSchemeMPLVerify,
     CBasicSchemeMPLAggregateVerify, CBasicSchemeMPLFree, CCoreMPLAggregatePubKeys,
-    CCoreMPLAggregateSigs, CCoreMPLSign, CCoreMPLVerify, CLegacySchemeMPLAggregateVerify,
-    CLegacySchemeMPLSign, CLegacySchemeMPLVerify, NewCAugSchemeMPL, NewCBasicSchemeMPL,
-    NewCLegacySchemeMPL,
+    CCoreMPLAggregateSigs, CCoreMPLSign, CCoreMPLVerify, CCoreMPLVerifySecure,
+    CLegacySchemeMPLAggregateVerify, CLegacySchemeMPLSign, CLegacySchemeMPLVerify,
+    CLegacySchemeMPLVerifySecure, NewCAugSchemeMPL, NewCBasicSchemeMPL, NewCLegacySchemeMPL,
 };
 
 use crate::{private_key::PrivateKey, G1Element, G2Element};
@@ -16,6 +16,29 @@ pub trait Scheme {
     fn sign(&self, private_key: &PrivateKey, message: &[u8]) -> G2Element;
 
     fn verify(&self, public_key: &G1Element, message: &[u8], signature: &G2Element) -> bool;
+
+    fn verify_secure<'a>(
+        &self,
+        public_keys: impl IntoIterator<Item = &'a G1Element>,
+        message: &[u8],
+        signature: &G2Element,
+    ) -> bool {
+        let mut g1_pointers = public_keys
+            .into_iter()
+            .map(|g1| g1.c_element)
+            .collect::<Vec<_>>();
+
+        unsafe {
+            CCoreMPLVerifySecure(
+                self.as_mut_ptr(),
+                g1_pointers.as_mut_ptr(),
+                g1_pointers.len(),
+                signature.c_element,
+                message.as_ptr() as *const _,
+                message.len(),
+            )
+        }
+    }
 
     fn aggregate_public_keys<'a>(
         &self,
@@ -193,6 +216,29 @@ impl Scheme for LegacySchemeMPL {
                 message.as_ptr() as *const _,
                 message.len(),
                 signature.c_element,
+            )
+        }
+    }
+
+    fn verify_secure<'a>(
+        &self,
+        public_keys: impl IntoIterator<Item = &'a G1Element>,
+        message: &[u8],
+        signature: &G2Element,
+    ) -> bool {
+        let mut g1_pointers = public_keys
+            .into_iter()
+            .map(|g1| g1.c_element)
+            .collect::<Vec<_>>();
+
+        unsafe {
+            CLegacySchemeMPLVerifySecure(
+                self.as_mut_ptr(),
+                g1_pointers.as_mut_ptr(),
+                g1_pointers.len(),
+                signature.c_element,
+                message.as_ptr() as *const _,
+                message.len(),
             )
         }
     }

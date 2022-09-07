@@ -16,8 +16,9 @@
 #define GO_BINDINGS_SCHEMES_H_
 #include <stdbool.h>
 #include <stdlib.h>
-#include "privatekey.h"
+
 #include "elements.h"
+#include "privatekey.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -29,92 +30,152 @@ typedef CCoreMPL CPopSchemeMPL;
 typedef CCoreMPL CLegacySchemeMPL;
 
 // CoreMPL
-CPrivateKey CCoreMPLKeyGen(const CCoreMPL scheme, const void* seed, const size_t seedLen, bool* didErr);
+CPrivateKey CCoreMPLKeyGen(
+    const CCoreMPL scheme,
+    const void* seed,
+    const size_t seedLen,
+    bool* didErr);
 CG1Element CCoreMPSkToG1(const CCoreMPL scheme, const CPrivateKey sk);
-CG2Element CCoreMPLSign(const CCoreMPL scheme, const CPrivateKey sk, const void* msg, const size_t msgLen);
-bool CCoreMPLVerify(const CBasicSchemeMPL scheme,
-                    const CG1Element pk,
-                    const void* msg,
-                    const size_t msgLen,
-                    const CG2Element sig);
-CG1Element CCoreMPLAggregatePubKeys(const CCoreMPL scheme, void** pubKeys, const size_t pkLen);
-CG2Element CCoreMPLAggregateSigs(const CCoreMPL scheme, void** sigs, const size_t sigLen);
-CPrivateKey CCoreMPLDeriveChildSk(const CCoreMPL scheme, const CPrivateKey sk, const uint32_t index);
-CPrivateKey CCoreMPLDeriveChildSkUnhardened(const CCoreMPL scheme, const CPrivateKey sk, const uint32_t index);
-CG1Element CCoreMPLDeriveChildPkUnhardened(const CCoreMPL scheme, const CG1Element sk, const uint32_t index);
-bool CCoreMPLAggregateVerify(const CCoreMPL scheme,
-                             void** pks,
-                             const size_t pkLen,
-                             void** msgs,
-                             const void* msgLens,
-                             const size_t msgLen,
-                             const CG2Element sig);
+CG2Element CCoreMPLSign(
+    const CCoreMPL scheme,
+    const CPrivateKey sk,
+    const void* msg,
+    const size_t msgLen);
+bool CCoreMPLVerify(
+    const CBasicSchemeMPL scheme,
+    const CG1Element pk,
+    const void* msg,
+    const size_t msgLen,
+    const CG2Element sig);
+bool CCoreMPLVerifySecure(
+    const CCoreMPL scheme,
+    void** pks,
+    const size_t pksLen,
+    const CG2Element sig,
+    const void* msg,
+    const size_t msgLen);
+CG1Element CCoreMPLAggregatePubKeys(
+    const CCoreMPL scheme,
+    void** pubKeys,
+    const size_t pkLen);
+CG2Element CCoreMPLAggregateSigs(
+    const CCoreMPL scheme,
+    void** sigs,
+    const size_t sigLen);
+CPrivateKey CCoreMPLDeriveChildSk(
+    const CCoreMPL scheme,
+    const CPrivateKey sk,
+    const uint32_t index);
+CPrivateKey CCoreMPLDeriveChildSkUnhardened(
+    const CCoreMPL scheme,
+    const CPrivateKey sk,
+    const uint32_t index);
+CG1Element CCoreMPLDeriveChildPkUnhardened(
+    const CCoreMPL scheme,
+    const CG1Element sk,
+    const uint32_t index);
+bool CCoreMPLAggregateVerify(
+    const CCoreMPL scheme,
+    void** pks,
+    const size_t pkLen,
+    void** msgs,
+    const void* msgLens,
+    const size_t msgLen,
+    const CG2Element sig);
 
 // BasicSchemeMPL
 CBasicSchemeMPL NewCBasicSchemeMPL();
-bool CBasicSchemeMPLAggregateVerify(CBasicSchemeMPL scheme,
-                                    void** pks,
-                                    const size_t pksLen,
-                                    void** msgs,
-                                    const void* msgsLens,
-                                    const size_t msgsLen,
-                                    const CG2Element sig);
+bool CBasicSchemeMPLAggregateVerify(
+    CBasicSchemeMPL scheme,
+    void** pks,
+    const size_t pksLen,
+    void** msgs,
+    const void* msgsLens,
+    const size_t msgsLen,
+    const CG2Element sig);
 void CBasicSchemeMPLFree(CBasicSchemeMPL scheme);
 
 // AugSchemeMPL
 CAugSchemeMPL NewCAugSchemeMPL();
-CG2Element CAugSchemeMPLSign(const CAugSchemeMPL scheme, const CPrivateKey sk, const void* msg, const size_t msgLen);
-CG2Element CAugSchemeMPLSignPrepend(const CAugSchemeMPL scheme,
-                                    const CPrivateKey sk,
-                                    const void* msg,
-                                    const size_t msgLen,
-                                    const CG1Element prepPk);
-bool CAugSchemeMPLVerify(const CAugSchemeMPL scheme,
-                         const CG1Element pk,
-                         const void* msg,
-                         const size_t msgLen,
-                         const CG2Element sig);
-bool CAugSchemeMPLAggregateVerify(const CAugSchemeMPL scheme,
-                                  void** pks,
-                                  const size_t pksLen,
-                                  void** msgs,
-                                  const void* msgsLens,
-                                  const size_t msgsLen,
-                                  const CG2Element sig);
+CG2Element CAugSchemeMPLSign(
+    const CAugSchemeMPL scheme,
+    const CPrivateKey sk,
+    const void* msg,
+    const size_t msgLen);
+CG2Element CAugSchemeMPLSignPrepend(
+    const CAugSchemeMPL scheme,
+    const CPrivateKey sk,
+    const void* msg,
+    const size_t msgLen,
+    const CG1Element prepPk);
+bool CAugSchemeMPLVerify(
+    const CAugSchemeMPL scheme,
+    const CG1Element pk,
+    const void* msg,
+    const size_t msgLen,
+    const CG2Element sig);
+bool CAugSchemeMPLAggregateVerify(
+    const CAugSchemeMPL scheme,
+    void** pks,
+    const size_t pksLen,
+    void** msgs,
+    const void* msgsLens,
+    const size_t msgsLen,
+    const CG2Element sig);
 void CAugSchemeMPLFree(CAugSchemeMPL scheme);
 
 // PopSchemeMPL
 CPopSchemeMPL NewCPopSchemeMPL();
-CG2Element CPopSchemeMPLPopProve(const CPopSchemeMPL scheme, const CPrivateKey sk);
-bool CPopSchemeMPLPopVerify(const CPopSchemeMPL scheme, const CG1Element pk, const CG2Element sig);
-bool CPopSchemeMPLFastAggregateVerify(const CPopSchemeMPL scheme,
-                                      void** pks,
-                                      const size_t pksLen,
-                                      const void* msgs,
-                                      const size_t msgsLen,
-                                      const CG2Element sig);
+CG2Element CPopSchemeMPLPopProve(
+    const CPopSchemeMPL scheme,
+    const CPrivateKey sk);
+bool CPopSchemeMPLPopVerify(
+    const CPopSchemeMPL scheme,
+    const CG1Element pk,
+    const CG2Element sig);
+bool CPopSchemeMPLFastAggregateVerify(
+    const CPopSchemeMPL scheme,
+    void** pks,
+    const size_t pksLen,
+    const void* msgs,
+    const size_t msgsLen,
+    const CG2Element sig);
 void CPopSchemeMPLFree(CPopSchemeMPL scheme);
 
 // LegacySchemeMPL
 CLegacySchemeMPL NewCLegacySchemeMPL();
-CG2Element CLegacySchemeMPLSign(const CLegacySchemeMPL scheme, const CPrivateKey sk, const void* msg, const size_t msgLen);
-CG2Element CLegacySchemeMPLSignPrepend(const CLegacySchemeMPL scheme,
-                                    const CPrivateKey sk,
-                                    const void* msg,
-                                    const size_t msgLen,
-                                    const CG1Element prepPk);
-bool CLegacySchemeMPLVerify(const CLegacySchemeMPL scheme,
-                         const CG1Element pk,
-                         const void* msg,
-                         const size_t msgLen,
-                         const CG2Element sig);
-bool CLegacySchemeMPLAggregateVerify(const CLegacySchemeMPL scheme,
-                                  void** pks,
-                                  const size_t pksLen,
-                                  void** msgs,
-                                  const void* msgsLens,
-                                  const size_t msgsLen,
-                                  const CG2Element sig);
+CG2Element CLegacySchemeMPLSign(
+    const CLegacySchemeMPL scheme,
+    const CPrivateKey sk,
+    const void* msg,
+    const size_t msgLen);
+CG2Element CLegacySchemeMPLSignPrepend(
+    const CLegacySchemeMPL scheme,
+    const CPrivateKey sk,
+    const void* msg,
+    const size_t msgLen,
+    const CG1Element prepPk);
+bool CLegacySchemeMPLVerify(
+    const CLegacySchemeMPL scheme,
+    const CG1Element pk,
+    const void* msg,
+    const size_t msgLen,
+    const CG2Element sig);
+bool CLegacySchemeMPLVerifySecure(
+    const CLegacySchemeMPL scheme,
+    void** pks,
+    const size_t pksLen,
+    const CG2Element sig,
+    const void* msg,
+    const size_t msgLen);
+bool CLegacySchemeMPLAggregateVerify(
+    const CLegacySchemeMPL scheme,
+    void** pks,
+    const size_t pksLen,
+    void** msgs,
+    const void* msgsLens,
+    const size_t msgsLen,
+    const CG2Element sig);
 void CLegacySchemeMPLFree(CLegacySchemeMPL scheme);
 
 #ifdef __cplusplus
