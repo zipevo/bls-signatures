@@ -1,9 +1,9 @@
 use std::ffi::c_void;
 
 use bls_dash_sys::{
-    CCoreMPLDeriveChildPkUnhardened, CG1ElementFree, CG1ElementFromBytes, CG1ElementIsEqual,
-    CG1ElementSerialize, CG2ElementFree, CG2ElementFromBytes, CG2ElementIsEqual,
-    CG2ElementSerialize,
+    CCoreMPLDeriveChildPkUnhardened, CG1ElementFree, CG1ElementFromBytes, CG1ElementGenerator,
+    CG1ElementGetFingerprint, CG1ElementIsEqual, CG1ElementSerialize, CG2ElementFree,
+    CG2ElementFromBytes, CG2ElementIsEqual, CG2ElementSerialize,
 };
 
 use crate::{schemes::Scheme, utils::c_err_to_result, BlsError};
@@ -25,6 +25,12 @@ impl PartialEq for G1Element {
 impl Eq for G1Element {}
 
 impl G1Element {
+    pub fn generate() -> Self {
+        let c_element = unsafe { CG1ElementGenerator() };
+
+        G1Element { c_element }
+    }
+
     pub(crate) fn from_bytes_with_legacy_flag(
         bytes: &[u8],
         legacy: bool,
@@ -70,6 +76,14 @@ impl G1Element {
                 CCoreMPLDeriveChildPkUnhardened(scheme.as_mut_ptr(), self.c_element, index)
             },
         }
+    }
+
+    pub(crate) fn fingerprint_with_legacy_flag(&self, legacy: bool) -> u32 {
+        unsafe { CG1ElementGetFingerprint(self.c_element, legacy) }
+    }
+
+    pub fn fingerprint(&self) -> u32 {
+        self.fingerprint_with_legacy_flag(false)
     }
 }
 
@@ -169,5 +183,34 @@ mod tests {
             G2Element::from_bytes(g2_bytes.as_ref()).expect("cannot build G2 element from bytes");
 
         assert_eq!(g2, g2_2);
+    }
+
+    mod generate {
+        use super::*;
+
+        #[test]
+        fn should_generate_new_g1_element() {
+            let g1_element = G1Element::generate();
+
+            assert_eq!(g1_element.serialize().len(), 48);
+        }
+    }
+
+    mod fingerprint {
+        use super::*;
+
+        #[test]
+        fn should_return_fingerprint() {
+            let bytes = [
+                151, 241, 211, 167, 49, 151, 215, 148, 38, 149, 99, 140, 79, 169, 172, 15, 195,
+                104, 140, 79, 151, 116, 185, 5, 161, 78, 58, 63, 23, 27, 172, 88, 108, 85, 232, 63,
+                249, 122, 26, 239, 251, 58, 240, 10, 219, 34, 198, 187,
+            ];
+
+            let g1_element =
+                G1Element::from_bytes(&bytes).expect("should create g1 element from bytes");
+
+            assert_eq!(g1_element.fingerprint(), 2093959050);
+        }
     }
 }
