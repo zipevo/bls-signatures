@@ -185,32 +185,24 @@ mod tests {
         assert_eq!(g2, g2_2);
     }
 
-    mod generate {
-        use super::*;
+    #[test]
+    fn should_generate_new_g1_element() {
+        let g1_element = G1Element::generate();
 
-        #[test]
-        fn should_generate_new_g1_element() {
-            let g1_element = G1Element::generate();
-
-            assert_eq!(g1_element.serialize().len(), 48);
-        }
+        assert_eq!(g1_element.serialize().len(), 48);
     }
 
-    mod fingerprint {
-        use super::*;
+    #[test]
+    fn should_return_fingerprint() {
+        let bytes = [
+            151, 241, 211, 167, 49, 151, 215, 148, 38, 149, 99, 140, 79, 169, 172, 15, 195, 104,
+            140, 79, 151, 116, 185, 5, 161, 78, 58, 63, 23, 27, 172, 88, 108, 85, 232, 63, 249,
+            122, 26, 239, 251, 58, 240, 10, 219, 34, 198, 187,
+        ];
 
-        #[test]
-        fn should_return_fingerprint() {
-            let bytes = [
-                151, 241, 211, 167, 49, 151, 215, 148, 38, 149, 99, 140, 79, 169, 172, 15, 195,
-                104, 140, 79, 151, 116, 185, 5, 161, 78, 58, 63, 23, 27, 172, 88, 108, 85, 232, 63,
-                249, 122, 26, 239, 251, 58, 240, 10, 219, 34, 198, 187,
-            ];
+        let g1_element =
+            G1Element::from_bytes(&bytes).expect("should create g1 element from bytes");
 
-            let g1_element =
-                G1Element::from_bytes(&bytes).expect("should create g1 element from bytes");
-
-            assert_eq!(g1_element.fingerprint(), 2093959050);
-        }
+        assert_eq!(g1_element.fingerprint(), 2093959050);
     }
 }

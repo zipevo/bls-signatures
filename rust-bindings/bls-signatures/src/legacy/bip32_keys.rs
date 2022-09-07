@@ -1,5 +1,5 @@
 use crate::{
-    bip32_keys::{BIP32ExtendedPublicKey, BIP32_EXTENDED_PUBLIC_KEY_SIZE},
+    bip32_keys::{BIP32ExtendedPrivateKey, BIP32ExtendedPublicKey, BIP32_EXTENDED_PUBLIC_KEY_SIZE},
     BlsError,
 };
 
@@ -14,5 +14,15 @@ impl BIP32ExtendedPublicKey {
 
     pub fn serialize_legacy(&self) -> Box<[u8; BIP32_EXTENDED_PUBLIC_KEY_SIZE]> {
         self.serialize_with_legacy_flag(true)
+    }
+}
+
+impl BIP32ExtendedPrivateKey {
+    pub fn private_child_legacy(&self, index: u32) -> Self {
+        self.private_child_with_legacy_flag(index, true)
+    }
+
+    pub fn get_extended_public_key_legacy(&self) -> Result<BIP32ExtendedPublicKey, BlsError> {
+        self.get_extended_public_key_with_legacy_flag(true)
     }
 }

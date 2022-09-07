@@ -1,9 +1,8 @@
-use std::{ffi::c_void, marker::PhantomData};
+use std::ffi::c_void;
 
 use bls_dash_sys::{
-    CCoreMPLDeriveChildPkUnhardened, CCoreMPLDeriveChildSk, CCoreMPLDeriveChildSkUnhardened,
-    CCoreMPLKeyGen, CPrivateKeyFree, CPrivateKeyFromBytes, CPrivateKeyGetG1Element,
-    CPrivateKeyIsEqual, CPrivateKeySerialize,
+    CCoreMPLDeriveChildSk, CCoreMPLDeriveChildSkUnhardened, CCoreMPLKeyGen, CPrivateKeyFree,
+    CPrivateKeyFromBytes, CPrivateKeyGetG1Element, CPrivateKeyIsEqual, CPrivateKeySerialize,
 };
 
 use crate::{
@@ -16,7 +15,7 @@ pub const PRIVATE_KEY_SIZE: usize = 32; // TODO somehow extract it from bls libr
 
 #[derive(Debug)]
 pub struct PrivateKey {
-    c_private_key: *mut c_void,
+    pub(crate) c_private_key: *mut c_void,
 }
 
 impl PartialEq for PrivateKey {

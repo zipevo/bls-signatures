@@ -3,12 +3,12 @@ use std::ffi::c_void;
 use bls_dash_sys::{
     CAugSchemeMPLAggregateVerify, CAugSchemeMPLFree, CAugSchemeMPLSign, CAugSchemeMPLVerify,
     CBasicSchemeMPLAggregateVerify, CBasicSchemeMPLFree, CCoreMPLAggregatePubKeys,
-    CCoreMPLAggregateSigs, CCoreMPLAggregateVerify, CCoreMPLKeyGen, CCoreMPLSign, CCoreMPLVerify,
-    CLegacySchemeMPLAggregateVerify, CLegacySchemeMPLSign, CLegacySchemeMPLVerify,
-    NewCAugSchemeMPL, NewCBasicSchemeMPL, NewCLegacySchemeMPL,
+    CCoreMPLAggregateSigs, CCoreMPLSign, CCoreMPLVerify, CLegacySchemeMPLAggregateVerify,
+    CLegacySchemeMPLSign, CLegacySchemeMPLVerify, NewCAugSchemeMPL, NewCBasicSchemeMPL,
+    NewCLegacySchemeMPL,
 };
 
-use crate::{private_key::PrivateKey, BlsError, G1Element, G2Element};
+use crate::{private_key::PrivateKey, G1Element, G2Element};
 
 pub trait Scheme {
     fn as_mut_ptr(&self) -> *mut c_void;
@@ -280,7 +280,7 @@ impl Scheme for AugSchemeMPL {
         let AggregateVerifyArgs {
             mut g1_pointers,
             mut messages_pointers,
-            messages_lengths: mut messages_lengths,
+            mut messages_lengths,
         } = prepare_aggregate_verify_args(public_keys, messages);
 
         unsafe {
