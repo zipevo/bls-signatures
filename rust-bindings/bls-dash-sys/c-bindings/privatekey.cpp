@@ -39,6 +39,14 @@ CPrivateKey CPrivateKeyFromBytes(const void* data, const bool modOrder, bool* di
     return skPtr;
 }
 
+CPrivateKey CPrivateKeyFromSeedBIP32(const void* data) {
+    return new bls::PrivateKey(
+        bls::PrivateKey::FromSeedBIP32(
+            bls::Bytes((uint8_t*)data, bls::PrivateKey::PRIVATE_KEY_SIZE)
+        )
+    );
+}
+
 CPrivateKey CPrivateKeyAggregate(void** sks, const size_t len) {
     return new bls::PrivateKey(
         bls::PrivateKey::Aggregate(toBLSVector<bls::PrivateKey>(sks, len))

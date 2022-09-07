@@ -2,7 +2,8 @@ use std::ffi::c_void;
 
 use bls_dash_sys::{
     CCoreMPLDeriveChildSk, CCoreMPLDeriveChildSkUnhardened, CCoreMPLKeyGen, CPrivateKeyFree,
-    CPrivateKeyFromBytes, CPrivateKeyGetG1Element, CPrivateKeyIsEqual, CPrivateKeySerialize,
+    CPrivateKeyFromBytes, CPrivateKeyFromSeedBIP32, CPrivateKeyGetG1Element, CPrivateKeyIsEqual,
+    CPrivateKeySerialize,
 };
 
 use crate::{
@@ -77,7 +78,14 @@ impl PrivateKey {
         let c_private_key = c_err_to_result(|did_err| unsafe {
             CPrivateKeyFromBytes(bytes.as_ptr() as *const c_void, mod_order, did_err)
         })?;
+
         Ok(PrivateKey { c_private_key })
+    }
+
+    pub fn from_bip32_seed(bytes: &[u8]) -> Self {
+        let c_private_key = unsafe { CPrivateKeyFromSeedBIP32(bytes.as_ptr() as *const c_void) };
+
+        PrivateKey { c_private_key }
     }
 
     pub fn derive_child_private_key(&self, scheme: &impl Scheme, index: u32) -> PrivateKey {
@@ -122,5 +130,23 @@ mod tests {
             .expect("cannot build private key from bytes");
 
         assert_eq!(sk1, sk2);
+    }
+
+    mod from_bip32_seed {
+        use super::*;
+
+        #[test]
+        fn should_return_private_key_from_bip32_bytes() {
+            let bytes = [1, 2, 3, 4];
+
+            let private_key = PrivateKey::from_bip32_seed(&bytes);
+
+            let expected_key_bytes = [
+                0, 40, 43, 250, 83, 117, 227, 93, 174, 67, 170, 185, 235, 46, 70, 117, 110, 208,
+                224, 23, 164, 13, 180, 200, 132, 46, 57, 21, 207, 149, 248, 135,
+            ];
+
+            assert_eq!(*private_key.serialize(), expected_key_bytes);
+        }
     }
 }
