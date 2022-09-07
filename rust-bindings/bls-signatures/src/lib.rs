@@ -15,7 +15,7 @@ pub use bip32_keys::{
 };
 pub use elements::{G1Element, G2Element, G1_ELEMENT_SIZE, G2_ELEMENT_SIZE};
 pub use private_key::{PrivateKey, PRIVATE_KEY_SIZE};
-pub use schemes::{AugSchemeMPL, BasicSchemeMPL, Scheme};
+pub use schemes::{AugSchemeMPL, BasicSchemeMPL, Scheme, LegacySchemeMPL};
 
 #[derive(Debug, PartialEq)]
 pub struct BlsError {
