@@ -15,7 +15,10 @@ pub struct BIP32ExtendedPublicKey {
 }
 
 impl BIP32ExtendedPublicKey {
-    fn from_bytes_with_legacy_flag(bytes: &[u8], legacy: bool) -> Result<Self, BlsError> {
+    pub(crate) fn from_bytes_with_legacy_flag(
+        bytes: &[u8],
+        legacy: bool,
+    ) -> Result<Self, BlsError> {
         if bytes.len() != BIP32_EXTENDED_PUBLIC_KEY_SIZE {
             return Err(BlsError {
                 msg: format!(
@@ -36,12 +39,7 @@ impl BIP32ExtendedPublicKey {
         Self::from_bytes_with_legacy_flag(bytes, false)
     }
 
-    #[cfg(feature = "legacy")]
-    pub fn from_bytes_legacy(bytes: &[u8]) -> Result<Self, BlsError> {
-        Self::from_bytes_with_legacy_flag(bytes, true)
-    }
-
-    fn public_child_with_legacy_flag(&self, index: u32, legacy: bool) -> Self {
+    pub(crate) fn public_child_with_legacy_flag(&self, index: u32, legacy: bool) -> Self {
         BIP32ExtendedPublicKey {
             c_extended_public_key: unsafe {
                 CExtendedPublicKeyPublicChild(self.c_extended_public_key, index, legacy)
@@ -53,12 +51,7 @@ impl BIP32ExtendedPublicKey {
         self.public_child_with_legacy_flag(index, false)
     }
 
-    #[cfg(feature = "legacy")]
-    pub fn public_child_legacy(&self, index: u32) -> Self {
-        self.public_child_with_legacy_flag(index, true)
-    }
-
-    fn serialize_with_legacy_flag(
+    pub(crate) fn serialize_with_legacy_flag(
         &self,
         legacy: bool,
     ) -> Box<[u8; BIP32_EXTENDED_PUBLIC_KEY_SIZE]> {
@@ -70,11 +63,6 @@ impl BIP32ExtendedPublicKey {
 
     pub fn serialize(&self) -> Box<[u8; BIP32_EXTENDED_PUBLIC_KEY_SIZE]> {
         self.serialize_with_legacy_flag(false)
-    }
-
-    #[cfg(feature = "legacy")]
-    pub fn serialize_legacy(&self) -> Box<[u8; BIP32_EXTENDED_PUBLIC_KEY_SIZE]> {
-        self.serialize_with_legacy_flag(true)
     }
 
     pub fn get_chain_code(&self) -> ChainCode {

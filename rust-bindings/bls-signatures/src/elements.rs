@@ -25,7 +25,10 @@ impl PartialEq for G1Element {
 impl Eq for G1Element {}
 
 impl G1Element {
-    fn from_bytes_with_legacy_flag(bytes: &[u8], legacy: bool) -> Result<Self, BlsError> {
+    pub(crate) fn from_bytes_with_legacy_flag(
+        bytes: &[u8],
+        legacy: bool,
+    ) -> Result<Self, BlsError> {
         if bytes.len() != G1_ELEMENT_SIZE {
             return Err(BlsError {
                 msg: format!(
@@ -46,12 +49,7 @@ impl G1Element {
         Self::from_bytes_with_legacy_flag(bytes, false)
     }
 
-    #[cfg(feature = "legacy")]
-    pub fn from_bytes_legacy(bytes: &[u8]) -> Result<Self, BlsError> {
-        Self::from_bytes_with_legacy_flag(bytes, true)
-    }
-
-    fn serialize_with_legacy_flag(&self, legacy: bool) -> Box<[u8; G1_ELEMENT_SIZE]> {
+    pub(crate) fn serialize_with_legacy_flag(&self, legacy: bool) -> Box<[u8; G1_ELEMENT_SIZE]> {
         unsafe {
             let malloc_ptr = CG1ElementSerialize(self.c_element, legacy);
             Box::from_raw(malloc_ptr as *mut _)
@@ -60,11 +58,6 @@ impl G1Element {
 
     pub fn serialize(&self) -> Box<[u8; G1_ELEMENT_SIZE]> {
         self.serialize_with_legacy_flag(false)
-    }
-
-    #[cfg(feature = "legacy")]
-    pub fn serialize_legacy(&self) -> Box<[u8; G1_ELEMENT_SIZE]> {
-        self.serialize_with_legacy_flag(true)
     }
 
     pub fn derive_child_public_key_unhardened(
@@ -100,7 +93,10 @@ impl PartialEq for G2Element {
 impl Eq for G2Element {}
 
 impl G2Element {
-    pub fn from_bytes_with_legacy_flag(bytes: &[u8], legacy: bool) -> Result<Self, BlsError> {
+    pub(crate) fn from_bytes_with_legacy_flag(
+        bytes: &[u8],
+        legacy: bool,
+    ) -> Result<Self, BlsError> {
         if bytes.len() != G2_ELEMENT_SIZE {
             return Err(BlsError {
                 msg: format!(
@@ -121,12 +117,7 @@ impl G2Element {
         Self::from_bytes_with_legacy_flag(bytes, false)
     }
 
-    #[cfg(feature = "legacy")]
-    pub fn from_bytes_legacy(bytes: &[u8]) -> Result<Self, BlsError> {
-        Self::from_bytes_with_legacy_flag(bytes, true)
-    }
-
-    pub fn serialize_with_legacy_flag(&self, legacy: bool) -> Box<[u8; G2_ELEMENT_SIZE]> {
+    pub(crate) fn serialize_with_legacy_flag(&self, legacy: bool) -> Box<[u8; G2_ELEMENT_SIZE]> {
         unsafe {
             let malloc_ptr = CG2ElementSerialize(self.c_element, legacy);
             Box::from_raw(malloc_ptr as *mut _)
@@ -135,11 +126,6 @@ impl G2Element {
 
     pub fn serialize(&self) -> Box<[u8; G2_ELEMENT_SIZE]> {
         self.serialize_with_legacy_flag(false)
-    }
-
-    #[cfg(feature = "legacy")]
-    pub fn serialize_legacy(&self) -> Box<[u8; G2_ELEMENT_SIZE]> {
-        self.serialize_with_legacy_flag(true)
     }
 }
 

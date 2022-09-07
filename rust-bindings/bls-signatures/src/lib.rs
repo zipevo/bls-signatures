@@ -1,12 +1,14 @@
-mod bip32_keys;
-mod elements;
-mod private_key;
-mod schemes;
-mod utils;
+pub mod bip32_keys;
+pub mod elements;
+pub mod private_key;
+pub mod schemes;
+pub mod utils;
+
+#[cfg(feature = "legacy")]
+mod legacy;
 
 use std::{error::Error, fmt::Display};
 
-pub use bip32_keys::{BIP32ExtendedPublicKey, ChainCode, BIP32_EXTENDED_PUBLIC_KEY_SIZE};
 pub use elements::{G1Element, G2Element, G1_ELEMENT_SIZE, G2_ELEMENT_SIZE};
 pub use private_key::{PrivateKey, PRIVATE_KEY_SIZE};
 pub use schemes::{AugSchemeMPL, BasicSchemeMPL, Scheme};
