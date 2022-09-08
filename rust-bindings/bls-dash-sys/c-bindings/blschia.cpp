@@ -18,6 +18,8 @@
 #include "error.h"
 #include "blschia.h"
 
+// TODO: Revisit
+
 std::string gErrMsg;
 
 void SecFree(void *p) {

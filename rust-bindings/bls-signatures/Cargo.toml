@@ -6,7 +6,8 @@ edition = "2021"
 
 [features]
 legacy = []
-default = [ "legacy" ]
+bip32 = []
+default = [ "legacy", "bip32" ]
 
 [dependencies]
 bls-dash-sys = { path = "../bls-dash-sys" }

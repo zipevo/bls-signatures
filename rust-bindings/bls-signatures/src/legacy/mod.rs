@@ -1,2 +1,2 @@
-mod bip32_keys;
+mod bip32;
 mod elements;

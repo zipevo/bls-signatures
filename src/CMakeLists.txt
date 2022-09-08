@@ -12,7 +12,7 @@ add_library(bls-dash
   ${CMAKE_CURRENT_SOURCE_DIR}/legacy.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/schemes.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/threshold.cpp
-)
+        ../rust-bindings/bls-dash-sys/c-bindings/bip32/chaincode.h ../rust-bindings/bls-dash-sys/c-bindings/bip32/chaincode.cpp)
 
 target_include_directories(bls-dash
   PUBLIC

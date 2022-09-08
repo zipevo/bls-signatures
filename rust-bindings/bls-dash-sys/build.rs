@@ -106,7 +106,7 @@ fn main() {
 
     let mut cc = cc::Build::new();
 
-    let cpp_files_mask = c_bindings_path.join("*.cpp");
+    let cpp_files_mask = c_bindings_path.join("/**/*.cpp");
 
     let cpp_files: Vec<_> = glob::glob(cpp_files_mask.to_str().unwrap())
         .expect("can't get list of cpp files")
@@ -183,16 +183,25 @@ fn main() {
     println!("Generate C binding for rust:");
 
     let mut builder = bindgen::Builder::default()
-        .header(c_bindings_path.join("blschia.h").to_str().unwrap())
-        .header(c_bindings_path.join("elements.h").to_str().unwrap())
-        .header(c_bindings_path.join("privatekey.h").to_str().unwrap())
-        .header(c_bindings_path.join("schemes.h").to_str().unwrap())
-        .header(c_bindings_path.join("threshold.h").to_str().unwrap())
-        .header(c_bindings_path.join("bip32extendedkeys.h").to_str().unwrap())
         // .trust_clang_mangling(true)
         // .wasm_import_module_name()
         .size_t_is_usize(true)
         .parse_callbacks(Box::new(bindgen::CargoCallbacks));
+
+    let headers_to_process = [
+        "blschia.h",
+        "elements.h",
+        "privatekey.h",
+        "schemes.h",
+        "threshold.h",
+        "bip32/chaincode.h",
+        "bip32/extendedprivatekey.h",
+        "bip32/extendedpublickey.h",
+    ];
+
+    for header in headers_to_process {
+        builder = builder.header(c_bindings_path.join(header).to_str().unwrap())
+    }
 
     if target_arch == "wasm32" {
         builder = builder.clang_args(
