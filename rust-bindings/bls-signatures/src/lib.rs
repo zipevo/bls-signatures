@@ -53,14 +53,12 @@ mod tests {
             .expect("cannot build private key from bytes");
         drop(private_key_bytes);
 
-        let public_key = private_key
-            .get_g1_element()
-            .expect("unable to get public key");
+        let public_key = private_key.g1_element().expect("unable to get public key");
 
         let private_key_bad =
             PrivateKey::key_gen(&scheme, bad_seed).expect("unable to generate private key");
         let public_key_bad = private_key_bad
-            .get_g1_element()
+            .g1_element()
             .expect("unable to get public key");
 
         let message = b"Evgeny owns 1337 dash no cap";
@@ -90,9 +88,7 @@ mod tests {
         let scheme = AugSchemeMPL::new();
 
         let master_sk = PrivateKey::key_gen(&scheme, seed).expect("unable to generate private key");
-        let master_pk = master_sk
-            .get_g1_element()
-            .expect("unable to get public key");
+        let master_pk = master_sk.g1_element().expect("unable to get public key");
 
         let child_sk_u = master_sk.derive_child_private_key_unhardened(&scheme, 22);
         let grandchild_sk_u = child_sk_u.derive_child_private_key_unhardened(&scheme, 0);
@@ -102,9 +98,7 @@ mod tests {
 
         assert_eq!(
             grandchild_pk_u,
-            grandchild_sk_u
-                .get_g1_element()
-                .expect("cannot get public key")
+            grandchild_sk_u.g1_element().expect("cannot get public key")
         );
     }
 }

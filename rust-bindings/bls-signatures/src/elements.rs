@@ -163,7 +163,7 @@ mod tests {
         let scheme = AugSchemeMPL::new();
         let sk = PrivateKey::key_gen(&scheme, seed).expect("unable to generate private key");
 
-        let g1 = sk.get_g1_element().expect("cannot get G1 element");
+        let g1 = sk.g1_element().expect("cannot get G1 element");
         let g1_bytes = g1.serialize();
         let g1_2 =
             G1Element::from_bytes(g1_bytes.as_ref()).expect("cannot build G1 element from bytes");

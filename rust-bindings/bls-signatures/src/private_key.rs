@@ -45,7 +45,7 @@ impl PrivateKey {
         })
     }
 
-    pub fn get_g1_element<'a>(&'a self) -> Result<G1Element, BlsError> {
+    pub fn g1_element(&self) -> Result<G1Element, BlsError> {
         Ok(G1Element {
             c_element: c_err_to_result(|did_err| unsafe {
                 CPrivateKeyGetG1Element(self.c_private_key, did_err)

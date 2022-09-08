@@ -369,16 +369,16 @@ mod tests {
             PrivateKey::key_gen(&scheme, seed4).expect("unable to generate private key");
 
         let public_key_1 = private_key_1
-            .get_g1_element()
+            .g1_element()
             .expect("unable to get public key");
         let public_key_2 = private_key_2
-            .get_g1_element()
+            .g1_element()
             .expect("unable to get public key");
         let public_key_3 = private_key_3
-            .get_g1_element()
+            .g1_element()
             .expect("unable to get public key");
         let public_key_4 = private_key_4
-            .get_g1_element()
+            .g1_element()
             .expect("unable to get public key");
 
         let message_1 = b"ayya";

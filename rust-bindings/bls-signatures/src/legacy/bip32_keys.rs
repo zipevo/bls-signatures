@@ -22,7 +22,7 @@ impl BIP32ExtendedPrivateKey {
         self.private_child_with_legacy_flag(index, true)
     }
 
-    pub fn get_extended_public_key_legacy(&self) -> Result<BIP32ExtendedPublicKey, BlsError> {
-        self.get_extended_public_key_with_legacy_flag(true)
+    pub fn extended_public_key_legacy(&self) -> Result<BIP32ExtendedPublicKey, BlsError> {
+        self.extended_public_key_with_legacy_flag(true)
     }
 }

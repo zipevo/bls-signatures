@@ -85,7 +85,7 @@ impl BIP32ExtendedPublicKey {
         self.serialize_with_legacy_flag(false)
     }
 
-    pub fn get_chain_code(&self) -> ChainCode {
+    pub fn chain_code(&self) -> ChainCode {
         ChainCode {
             c_chain_code: unsafe { CExtendedPublicKeyGetChainCode(self.c_extended_public_key) },
         }
@@ -159,7 +159,7 @@ impl BIP32ExtendedPrivateKey {
         }
     }
 
-    pub(crate) fn get_extended_public_key_with_legacy_flag(
+    pub(crate) fn extended_public_key_with_legacy_flag(
         &self,
         legacy: bool,
     ) -> Result<BIP32ExtendedPublicKey, BlsError> {
@@ -174,11 +174,11 @@ impl BIP32ExtendedPrivateKey {
         })
     }
 
-    pub fn get_extended_public_key(&self) -> Result<BIP32ExtendedPublicKey, BlsError> {
-        self.get_extended_public_key_with_legacy_flag(false)
+    pub fn extended_public_key(&self) -> Result<BIP32ExtendedPublicKey, BlsError> {
+        self.extended_public_key_with_legacy_flag(false)
     }
 
-    pub fn get_public_key(&self) -> Result<G1Element, BlsError> {
+    pub fn public_key(&self) -> Result<G1Element, BlsError> {
         Ok(G1Element {
             c_element: c_err_to_result(|did_err| unsafe {
                 CExtendedPrivateKeyGetPublicKey(self.c_extended_private_key, did_err)
@@ -186,7 +186,7 @@ impl BIP32ExtendedPrivateKey {
         })
     }
 
-    pub fn get_private_key(&self) -> PrivateKey {
+    pub fn private_key(&self) -> PrivateKey {
         PrivateKey {
             c_private_key: unsafe { CExtendedPrivateKeyGetPrivateKey(self.c_extended_private_key) },
         }
@@ -199,7 +199,7 @@ impl BIP32ExtendedPrivateKey {
         }
     }
 
-    pub fn get_chain_code(&self) -> ChainCode {
+    pub fn chain_code(&self) -> ChainCode {
         ChainCode {
             c_chain_code: unsafe { CExtendedPrivateKeyGetChainCode(self.c_extended_private_key) },
         }
@@ -253,7 +253,7 @@ mod tests {
             let private_key = BIP32ExtendedPrivateKey::from_seed(seed)
                 .expect("cannot generate extended private key");
             let public_key = private_key
-                .get_extended_public_key()
+                .extended_public_key()
                 .expect("cannot get extended public key");
 
             let public_key_bytes = public_key.serialize();
@@ -270,7 +270,7 @@ mod tests {
             let private_key = BIP32ExtendedPrivateKey::from_seed(seed)
                 .expect("cannot generate extended private key");
             let public_key = private_key
-                .get_extended_public_key_legacy()
+                .extended_public_key_legacy()
                 .expect("cannot get extended public key");
 
             let public_key_bytes = public_key.serialize_legacy();
@@ -295,11 +295,8 @@ mod tests {
                 .expect("cannot deserialize extended private key");
 
             assert_eq!(private_key, private_key_2);
-            assert_eq!(
-                private_key.get_private_key(),
-                private_key_2.get_private_key()
-            );
-            assert_eq!(private_key.get_public_key(), private_key_2.get_public_key());
+            assert_eq!(private_key.private_key(), private_key_2.private_key());
+            assert_eq!(private_key.public_key(), private_key_2.public_key());
         }
 
         #[test]
@@ -308,7 +305,7 @@ mod tests {
             let private_key = BIP32ExtendedPrivateKey::from_seed(seed)
                 .expect("cannot generate extended private key");
             let public_key = private_key
-                .get_extended_public_key()
+                .extended_public_key()
                 .expect("cannot get extended public key");
 
             let private_child = private_key.private_child(1337);
@@ -320,7 +317,7 @@ mod tests {
             assert_eq!(
                 public_grandchild,
                 private_grandchild
-                    .get_extended_public_key()
+                    .extended_public_key()
                     .expect("cannot get extended public key")
             );
         }
@@ -332,7 +329,7 @@ mod tests {
             let private_key = BIP32ExtendedPrivateKey::from_seed(seed)
                 .expect("cannot generate extended private key");
             let public_key = private_key
-                .get_extended_public_key_legacy()
+                .extended_public_key_legacy()
                 .expect("cannot get extended public key");
 
             let private_child = private_key.private_child_legacy(1337);
@@ -344,7 +341,7 @@ mod tests {
             assert_eq!(
                 public_grandchild,
                 private_grandchild
-                    .get_extended_public_key_legacy()
+                    .extended_public_key_legacy()
                     .expect("cannot get extended public key")
             );
         }
