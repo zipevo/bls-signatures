@@ -33,7 +33,7 @@ std::vector<bls::Bytes> toVectorHashes(void** elems, const size_t len) {
     return vec;
 }
 
-CPrivateKey CThresholdPrivateKeyShare(void** sks, const size_t sksLen, const void* hash, bool* didErr) {
+PrivateKey ThresholdPrivateKeyShare(void** sks, const size_t sksLen, const void* hash, bool* didErr) {
     bls::PrivateKey* sk = nullptr;
     try {
         sk = new bls::PrivateKey(
@@ -51,7 +51,7 @@ CPrivateKey CThresholdPrivateKeyShare(void** sks, const size_t sksLen, const voi
     return sk;
 }
 
-CPrivateKey CThresholdPrivateKeyRecover(void** sks,
+PrivateKey ThresholdPrivateKeyRecover(void** sks,
                                         const size_t sksLen,
                                         void** hashes,
                                         const size_t hashesLen,
@@ -74,7 +74,7 @@ CPrivateKey CThresholdPrivateKeyRecover(void** sks,
     return sk;
 }
 
-CG1Element CThresholdPublicKeyShare(void** pks, const size_t pksLen, const void* hash, bool* didErr) {
+G1Element ThresholdPublicKeyShare(void** pks, const size_t pksLen, const void* hash, bool* didErr) {
     bls::G1Element* el = nullptr;
     try {
         el = new bls::G1Element(
@@ -92,7 +92,7 @@ CG1Element CThresholdPublicKeyShare(void** pks, const size_t pksLen, const void*
     return el;
 }
 
-CG1Element CThresholdPublicKeyRecover(void** pks,
+G1Element ThresholdPublicKeyRecover(void** pks,
                                       const size_t pksLen,
                                       void** hashes,
                                       const size_t hashesLen,
@@ -114,7 +114,7 @@ CG1Element CThresholdPublicKeyRecover(void** pks,
     return el;
 }
 
-CG2Element CThresholdSignatureShare(void** sigs, const size_t sigsLen, const void* hash, bool* didErr) {
+G2Element ThresholdSignatureShare(void** sigs, const size_t sigsLen, const void* hash, bool* didErr) {
     bls::G2Element* el = nullptr;
     try {
         el = new bls::G2Element(
@@ -132,7 +132,7 @@ CG2Element CThresholdSignatureShare(void** sigs, const size_t sigsLen, const voi
     return el;
 }
 
-CG2Element CThresholdSignatureRecover(void** sigs,
+G2Element ThresholdSignatureRecover(void** sigs,
                                       const size_t sigsLen,
                                       void** hashes,
                                       const size_t hashesLen,
@@ -154,14 +154,14 @@ CG2Element CThresholdSignatureRecover(void** sigs,
     return el;
 }
 
-CG2Element CThresholdSign(const CPrivateKey sk, const void* hash) {
+G2Element ThresholdSign(const PrivateKey sk, const void* hash) {
     bls::PrivateKey* skPtr = (bls::PrivateKey*)sk;
     return new bls::G2Element(
         bls::Threshold::Sign(*skPtr, bls::Bytes((uint8_t*)hash, HashSize))
     );
 }
 
-bool CThresholdVerify(const CG1Element pk, const void* hash, const CG2Element sig) {
+bool ThresholdVerify(const G1Element pk, const void* hash, const G2Element sig) {
     bls::G1Element* pkPtr = (bls::G1Element*)pk;
     bls::G2Element* sigPtr = (bls::G2Element*)sig;
     return bls::Threshold::Verify(*pkPtr, bls::Bytes((uint8_t*)hash, HashSize), *sigPtr);

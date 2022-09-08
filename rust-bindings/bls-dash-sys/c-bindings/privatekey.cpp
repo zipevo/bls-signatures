@@ -20,7 +20,7 @@
 #include "utils.hpp"
 
 // private key bindings implementation
-CPrivateKey CPrivateKeyFromBytes(const void* data, const bool modOrder, bool* didErr) {
+PrivateKey PrivateKeyFromBytes(const void* data, const bool modOrder, bool* didErr) {
     bls::PrivateKey* skPtr = nullptr;
     try {
         skPtr = new bls::PrivateKey(
@@ -39,7 +39,7 @@ CPrivateKey CPrivateKeyFromBytes(const void* data, const bool modOrder, bool* di
     return skPtr;
 }
 
-CPrivateKey CPrivateKeyFromSeedBIP32(const void* data) {
+PrivateKey PrivateKeyFromSeedBIP32(const void* data) {
     return new bls::PrivateKey(
         bls::PrivateKey::FromSeedBIP32(
             bls::Bytes((uint8_t*)data, bls::PrivateKey::PRIVATE_KEY_SIZE)
@@ -47,13 +47,13 @@ CPrivateKey CPrivateKeyFromSeedBIP32(const void* data) {
     );
 }
 
-CPrivateKey CPrivateKeyAggregate(void** sks, const size_t len) {
+PrivateKey PrivateKeyAggregate(void** sks, const size_t len) {
     return new bls::PrivateKey(
         bls::PrivateKey::Aggregate(toBLSVector<bls::PrivateKey>(sks, len))
     );
 }
 
-void* CPrivateKeySerialize(const CPrivateKey sk) {
+void* PrivateKeySerialize(const PrivateKey sk) {
     const bls::PrivateKey* skPtr = (bls::PrivateKey*)sk;
     uint8_t* buffer = bls::Util::SecAlloc<uint8_t>(bls::PrivateKey::PRIVATE_KEY_SIZE);
     skPtr->Serialize(buffer);
@@ -61,17 +61,17 @@ void* CPrivateKeySerialize(const CPrivateKey sk) {
     return (void*)buffer;
 }
 
-size_t CPrivateKeySizeBytes() {
+size_t PrivateKeySizeBytes() {
     return bls::PrivateKey::PRIVATE_KEY_SIZE;
 }
 
-bool CPrivateKeyIsEqual(const CPrivateKey sk1, const CPrivateKey sk2) {
+bool PrivateKeyIsEqual(const PrivateKey sk1, const PrivateKey sk2) {
     const bls::PrivateKey* sk1Ptr = (bls::PrivateKey*)sk1;
     const bls::PrivateKey* sk2Ptr = (bls::PrivateKey*)sk2;
     return *sk1Ptr == *sk2Ptr;
 }
 
-CG1Element CPrivateKeyGetG1Element(const CPrivateKey sk, bool* didErr) {
+G1Element PrivateKeyGetG1Element(const PrivateKey sk, bool* didErr) {
     bls::PrivateKey* skPtr = (bls::PrivateKey*)sk;
     bls::G1Element* el = nullptr;
     try {
@@ -86,7 +86,7 @@ CG1Element CPrivateKeyGetG1Element(const CPrivateKey sk, bool* didErr) {
     return el;
 }
 
-CG2Element CPrivateKeyGetG2Element(const CPrivateKey sk, bool* didErr) {
+G2Element PrivateKeyGetG2Element(const PrivateKey sk, bool* didErr) {
     bls::PrivateKey* skPtr = (bls::PrivateKey*)sk;
     bls::G2Element* el = nullptr;
     try {
@@ -101,13 +101,13 @@ CG2Element CPrivateKeyGetG2Element(const CPrivateKey sk, bool* didErr) {
     return el;
 }
 
-CG2Element CPrivateKeyGetG2Power(const CPrivateKey sk, const CG2Element el) {
+G2Element PrivateKeyGetG2Power(const PrivateKey sk, const G2Element el) {
     const bls::PrivateKey* skPtr = (bls::PrivateKey*)sk;
     const bls::G2Element* elPtr = (bls::G2Element*)el;
     return new bls::G2Element(skPtr->GetG2Power(*elPtr));
 }
 
-CG2Element CPrivateKeySignG2(const CPrivateKey sk,
+G2Element PrivateKeySignG2(const PrivateKey sk,
                              uint8_t* msg,
                              const size_t len,
                              const uint8_t* dst,
@@ -116,7 +116,7 @@ CG2Element CPrivateKeySignG2(const CPrivateKey sk,
     return new bls::G2Element(skPtr->SignG2(msg, len, dst, dstLen));
 }
 
-void CPrivateKeyFree(CPrivateKey sk) {
+void PrivateKeyFree(PrivateKey sk) {
     bls::PrivateKey* skPtr = (bls::PrivateKey*)sk;
     delete skPtr;
 }

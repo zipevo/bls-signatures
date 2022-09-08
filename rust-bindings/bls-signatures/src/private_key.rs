@@ -1,9 +1,9 @@
 use std::ffi::c_void;
 
 use bls_dash_sys::{
-    CCoreMPLDeriveChildSk, CCoreMPLDeriveChildSkUnhardened, CCoreMPLKeyGen, CPrivateKeyFree,
-    CPrivateKeyFromBytes, CPrivateKeyFromSeedBIP32, CPrivateKeyGetG1Element, CPrivateKeyIsEqual,
-    CPrivateKeySerialize,
+    CoreMPLDeriveChildSk, CoreMPLDeriveChildSkUnhardened, CoreMPLKeyGen, PrivateKeyFree,
+    PrivateKeyFromBytes, PrivateKeyFromSeedBIP32, PrivateKeyGetG1Element, PrivateKeyIsEqual,
+    PrivateKeySerialize,
 };
 
 use crate::{
@@ -21,7 +21,7 @@ pub struct PrivateKey {
 
 impl PartialEq for PrivateKey {
     fn eq(&self, other: &Self) -> bool {
-        unsafe { CPrivateKeyIsEqual(self.c_private_key, other.c_private_key) }
+        unsafe { PrivateKeyIsEqual(self.c_private_key, other.c_private_key) }
     }
 }
 
@@ -32,10 +32,11 @@ impl PrivateKey {
         self.c_private_key
     }
 
+    // TODO Rename to from_seed
     pub fn key_gen(scheme: &impl Scheme, seed: &[u8]) -> Result<Self, BlsError> {
         Ok(PrivateKey {
             c_private_key: c_err_to_result(|did_err| unsafe {
-                CCoreMPLKeyGen(
+                CoreMPLKeyGen(
                     scheme.as_mut_ptr(),
                     seed.as_ptr() as *const _,
                     seed.len(),
@@ -48,17 +49,17 @@ impl PrivateKey {
     pub fn g1_element(&self) -> Result<G1Element, BlsError> {
         Ok(G1Element {
             c_element: c_err_to_result(|did_err| unsafe {
-                CPrivateKeyGetG1Element(self.c_private_key, did_err)
+                PrivateKeyGetG1Element(self.c_private_key, did_err)
             })?,
         })
     }
 
     pub fn serialize(&self) -> SecureBox {
-        // `CPrivateKeySerialize` internally securely allocates memory which we have to
+        // `PrivateKeySerialize` internally securely allocates memory which we have to
         // wrap safely
         unsafe {
             SecureBox::from_ptr(
-                CPrivateKeySerialize(self.c_private_key) as *mut u8,
+                PrivateKeySerialize(self.c_private_key) as *mut u8,
                 PRIVATE_KEY_SIZE,
             )
         }
@@ -76,14 +77,14 @@ impl PrivateKey {
         }
 
         let c_private_key = c_err_to_result(|did_err| unsafe {
-            CPrivateKeyFromBytes(bytes.as_ptr() as *const c_void, mod_order, did_err)
+            PrivateKeyFromBytes(bytes.as_ptr() as *const c_void, mod_order, did_err)
         })?;
 
         Ok(PrivateKey { c_private_key })
     }
 
     pub fn from_bip32_seed(bytes: &[u8]) -> Self {
-        let c_private_key = unsafe { CPrivateKeyFromSeedBIP32(bytes.as_ptr() as *const c_void) };
+        let c_private_key = unsafe { PrivateKeyFromSeedBIP32(bytes.as_ptr() as *const c_void) };
 
         PrivateKey { c_private_key }
     }
@@ -91,7 +92,7 @@ impl PrivateKey {
     pub fn derive_child_private_key(&self, scheme: &impl Scheme, index: u32) -> PrivateKey {
         PrivateKey {
             c_private_key: unsafe {
-                CCoreMPLDeriveChildSk(scheme.as_mut_ptr(), self.c_private_key, index)
+                CoreMPLDeriveChildSk(scheme.as_mut_ptr(), self.c_private_key, index)
             },
         }
     }
@@ -103,7 +104,7 @@ impl PrivateKey {
     ) -> PrivateKey {
         PrivateKey {
             c_private_key: unsafe {
-                CCoreMPLDeriveChildSkUnhardened(scheme.as_mut_ptr(), self.c_private_key, index)
+                CoreMPLDeriveChildSkUnhardened(scheme.as_mut_ptr(), self.c_private_key, index)
             },
         }
     }
@@ -111,7 +112,7 @@ impl PrivateKey {
 
 impl Drop for PrivateKey {
     fn drop(&mut self) {
-        unsafe { CPrivateKeyFree(self.c_private_key) }
+        unsafe { PrivateKeyFree(self.c_private_key) }
     }
 }
 
@@ -137,7 +138,7 @@ mod tests {
 
         #[test]
         fn should_return_private_key_from_bip32_bytes() {
-            let bytes = [1, 2, 3, 4];
+            let bytes = [1, 2, 3, 4, 5, 6, 7];
 
             let private_key = PrivateKey::from_bip32_seed(&bytes);
 

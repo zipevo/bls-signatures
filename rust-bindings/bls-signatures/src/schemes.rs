@@ -1,13 +1,14 @@
 use std::ffi::c_void;
 
 use bls_dash_sys::{
-    CAugSchemeMPLAggregateVerify, CAugSchemeMPLFree, CAugSchemeMPLSign, CAugSchemeMPLVerify,
-    CBasicSchemeMPLAggregateVerify, CBasicSchemeMPLFree, CCoreMPLAggregatePubKeys,
-    CCoreMPLAggregateSigs, CCoreMPLSign, CCoreMPLVerify, CCoreMPLVerifySecure,
-    CLegacySchemeMPLAggregateVerify, CLegacySchemeMPLSign, CLegacySchemeMPLVerify,
-    CLegacySchemeMPLVerifySecure, NewCAugSchemeMPL, NewCBasicSchemeMPL, NewCLegacySchemeMPL,
+    AugSchemeMPLAggregateVerify, AugSchemeMPLFree, AugSchemeMPLSign, AugSchemeMPLVerify,
+    BasicSchemeMPLAggregateVerify, BasicSchemeMPLFree, CoreMPLAggregatePubKeys,
+    CoreMPLAggregateSigs, CoreMPLSign, CoreMPLVerify, CoreMPLVerifySecure,
+    LegacySchemeMPLAggregateVerify, LegacySchemeMPLSign, LegacySchemeMPLVerify,
+    LegacySchemeMPLVerifySecure, NewAugSchemeMPL, NewBasicSchemeMPL, NewLegacySchemeMPL,
 };
 
+// TODO Split into modules
 use crate::{private_key::PrivateKey, G1Element, G2Element};
 
 pub trait Scheme {
@@ -29,7 +30,7 @@ pub trait Scheme {
             .collect::<Vec<_>>();
 
         unsafe {
-            CCoreMPLVerifySecure(
+            CoreMPLVerifySecure(
                 self.as_mut_ptr(),
                 g1_pointers.as_mut_ptr(),
                 g1_pointers.len(),
@@ -50,7 +51,7 @@ pub trait Scheme {
             .collect::<Vec<_>>();
         G1Element {
             c_element: unsafe {
-                CCoreMPLAggregatePubKeys(
+                CoreMPLAggregatePubKeys(
                     self.as_mut_ptr(),
                     g1_pointers.as_mut_ptr(),
                     g1_pointers.len(),
@@ -63,7 +64,7 @@ pub trait Scheme {
         let mut g2_pointers = sigs.into_iter().map(|g2| g2.c_element).collect::<Vec<_>>();
         G2Element {
             c_element: unsafe {
-                CCoreMPLAggregateSigs(
+                CoreMPLAggregateSigs(
                     self.as_mut_ptr(),
                     g2_pointers.as_mut_ptr(),
                     g2_pointers.len(),
@@ -86,6 +87,7 @@ struct AggregateVerifyArgs {
     messages_lengths: Vec<usize>,
 }
 
+// TODO put constructor inside struct?
 fn prepare_aggregate_verify_args<'a>(
     public_keys: impl IntoIterator<Item = &'a G1Element>,
     messages: impl IntoIterator<Item = &'a [u8]>,
@@ -96,17 +98,17 @@ fn prepare_aggregate_verify_args<'a>(
         .collect::<Vec<_>>();
 
     let mut messages_pointers = Vec::new();
-    let mut messages_lengthes = Vec::new();
+    let mut messages_lengths = Vec::new();
 
     for m in messages.into_iter() {
         messages_pointers.push(m.as_ptr());
-        messages_lengthes.push(m.len());
+        messages_lengths.push(m.len());
     }
 
     AggregateVerifyArgs {
         g1_pointers,
         messages_pointers,
-        messages_lengths: messages_lengthes,
+        messages_lengths,
     }
 }
 
@@ -117,7 +119,7 @@ pub struct BasicSchemeMPL {
 impl BasicSchemeMPL {
     pub fn new() -> Self {
         BasicSchemeMPL {
-            scheme: unsafe { NewCBasicSchemeMPL() },
+            scheme: unsafe { NewBasicSchemeMPL() },
         }
     }
 }
@@ -130,7 +132,7 @@ impl Scheme for BasicSchemeMPL {
     fn sign(&self, private_key: &PrivateKey, message: &[u8]) -> G2Element {
         G2Element {
             c_element: unsafe {
-                CCoreMPLSign(
+                CoreMPLSign(
                     self.scheme,
                     private_key.as_mut_ptr(),
                     message.as_ptr() as *const _,
@@ -142,7 +144,7 @@ impl Scheme for BasicSchemeMPL {
 
     fn verify(&self, public_key: &G1Element, message: &[u8], signature: &G2Element) -> bool {
         unsafe {
-            CCoreMPLVerify(
+            CoreMPLVerify(
                 self.scheme,
                 public_key.c_element,
                 message.as_ptr() as *const _,
@@ -165,7 +167,7 @@ impl Scheme for BasicSchemeMPL {
         } = prepare_aggregate_verify_args(public_keys, messages);
 
         unsafe {
-            CBasicSchemeMPLAggregateVerify(
+            BasicSchemeMPLAggregateVerify(
                 self.as_mut_ptr(),
                 g1_pointers.as_mut_ptr(),
                 g1_pointers.len(),
@@ -185,7 +187,7 @@ pub struct LegacySchemeMPL {
 impl LegacySchemeMPL {
     pub fn new() -> Self {
         LegacySchemeMPL {
-            scheme: unsafe { NewCLegacySchemeMPL() },
+            scheme: unsafe { NewLegacySchemeMPL() },
         }
     }
 }
@@ -198,7 +200,7 @@ impl Scheme for LegacySchemeMPL {
     fn sign(&self, private_key: &PrivateKey, message: &[u8]) -> G2Element {
         G2Element {
             c_element: unsafe {
-                CLegacySchemeMPLSign(
+                LegacySchemeMPLSign(
                     self.scheme,
                     private_key.as_mut_ptr(),
                     message.as_ptr() as *const _,
@@ -210,7 +212,7 @@ impl Scheme for LegacySchemeMPL {
 
     fn verify(&self, public_key: &G1Element, message: &[u8], signature: &G2Element) -> bool {
         unsafe {
-            CLegacySchemeMPLVerify(
+            LegacySchemeMPLVerify(
                 self.scheme,
                 public_key.c_element,
                 message.as_ptr() as *const _,
@@ -232,7 +234,7 @@ impl Scheme for LegacySchemeMPL {
             .collect::<Vec<_>>();
 
         unsafe {
-            CLegacySchemeMPLVerifySecure(
+            LegacySchemeMPLVerifySecure(
                 self.as_mut_ptr(),
                 g1_pointers.as_mut_ptr(),
                 g1_pointers.len(),
@@ -256,7 +258,7 @@ impl Scheme for LegacySchemeMPL {
         } = prepare_aggregate_verify_args(public_keys, messages);
 
         unsafe {
-            CLegacySchemeMPLAggregateVerify(
+            LegacySchemeMPLAggregateVerify(
                 self.as_mut_ptr(),
                 g1_pointers.as_mut_ptr(),
                 g1_pointers.len(),
@@ -271,7 +273,7 @@ impl Scheme for LegacySchemeMPL {
 
 impl Drop for BasicSchemeMPL {
     fn drop(&mut self) {
-        unsafe { CBasicSchemeMPLFree(self.scheme) }
+        unsafe { BasicSchemeMPLFree(self.scheme) }
     }
 }
 
@@ -282,7 +284,7 @@ pub struct AugSchemeMPL {
 impl AugSchemeMPL {
     pub fn new() -> Self {
         AugSchemeMPL {
-            scheme: unsafe { NewCAugSchemeMPL() },
+            scheme: unsafe { NewAugSchemeMPL() },
         }
     }
 }
@@ -295,7 +297,7 @@ impl Scheme for AugSchemeMPL {
     fn sign(&self, private_key: &PrivateKey, message: &[u8]) -> G2Element {
         G2Element {
             c_element: unsafe {
-                CAugSchemeMPLSign(
+                AugSchemeMPLSign(
                     self.scheme,
                     private_key.as_mut_ptr(),
                     message.as_ptr() as *const _,
@@ -307,7 +309,7 @@ impl Scheme for AugSchemeMPL {
 
     fn verify(&self, public_key: &G1Element, message: &[u8], signature: &G2Element) -> bool {
         unsafe {
-            CAugSchemeMPLVerify(
+            AugSchemeMPLVerify(
                 self.scheme,
                 public_key.c_element,
                 message.as_ptr() as *const _,
@@ -330,7 +332,7 @@ impl Scheme for AugSchemeMPL {
         } = prepare_aggregate_verify_args(public_keys, messages);
 
         unsafe {
-            CAugSchemeMPLAggregateVerify(
+            AugSchemeMPLAggregateVerify(
                 self.as_mut_ptr(),
                 g1_pointers.as_mut_ptr(),
                 g1_pointers.len(),
@@ -345,7 +347,7 @@ impl Scheme for AugSchemeMPL {
 
 impl Drop for AugSchemeMPL {
     fn drop(&mut self) {
-        unsafe { CAugSchemeMPLFree(self.scheme) }
+        unsafe { AugSchemeMPLFree(self.scheme) }
     }
 }
 

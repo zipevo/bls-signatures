@@ -9,11 +9,11 @@
 extern "C" {
 #endif
 
-typedef void* CBIP32ChainCode;
+typedef void* BIP32ChainCode;
 
-void* CBIP32ChainCodeSerialize(const CBIP32ChainCode cc);
-bool CBIP32ChainCodeIsEqual(const CBIP32ChainCode cc1, const CBIP32ChainCode cc2);
-void CBIP32ChainCodeFree(const CBIP32ChainCode cc);
+void* BIP32ChainCodeSerialize(const BIP32ChainCode cc);
+bool BIP32ChainCodeIsEqual(const BIP32ChainCode cc1, const BIP32ChainCode cc2);
+void BIP32ChainCodeFree(const BIP32ChainCode cc);
 
 #ifdef __cplusplus
 }

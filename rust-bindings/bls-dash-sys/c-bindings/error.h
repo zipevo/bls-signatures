@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GO_BINDINGS_ERROR_H_
-#define GO_BINDINGS_ERROR_H_
+#ifndef ERROR_H_
+#define ERROR_H_
 #include <string>
 
 extern std::string gErrMsg;
 
-#endif  // GO_BINDINGS_ERROR_H_
+#endif  // ERROR_H_

@@ -6,7 +6,7 @@
 #include "../error.h"
 #include "bls.hpp"
 
-CBIP32ExtendedPublicKey CBIP32ExtendedPublicKeyFromBytes(
+BIP32ExtendedPublicKey BIP32ExtendedPublicKeyFromBytes(
     const void* data,
     const bool legacy,
     bool* didErr)
@@ -25,8 +25,8 @@ CBIP32ExtendedPublicKey CBIP32ExtendedPublicKeyFromBytes(
     return el;
 }
 
-CBIP32ExtendedPublicKey CBIP32ExtendedPublicKeyPublicChild(
-    const CBIP32ExtendedPublicKey pk,
+BIP32ExtendedPublicKey BIP32ExtendedPublicKeyPublicChild(
+    const BIP32ExtendedPublicKey pk,
     const uint32_t index,
     const bool legacy)
 {
@@ -34,14 +34,14 @@ CBIP32ExtendedPublicKey CBIP32ExtendedPublicKeyPublicChild(
     return new bls::ExtendedPublicKey(pkPtr->PublicChild(index, legacy));
 }
 
-CBIP32ChainCode CBIP32ExtendedPublicKeyGetChainCode(const CBIP32ExtendedPublicKey pk)
+BIP32ChainCode BIP32ExtendedPublicKeyGetChainCode(const BIP32ExtendedPublicKey pk)
 {
     const bls::ExtendedPublicKey* pkPtr = (bls::ExtendedPublicKey*)pk;
     return new bls::ChainCode(pkPtr->GetChainCode());
 }
 
-void* CBIP32ExtendedPublicKeySerialize(
-    const CBIP32ExtendedPublicKey pk,
+void* BIP32ExtendedPublicKeySerialize(
+    const BIP32ExtendedPublicKey pk,
     const bool legacy)
 {
     const bls::ExtendedPublicKey* pkPtr = (bls::ExtendedPublicKey*)pk;
@@ -51,16 +51,16 @@ void* CBIP32ExtendedPublicKeySerialize(
     return (void*)buffer;
 }
 
-bool CBIP32ExtendedPublicKeyIsEqual(
-    const CBIP32ExtendedPublicKey pk1,
-    const CBIP32ExtendedPublicKey pk2)
+bool BIP32ExtendedPublicKeyIsEqual(
+    const BIP32ExtendedPublicKey pk1,
+    const BIP32ExtendedPublicKey pk2)
 {
     const bls::ExtendedPublicKey* pk1Ptr = (bls::ExtendedPublicKey*)pk1;
     const bls::ExtendedPublicKey* pk2Ptr = (bls::ExtendedPublicKey*)pk2;
     return *pk1Ptr == *pk2Ptr;
 }
 
-void CBIP32ExtendedPublicKeyFree(const CBIP32ExtendedPublicKey pk)
+void BIP32ExtendedPublicKeyFree(const BIP32ExtendedPublicKey pk)
 {
     const bls::ExtendedPublicKey* pkPtr = (bls::ExtendedPublicKey*)pk;
     delete pkPtr;

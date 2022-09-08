@@ -7,7 +7,7 @@
 #include "bls.hpp"
 #include "extendedpublickey.h"
 
-CBIP32ExtendedPublicKey CBIP32ExtendedPublicKeyFromBytes(
+BIP32ExtendedPublicKey BIP32ExtendedPublicKeyFromBytes(
     const void* data,
     const bool legacy,
     bool* didErr)
@@ -26,8 +26,8 @@ CBIP32ExtendedPublicKey CBIP32ExtendedPublicKeyFromBytes(
     return el;
 }
 
-CBIP32ExtendedPublicKey CBIP32ExtendedPublicKeyPublicChild(
-    const CBIP32ExtendedPublicKey pk,
+BIP32ExtendedPublicKey BIP32ExtendedPublicKeyPublicChild(
+    const BIP32ExtendedPublicKey pk,
     const uint32_t index,
     const bool legacy)
 {
@@ -35,14 +35,14 @@ CBIP32ExtendedPublicKey CBIP32ExtendedPublicKeyPublicChild(
     return new bls::ExtendedPublicKey(pkPtr->PublicChild(index, legacy));
 }
 
-CBIP32ChainCode CBIP32ExtendedPublicKeyGetChainCode(const CBIP32ExtendedPublicKey pk)
+BIP32ChainCode BIP32ExtendedPublicKeyGetChainCode(const BIP32ExtendedPublicKey pk)
 {
     const bls::ExtendedPublicKey* pkPtr = (bls::ExtendedPublicKey*)pk;
     return new bls::ChainCode(pkPtr->GetChainCode());
 }
 
-void* CBIP32ExtendedPublicKeySerialize(
-    const CBIP32ExtendedPublicKey pk,
+void* BIP32ExtendedPublicKeySerialize(
+    const BIP32ExtendedPublicKey pk,
     const bool legacy)
 {
     const bls::ExtendedPublicKey* pkPtr = (bls::ExtendedPublicKey*)pk;
@@ -52,22 +52,22 @@ void* CBIP32ExtendedPublicKeySerialize(
     return (void*)buffer;
 }
 
-bool CBIP32ExtendedPublicKeyIsEqual(
-    const CBIP32ExtendedPublicKey pk1,
-    const CBIP32ExtendedPublicKey pk2)
+bool BIP32ExtendedPublicKeyIsEqual(
+    const BIP32ExtendedPublicKey pk1,
+    const BIP32ExtendedPublicKey pk2)
 {
     const bls::ExtendedPublicKey* pk1Ptr = (bls::ExtendedPublicKey*)pk1;
     const bls::ExtendedPublicKey* pk2Ptr = (bls::ExtendedPublicKey*)pk2;
     return *pk1Ptr == *pk2Ptr;
 }
 
-void CBIP32ExtendedPublicKeyFree(const CBIP32ExtendedPublicKey pk)
+void BIP32ExtendedPublicKeyFree(const BIP32ExtendedPublicKey pk)
 {
     const bls::ExtendedPublicKey* pkPtr = (bls::ExtendedPublicKey*)pk;
     delete pkPtr;
 }
 
-CBIP32ExtendedPrivateKey CBIP32ExtendedPrivateKeyFromBytes(const void* data, bool* didErr)
+BIP32ExtendedPrivateKey BIP32ExtendedPrivateKeyFromBytes(const void* data, bool* didErr)
 {
     bls::ExtendedPrivateKey* el = nullptr;
     try {
@@ -82,7 +82,7 @@ CBIP32ExtendedPrivateKey CBIP32ExtendedPrivateKeyFromBytes(const void* data, boo
     return el;
 }
 
-CBIP32ExtendedPrivateKey CBIP32ExtendedPrivateKeyFromSeed(const void* data, bool* didErr)
+BIP32ExtendedPrivateKey BIP32ExtendedPrivateKeyFromSeed(const void* data, bool* didErr)
 {
     bls::ExtendedPrivateKey* el = nullptr;
     try {
@@ -97,8 +97,8 @@ CBIP32ExtendedPrivateKey CBIP32ExtendedPrivateKeyFromSeed(const void* data, bool
     return el;
 }
 
-CBIP32ExtendedPrivateKey CBIP32ExtendedPrivateKeyPrivateChild(
-    const CBIP32ExtendedPrivateKey sk,
+BIP32ExtendedPrivateKey BIP32ExtendedPrivateKeyPrivateChild(
+    const BIP32ExtendedPrivateKey sk,
     const uint32_t index,
     const bool legacy)
 {
@@ -106,21 +106,21 @@ CBIP32ExtendedPrivateKey CBIP32ExtendedPrivateKeyPrivateChild(
     return new bls::ExtendedPrivateKey(skPtr->PrivateChild(index, legacy));
 }
 
-CBIP32ExtendedPublicKey CBIP32ExtendedPrivateKeyPublicChild(
-    const CBIP32ExtendedPrivateKey sk,
+BIP32ExtendedPublicKey BIP32ExtendedPrivateKeyPublicChild(
+    const BIP32ExtendedPrivateKey sk,
     const uint32_t index)
 {
     const bls::ExtendedPrivateKey* skPtr = (bls::ExtendedPrivateKey*)sk;
     return new bls::ExtendedPublicKey(skPtr->PublicChild(index));
 }
 
-CBIP32ChainCode CBIP32ExtendedPrivateKeyGetChainCode(const CBIP32ExtendedPrivateKey sk)
+BIP32ChainCode BIP32ExtendedPrivateKeyGetChainCode(const BIP32ExtendedPrivateKey sk)
 {
     const bls::ExtendedPrivateKey* skPtr = (bls::ExtendedPrivateKey*)sk;
     return new bls::ChainCode(skPtr->GetChainCode());
 }
 
-void* CBIP32ExtendedPrivateKeySerialize(const CBIP32ExtendedPrivateKey sk)
+void* BIP32ExtendedPrivateKeySerialize(const BIP32ExtendedPrivateKey sk)
 {
     const bls::ExtendedPrivateKey* skPtr = (bls::ExtendedPrivateKey*)sk;
     uint8_t* buffer =
@@ -130,23 +130,23 @@ void* CBIP32ExtendedPrivateKeySerialize(const CBIP32ExtendedPrivateKey sk)
     return (void*)buffer;
 }
 
-bool CBIP32ExtendedPrivateKeyIsEqual(
-    const CBIP32ExtendedPrivateKey sk1,
-    const CBIP32ExtendedPrivateKey sk2)
+bool BIP32ExtendedPrivateKeyIsEqual(
+    const BIP32ExtendedPrivateKey sk1,
+    const BIP32ExtendedPrivateKey sk2)
 {
     const bls::ExtendedPrivateKey* sk1Ptr = (bls::ExtendedPrivateKey*)sk1;
     const bls::ExtendedPrivateKey* sk2Ptr = (bls::ExtendedPrivateKey*)sk2;
     return *sk1Ptr == *sk2Ptr;
 }
 
-void* CBIP32ExtendedPrivateKeyGetPrivateKey(const CBIP32ExtendedPrivateKey sk)
+void* BIP32ExtendedPrivateKeyGetPrivateKey(const BIP32ExtendedPrivateKey sk)
 {
     bls::ExtendedPrivateKey* skPtr = (bls::ExtendedPrivateKey*)sk;
     return new bls::PrivateKey(skPtr->GetPrivateKey());
 }
 
-void* CBIP32ExtendedPrivateKeyGetPublicKey(
-    const CBIP32ExtendedPrivateKey sk,
+void* BIP32ExtendedPrivateKeyGetPublicKey(
+    const BIP32ExtendedPrivateKey sk,
     bool* didErr)
 {
     bls::ExtendedPrivateKey* skPtr = (bls::ExtendedPrivateKey*)sk;
@@ -163,8 +163,8 @@ void* CBIP32ExtendedPrivateKeyGetPublicKey(
     return el;
 }
 
-CBIP32ExtendedPublicKey CBIP32ExtendedPrivateKeyGetExtendedPublicKey(
-    const CBIP32ExtendedPrivateKey sk,
+BIP32ExtendedPublicKey BIP32ExtendedPrivateKeyGetExtendedPublicKey(
+    const BIP32ExtendedPrivateKey sk,
     const bool legacy,
     bool* didErr)
 {
@@ -182,7 +182,7 @@ CBIP32ExtendedPublicKey CBIP32ExtendedPrivateKeyGetExtendedPublicKey(
     return pk;
 }
 
-void CBIP32ExtendedPrivateKeyFree(const CBIP32ExtendedPrivateKey sk)
+void BIP32ExtendedPrivateKeyFree(const BIP32ExtendedPrivateKey sk)
 {
     const bls::ExtendedPrivateKey* skPtr = (bls::ExtendedPrivateKey*)sk;
     delete skPtr;

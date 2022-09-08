@@ -6,10 +6,10 @@ fn sign_and_verify() {
     let bad_seed = b"weedseedweedseedweedseedweedseed";
 
     unsafe {
-        let scheme = sys::NewCAugSchemeMPL();
+        let scheme = sys::NewAugSchemeMPL();
         let mut did_err = false;
 
-        let sk = sys::CCoreMPLKeyGen(
+        let sk = sys::CoreMPLKeyGen(
             scheme,
             seed.as_ptr() as *const _,
             seed.len(),
@@ -17,10 +17,10 @@ fn sign_and_verify() {
         );
         assert!(!did_err);
 
-        let pk = sys::CPrivateKeyGetG1Element(sk, &mut did_err as *mut _);
+        let pk = sys::PrivateKeyGetG1Element(sk, &mut did_err as *mut _);
         assert!(!did_err);
 
-        let sk2 = sys::CCoreMPLKeyGen(
+        let sk2 = sys::CoreMPLKeyGen(
             scheme,
             bad_seed.as_ptr() as *const _,
             bad_seed.len(),
@@ -28,17 +28,17 @@ fn sign_and_verify() {
         );
         assert!(!did_err);
 
-        let pk2 = sys::CPrivateKeyGetG1Element(sk2, &mut did_err as *mut _);
+        let pk2 = sys::PrivateKeyGetG1Element(sk2, &mut did_err as *mut _);
         assert!(!did_err);
 
         let message = b"Evgeny owns 1337 dash no cap";
-        let sig = sys::CCoreMPLSign(scheme, sk, message.as_ptr() as *const _, message.len());
+        let sig = sys::CoreMPLSign(scheme, sk, message.as_ptr() as *const _, message.len());
 
         let verify =
-            sys::CCoreMPLVerify(scheme, pk, message.as_ptr() as *const _, message.len(), sig);
+            sys::CoreMPLVerify(scheme, pk, message.as_ptr() as *const _, message.len(), sig);
         assert!(verify);
 
-        let verify_bad = sys::CCoreMPLVerify(
+        let verify_bad = sys::CoreMPLVerify(
             scheme,
             pk2,
             message.as_ptr() as *const _,
@@ -47,11 +47,11 @@ fn sign_and_verify() {
         );
         assert!(!verify_bad);
 
-        sys::CG2ElementFree(sig);
-        sys::CG1ElementFree(pk2);
-        sys::CPrivateKeyFree(sk2);
-        sys::CG1ElementFree(pk);
-        sys::CPrivateKeyFree(sk);
-        sys::CAugSchemeMPLFree(scheme);
+        sys::G2ElementFree(sig);
+        sys::G1ElementFree(pk2);
+        sys::PrivateKeyFree(sk2);
+        sys::G1ElementFree(pk);
+        sys::PrivateKeyFree(sk);
+        sys::AugSchemeMPLFree(scheme);
     }
 }

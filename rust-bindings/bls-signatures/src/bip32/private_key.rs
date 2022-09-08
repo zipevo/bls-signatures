@@ -1,16 +1,11 @@
 use std::ffi::c_void;
 
 use bls_dash_sys::{
-    CBIP32ChainCodeFree, CBIP32ChainCodeIsEqual, CBIP32ChainCodeSerialize,
-    CBIP32ExtendedPrivateKeyFree, CBIP32ExtendedPrivateKeyFromBytes,
-    CBIP32ExtendedPrivateKeyFromSeed, CBIP32ExtendedPrivateKeyGetChainCode,
-    CBIP32ExtendedPrivateKeyGetExtendedPublicKey, CBIP32ExtendedPrivateKeyGetPrivateKey,
-    CBIP32ExtendedPrivateKeyGetPublicKey, CBIP32ExtendedPrivateKeyIsEqual,
-    CBIP32ExtendedPrivateKeyPrivateChild, CBIP32ExtendedPrivateKeyPublicChild,
-    CBIP32ExtendedPrivateKeySerialize, CBIP32ExtendedPublicKeyFree,
-    CBIP32ExtendedPublicKeyFromBytes, CBIP32ExtendedPublicKeyGetChainCode,
-    CBIP32ExtendedPublicKeyIsEqual, CBIP32ExtendedPublicKeyPublicChild,
-    CBIP32ExtendedPublicKeySerialize,
+    BIP32ExtendedPrivateKeyFree, BIP32ExtendedPrivateKeyFromBytes, BIP32ExtendedPrivateKeyFromSeed,
+    BIP32ExtendedPrivateKeyGetChainCode, BIP32ExtendedPrivateKeyGetExtendedPublicKey,
+    BIP32ExtendedPrivateKeyGetPrivateKey, BIP32ExtendedPrivateKeyGetPublicKey,
+    BIP32ExtendedPrivateKeyIsEqual, BIP32ExtendedPrivateKeyPrivateChild,
+    BIP32ExtendedPrivateKeyPublicChild, BIP32ExtendedPrivateKeySerialize,
 };
 
 use crate::{
@@ -29,7 +24,7 @@ pub struct ExtendedPrivateKey {
 impl PartialEq for ExtendedPrivateKey {
     fn eq(&self, other: &Self) -> bool {
         unsafe {
-            CBIP32ExtendedPrivateKeyIsEqual(
+            BIP32ExtendedPrivateKeyIsEqual(
                 self.c_extended_private_key,
                 other.c_extended_private_key,
             )
@@ -52,7 +47,7 @@ impl ExtendedPrivateKey {
         }
         Ok(ExtendedPrivateKey {
             c_extended_private_key: c_err_to_result(|did_err| unsafe {
-                CBIP32ExtendedPrivateKeyFromBytes(bytes.as_ptr() as *const _, did_err)
+                BIP32ExtendedPrivateKeyFromBytes(bytes.as_ptr() as *const _, did_err)
             })?,
         })
     }
@@ -60,7 +55,7 @@ impl ExtendedPrivateKey {
     pub fn from_seed(bytes: &[u8]) -> Result<Self, BlsError> {
         Ok(ExtendedPrivateKey {
             c_extended_private_key: c_err_to_result(|did_err| unsafe {
-                CBIP32ExtendedPrivateKeyFromSeed(bytes.as_ptr() as *const _, did_err)
+                BIP32ExtendedPrivateKeyFromSeed(bytes.as_ptr() as *const _, did_err)
             })?,
         })
     }
@@ -68,7 +63,7 @@ impl ExtendedPrivateKey {
     pub(crate) fn private_child_with_legacy_flag(&self, index: u32, legacy: bool) -> Self {
         ExtendedPrivateKey {
             c_extended_private_key: unsafe {
-                CBIP32ExtendedPrivateKeyPrivateChild(self.c_extended_private_key, index, legacy)
+                BIP32ExtendedPrivateKeyPrivateChild(self.c_extended_private_key, index, legacy)
             },
         }
     }
@@ -80,7 +75,7 @@ impl ExtendedPrivateKey {
     pub fn public_child(&self, index: u32) -> ExtendedPublicKey {
         ExtendedPublicKey {
             c_extended_public_key: unsafe {
-                CBIP32ExtendedPrivateKeyPublicChild(self.c_extended_private_key, index)
+                BIP32ExtendedPrivateKeyPublicChild(self.c_extended_private_key, index)
             },
         }
     }
@@ -91,7 +86,7 @@ impl ExtendedPrivateKey {
     ) -> Result<ExtendedPublicKey, BlsError> {
         Ok(ExtendedPublicKey {
             c_extended_public_key: c_err_to_result(|did_err| unsafe {
-                CBIP32ExtendedPrivateKeyGetExtendedPublicKey(
+                BIP32ExtendedPrivateKeyGetExtendedPublicKey(
                     self.c_extended_private_key,
                     legacy,
                     did_err,
@@ -107,7 +102,7 @@ impl ExtendedPrivateKey {
     pub fn public_key(&self) -> Result<G1Element, BlsError> {
         Ok(G1Element {
             c_element: c_err_to_result(|did_err| unsafe {
-                CBIP32ExtendedPrivateKeyGetPublicKey(self.c_extended_private_key, did_err)
+                BIP32ExtendedPrivateKeyGetPublicKey(self.c_extended_private_key, did_err)
             })?,
         })
     }
@@ -115,14 +110,14 @@ impl ExtendedPrivateKey {
     pub fn private_key(&self) -> PrivateKey {
         PrivateKey {
             c_private_key: unsafe {
-                CBIP32ExtendedPrivateKeyGetPrivateKey(self.c_extended_private_key)
+                BIP32ExtendedPrivateKeyGetPrivateKey(self.c_extended_private_key)
             },
         }
     }
 
     pub fn serialize(&self) -> SecureBox {
         unsafe {
-            let secalloc_ptr = CBIP32ExtendedPrivateKeySerialize(self.c_extended_private_key);
+            let secalloc_ptr = BIP32ExtendedPrivateKeySerialize(self.c_extended_private_key);
             SecureBox::from_ptr(secalloc_ptr as *mut u8, BIP32_EXTENDED_PRIVATE_KEY_SIZE)
         }
     }
@@ -130,7 +125,7 @@ impl ExtendedPrivateKey {
     pub fn chain_code(&self) -> ChainCode {
         ChainCode {
             c_chain_code: unsafe {
-                CBIP32ExtendedPrivateKeyGetChainCode(self.c_extended_private_key)
+                BIP32ExtendedPrivateKeyGetChainCode(self.c_extended_private_key)
             },
         }
     }
@@ -138,7 +133,7 @@ impl ExtendedPrivateKey {
 
 impl Drop for ExtendedPrivateKey {
     fn drop(&mut self) {
-        unsafe { CBIP32ExtendedPrivateKeyFree(self.c_extended_private_key) }
+        unsafe { BIP32ExtendedPrivateKeyFree(self.c_extended_private_key) }
     }
 }
 

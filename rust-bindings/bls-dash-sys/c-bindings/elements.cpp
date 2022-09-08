@@ -19,11 +19,11 @@
 #include "elements.h"
 
 // G1Element
-int CG1ElementSize() {
+int G1ElementSize() {
     return bls::G1Element::SIZE;
 }
 
-CG1Element CG1ElementFromBytes(const void* data, bool legacy, bool* didErr) {
+G1Element G1ElementFromBytes(const void* data, bool legacy, bool* didErr) {
     bls::G1Element* el = nullptr;
     try {
         el = new bls::G1Element(
@@ -38,21 +38,21 @@ CG1Element CG1ElementFromBytes(const void* data, bool legacy, bool* didErr) {
     return el;
 }
 
-CG1Element CG1ElementGenerator() {
+G1Element G1ElementGenerator() {
     return new bls::G1Element(bls::G1Element::Generator());
 }
 
-bool CG1ElementIsValid(const CG1Element el) {
+bool G1ElementIsValid(const G1Element el) {
     const bls::G1Element* elPtr = (bls::G1Element*)el;
     return elPtr->IsValid();
 }
 
-uint32_t CG1ElementGetFingerprint(const CG1Element el, const bool legacy) {
+uint32_t G1ElementGetFingerprint(const G1Element el, const bool legacy) {
     const bls::G1Element* elPtr = (bls::G1Element*)el;
     return elPtr->GetFingerprint(legacy);
 }
 
-void* CG1ElementSerialize(const CG1Element el, const bool legacy) {
+void* G1ElementSerialize(const G1Element el, const bool legacy) {
     const bls::G1Element* elPtr = (bls::G1Element*)el;
     const std::vector<uint8_t> serialized = elPtr->Serialize(legacy);
     uint8_t* buffer = (uint8_t*)malloc(bls::G1Element::SIZE);
@@ -60,40 +60,40 @@ void* CG1ElementSerialize(const CG1Element el, const bool legacy) {
     return (void*)buffer;
 }
 
-bool CG1ElementIsEqual(const CG1Element el1, const CG1Element el2) {
+bool G1ElementIsEqual(const G1Element el1, const G1Element el2) {
     const bls::G1Element* el1Ptr = (bls::G1Element*)el1;
     const bls::G1Element* el2Ptr = (bls::G1Element*)el2;
     return *el1Ptr == *el2Ptr;
 }
 
-CG1Element CG1ElementAdd(const CG1Element el1, const CG1Element el2) {
+G1Element G1ElementAdd(const G1Element el1, const G1Element el2) {
     const bls::G1Element* el1Ptr = (bls::G1Element*)el1;
     const bls::G1Element* el2Ptr = (bls::G1Element*)el2;
     return new bls::G1Element((*el1Ptr) + (*el2Ptr));
 }
 
-CG1Element CG1ElementMul(const CG1Element el, const CPrivateKey sk) {
+G1Element G1ElementMul(const G1Element el, const PrivateKey sk) {
     const bls::G1Element* elPtr = (bls::G1Element*)el;
     const bls::PrivateKey* skPtr = (bls::PrivateKey*)sk;
     return new bls::G1Element(*elPtr * *skPtr);
 }
 
-CG1Element CG1ElementNegate(const CG1Element el) {
+G1Element G1ElementNegate(const G1Element el) {
     const bls::G1Element* elPtr = (bls::G1Element*)el;
     return new bls::G1Element(elPtr->Negate());
 }
 
-void CG1ElementFree(const CG1Element el) {
+void G1ElementFree(const G1Element el) {
     const bls::G1Element* elPtr = (bls::G1Element*)el;
     delete elPtr;
 }
 
 // G2Element
-int CG2ElementSize() {
+int G2ElementSize() {
     return bls::G2Element::SIZE;
 }
 
-CG2Element CG2ElementFromBytes(const void* data, const bool legacy, bool* didErr) {
+G2Element G2ElementFromBytes(const void* data, const bool legacy, bool* didErr) {
     bls::G2Element* el = nullptr;
     try {
         el = new bls::G2Element(
@@ -108,16 +108,16 @@ CG2Element CG2ElementFromBytes(const void* data, const bool legacy, bool* didErr
     return el;
 }
 
-CG2Element CG2ElementGenerator() {
+G2Element G2ElementGenerator() {
     return new bls::G2Element(bls::G2Element::Generator());
 }
 
-bool CG2ElementIsValid(const CG2Element el) {
+bool G2ElementIsValid(const G2Element el) {
     const bls::G2Element* elPtr = (bls::G2Element*)el;
     return elPtr->IsValid();
 }
 
-void* CG2ElementSerialize(const CG2Element el, const bool legacy) {
+void* G2ElementSerialize(const G2Element el, const bool legacy) {
     const bls::G2Element* elPtr = (bls::G2Element*)el;
     const std::vector<uint8_t> serialized = elPtr->Serialize(legacy);
     uint8_t* buffer = (uint8_t*)malloc(bls::G2Element::SIZE);
@@ -125,30 +125,30 @@ void* CG2ElementSerialize(const CG2Element el, const bool legacy) {
     return (void*)buffer;
 }
 
-bool CG2ElementIsEqual(const CG2Element el1, const CG2Element el2) {
+bool G2ElementIsEqual(const G2Element el1, const G2Element el2) {
     const bls::G2Element* el1Ptr = (bls::G2Element*)el1;
     const bls::G2Element* el2Ptr = (bls::G2Element*)el2;
     return *el1Ptr == *el2Ptr;
 }
 
-CG2Element CG2ElementAdd(const CG2Element el1, const CG2Element el2) {
+G2Element G2ElementAdd(const G2Element el1, const G2Element el2) {
     bls::G2Element* el1Ptr = (bls::G2Element*)el1;
     bls::G2Element* el2Ptr = (bls::G2Element*)el2;
     return new bls::G2Element(*el1Ptr + *el2Ptr);
 }
 
-CG2Element CG2ElementMul(const CG2Element el, const CPrivateKey sk) {
+G2Element G2ElementMul(const G2Element el, const PrivateKey sk) {
     const bls::G2Element* elPtr = (bls::G2Element*)el;
     const bls::PrivateKey* skPtr = (bls::PrivateKey*)sk;
     return new bls::G2Element(*elPtr * *skPtr);
 }
 
-CG2Element CG2ElementNegate(const CG2Element el) {
+G2Element G2ElementNegate(const G2Element el) {
     const bls::G2Element* elPtr = (bls::G2Element*)el;
     return new bls::G2Element(elPtr->Negate());
 }
 
-void CG2ElementFree(const CG2Element el) {
+void G2ElementFree(const G2Element el) {
     bls::G2Element* elPtr = (bls::G2Element*)el;
     delete elPtr;
 }

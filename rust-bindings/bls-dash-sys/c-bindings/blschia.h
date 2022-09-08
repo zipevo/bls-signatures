@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GO_BINDINGS_BLSCHIA_H_
-#define GO_BINDINGS_BLSCHIA_H_
+#ifndef BLSCHIA_H_
+#define BLSCHIA_H_
 #include <stdbool.h>
 #include <stdint.h>
 #include "privatekey.h"
@@ -43,4 +43,4 @@ const char* GetLastErrorMsg();
 #ifdef __cplusplus
 }
 #endif
-#endif // GO_BINDINGS_BLSCHIA_H_
+#endif // BLSCHIA_H_

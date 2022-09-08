@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GO_BINDINGS_ELEMENTS_H_
-#define GO_BINDINGS_ELEMENTS_H_
+#ifndef ELEMENTS_H_
+#define ELEMENTS_H_
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -21,36 +21,36 @@
 extern "C" {
 #endif
 
-typedef void* CG1Element;
-typedef void* CG2Element;
-typedef void* CPrivateKey;
+typedef void* G1Element;
+typedef void* G2Element;
+typedef void* PrivateKey;
 
 // G1Element
-int CG1ElementSize();
-CG1Element CG1ElementFromBytes(const void* data, const bool legacy, bool* didErr);
-CG1Element CG1ElementGenerator();
-bool CG1ElementIsValid(const CG1Element el);
-uint32_t CG1ElementGetFingerprint(const CG1Element el, const bool legacy);
-bool CG1ElementIsEqual(const CG1Element el1, const CG1Element el2);
-CG1Element CG1ElementAdd(const CG1Element el1, const CG1Element el2);
-CG1Element CG1ElementMul(const CG1Element el, const CPrivateKey sk);
-CG1Element CG1ElementNegate(const CG1Element el);
-void* CG1ElementSerialize(const CG1Element el, const bool legacy);
-void CG1ElementFree(const CG1Element el);
+int G1ElementSize();
+G1Element G1ElementFromBytes(const void* data, const bool legacy, bool* didErr);
+G1Element G1ElementGenerator();
+bool G1ElementIsValid(const G1Element el);
+uint32_t G1ElementGetFingerprint(const G1Element el, const bool legacy);
+bool G1ElementIsEqual(const G1Element el1, const G1Element el2);
+G1Element G1ElementAdd(const G1Element el1, const G1Element el2);
+G1Element G1ElementMul(const G1Element el, const PrivateKey sk);
+G1Element G1ElementNegate(const G1Element el);
+void* G1ElementSerialize(const G1Element el, const bool legacy);
+void G1ElementFree(const G1Element el);
 
 // G2Element
-int CG2ElementSize();
-CG2Element CG2ElementFromBytes(const void* data, const bool legacy, bool* didErr);
-CG2Element CG2ElementGenerator();
-bool CG2ElementIsValid(const CG2Element el);
-bool CG2ElementIsEqual(const CG2Element el1, const CG2Element el2);
-CG2Element CG2ElementAdd(const CG2Element el1, const CG2Element el2);
-CG2Element CG2ElementMul(const CG2Element el, const CPrivateKey sk);
-CG2Element CG2ElementNegate(const CG2Element el);
-void* CG2ElementSerialize(const CG2Element el, const bool legacy);
-void CG2ElementFree(const CG2Element el);
+int G2ElementSize();
+G2Element G2ElementFromBytes(const void* data, const bool legacy, bool* didErr);
+G2Element G2ElementGenerator();
+bool G2ElementIsValid(const G2Element el);
+bool G2ElementIsEqual(const G2Element el1, const G2Element el2);
+G2Element G2ElementAdd(const G2Element el1, const G2Element el2);
+G2Element G2ElementMul(const G2Element el, const PrivateKey sk);
+G2Element G2ElementNegate(const G2Element el);
+void* G2ElementSerialize(const G2Element el, const bool legacy);
+void G2ElementFree(const G2Element el);
 
 #ifdef __cplusplus
 }
 #endif
-#endif // GO_BINDINGS_ELEMENTS_H_
+#endif // ELEMENTS_H_

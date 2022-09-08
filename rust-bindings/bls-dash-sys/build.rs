@@ -106,7 +106,7 @@ fn main() {
 
     let mut cc = cc::Build::new();
 
-    let cpp_files_mask = c_bindings_path.join("/**/*.cpp");
+    let cpp_files_mask = c_bindings_path.join("**/*.cpp");
 
     let cpp_files: Vec<_> = glob::glob(cpp_files_mask.to_str().unwrap())
         .expect("can't get list of cpp files")

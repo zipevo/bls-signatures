@@ -25,8 +25,8 @@
 
 // Implementation of bindings for CoreMPL class
 
-CPrivateKey CCoreMPLKeyGen(
-    const CCoreMPL scheme,
+PrivateKey CoreMPLKeyGen(
+    const CoreMPL scheme,
     const void* seed,
     const size_t seedLen,
     bool* didErr)
@@ -45,16 +45,16 @@ CPrivateKey CCoreMPLKeyGen(
     return sk;
 }
 
-CG1Element CCoreMPSkToG1(const CCoreMPL scheme, const CPrivateKey sk)
+G1Element CoreMPLSkToG1(const CoreMPL scheme, const PrivateKey sk)
 {
     bls::CoreMPL* schemePtr = (bls::CoreMPL*)scheme;
     const bls::PrivateKey* skPtr = (bls::PrivateKey*)sk;
     return new bls::G1Element(schemePtr->SkToG1(*skPtr));
 }
 
-CG2Element CCoreMPLSign(
-    CCoreMPL scheme,
-    const CPrivateKey sk,
+G2Element CoreMPLSign(
+    CoreMPL scheme,
+    const PrivateKey sk,
     const void* msg,
     const size_t msgLen)
 {
@@ -64,12 +64,12 @@ CG2Element CCoreMPLSign(
         schemePtr->Sign(*skPtr, bls::Bytes((uint8_t*)msg, msgLen)));
 }
 
-bool CCoreMPLVerify(
-    const CCoreMPL scheme,
-    const CG1Element pk,
+bool CoreMPLVerify(
+    const CoreMPL scheme,
+    const G1Element pk,
     const void* msg,
     const size_t msgLen,
-    const CG2Element sig)
+    const G2Element sig)
 {
     bls::CoreMPL* schemePtr = (bls::CoreMPL*)scheme;
     const bls::G1Element* pkPtr = (bls::G1Element*)pk;
@@ -78,11 +78,11 @@ bool CCoreMPLVerify(
         *pkPtr, bls::Bytes((uint8_t*)msg, msgLen), *sigPtr);
 }
 
-bool CCoreMPLVerifySecure(
-    const CCoreMPL scheme,
+bool CoreMPLVerifySecure(
+    const CoreMPL scheme,
     void** pks,
     const size_t pksLen,
-    const CG2Element sig,
+    const G2Element sig,
     const void* msg,
     const size_t msgLen)
 {
@@ -95,8 +95,8 @@ bool CCoreMPLVerifySecure(
         vecPubKeys, *sigPtr, bls::Bytes(msgPtr, msgLen));
 }
 
-CG1Element CCoreMPLAggregatePubKeys(
-    const CCoreMPL scheme,
+G1Element CoreMPLAggregatePubKeys(
+    const CoreMPL scheme,
     void** pks,
     const size_t pksLen)
 {
@@ -105,8 +105,8 @@ CG1Element CCoreMPLAggregatePubKeys(
         schemePtr->Aggregate(toBLSVector<bls::G1Element>(pks, pksLen)));
 }
 
-CG2Element CCoreMPLAggregateSigs(
-    const CCoreMPL scheme,
+G2Element CoreMPLAggregateSigs(
+    const CoreMPL scheme,
     void** sigs,
     const size_t sigsLen)
 {
@@ -115,9 +115,9 @@ CG2Element CCoreMPLAggregateSigs(
         schemePtr->Aggregate(toBLSVector<bls::G2Element>(sigs, sigsLen)));
 }
 
-CPrivateKey CCoreMPLDeriveChildSk(
-    const CCoreMPL scheme,
-    const CPrivateKey sk,
+PrivateKey CoreMPLDeriveChildSk(
+    const CoreMPL scheme,
+    const PrivateKey sk,
     const uint32_t index)
 {
     bls::CoreMPL* schemePtr = (bls::CoreMPL*)scheme;
@@ -125,9 +125,9 @@ CPrivateKey CCoreMPLDeriveChildSk(
     return new bls::PrivateKey(schemePtr->DeriveChildSk(*skPtr, index));
 }
 
-CPrivateKey CCoreMPLDeriveChildSkUnhardened(
-    CCoreMPL scheme,
-    CPrivateKey sk,
+PrivateKey CoreMPLDeriveChildSkUnhardened(
+    CoreMPL scheme,
+    PrivateKey sk,
     uint32_t index)
 {
     bls::CoreMPL* schemePtr = (bls::CoreMPL*)scheme;
@@ -136,9 +136,9 @@ CPrivateKey CCoreMPLDeriveChildSkUnhardened(
         schemePtr->DeriveChildSkUnhardened(*skPtr, index));
 }
 
-CG1Element CCoreMPLDeriveChildPkUnhardened(
-    CCoreMPL scheme,
-    CG1Element el,
+G1Element CoreMPLDeriveChildPkUnhardened(
+    CoreMPL scheme,
+    G1Element el,
     uint32_t index)
 {
     bls::CoreMPL* schemePtr = (bls::CoreMPL*)scheme;
@@ -147,14 +147,14 @@ CG1Element CCoreMPLDeriveChildPkUnhardened(
         schemePtr->DeriveChildPkUnhardened(*elPtr, index));
 }
 
-bool CCoreMPLAggregateVerify(
-    const CCoreMPL scheme,
+bool CoreMPLAggregateVerify(
+    const CoreMPL scheme,
     void** pks,
     const size_t pksLen,
     void** msgs,
     const void* msgsLens,
     const size_t msgsLen,
-    const CG2Element sig)
+    const G2Element sig)
 {
     bls::CoreMPL* schemePtr = (bls::CoreMPL*)scheme;
     const size_t* msgLensPtr = (size_t*)msgsLens;
@@ -169,16 +169,16 @@ bool CCoreMPLAggregateVerify(
 }
 
 // BasicSchemeMPL
-CBasicSchemeMPL NewCBasicSchemeMPL() { return new bls::BasicSchemeMPL(); }
+BasicSchemeMPL NewBasicSchemeMPL() { return new bls::BasicSchemeMPL(); }
 
-bool CBasicSchemeMPLAggregateVerify(
-    CBasicSchemeMPL scheme,
+bool BasicSchemeMPLAggregateVerify(
+    BasicSchemeMPL scheme,
     void** pks,
     const size_t pksLen,
     void** msgs,
     const void* msgsLens,
     const size_t msgsLen,
-    const CG2Element sig)
+    const G2Element sig)
 {
     bls::BasicSchemeMPL* schemePtr = (bls::BasicSchemeMPL*)scheme;
     const size_t* msgLensPtr = (size_t*)msgsLens;
@@ -192,18 +192,18 @@ bool CBasicSchemeMPLAggregateVerify(
     return schemePtr->AggregateVerify(vecPubKeys, vecMsgs, *sigPtr);
 }
 
-void CBasicSchemeMPLFree(CBasicSchemeMPL scheme)
+void BasicSchemeMPLFree(BasicSchemeMPL scheme)
 {
     bls::BasicSchemeMPL* schemePtr = (bls::BasicSchemeMPL*)scheme;
     delete schemePtr;
 }
 
 // AugSchemeMPL
-CAugSchemeMPL NewCAugSchemeMPL() { return new bls::AugSchemeMPL(); }
+AugSchemeMPL NewAugSchemeMPL() { return new bls::AugSchemeMPL(); }
 
-CG2Element CAugSchemeMPLSign(
-    const CAugSchemeMPL scheme,
-    const CPrivateKey sk,
+G2Element AugSchemeMPLSign(
+    const AugSchemeMPL scheme,
+    const PrivateKey sk,
     const void* msg,
     const size_t msgLen)
 {
@@ -213,12 +213,12 @@ CG2Element CAugSchemeMPLSign(
         schemePtr->Sign(*skPtr, bls::Bytes((uint8_t*)msg, msgLen)));
 }
 
-CG2Element CAugSchemeMPLSignPrepend(
-    const CAugSchemeMPL scheme,
-    const CPrivateKey sk,
+G2Element AugSchemeMPLSignPrepend(
+    const AugSchemeMPL scheme,
+    const PrivateKey sk,
     const void* msg,
     const size_t msgLen,
-    const CG1Element prepPk)
+    const G1Element prepPk)
 {
     bls::AugSchemeMPL* schemePtr = (bls::AugSchemeMPL*)scheme;
     const bls::PrivateKey* skPtr = (bls::PrivateKey*)sk;
@@ -227,12 +227,12 @@ CG2Element CAugSchemeMPLSignPrepend(
         schemePtr->Sign(*skPtr, bls::Bytes((uint8_t*)msg, msgLen), *prepPkPtr));
 }
 
-bool CAugSchemeMPLVerify(
-    const CAugSchemeMPL scheme,
-    const CG1Element pk,
+bool AugSchemeMPLVerify(
+    const AugSchemeMPL scheme,
+    const G1Element pk,
     const void* msg,
     const size_t msgLen,
-    const CG2Element sig)
+    const G2Element sig)
 {
     bls::AugSchemeMPL* schemePtr = (bls::AugSchemeMPL*)scheme;
     const bls::G1Element* pkPtr = (bls::G1Element*)pk;
@@ -241,14 +241,14 @@ bool CAugSchemeMPLVerify(
     return schemePtr->Verify(*pkPtr, bls::Bytes(msgPtr, msgLen), *sigPtr);
 }
 
-bool CAugSchemeMPLAggregateVerify(
-    const CAugSchemeMPL scheme,
+bool AugSchemeMPLAggregateVerify(
+    const AugSchemeMPL scheme,
     void** pks,
     const size_t pksLen,
     void** msgs,
     const void* msgsLens,
     const size_t msgsLen,
-    const CG2Element sig)
+    const G2Element sig)
 {
     bls::AugSchemeMPL* schemePtr = (bls::AugSchemeMPL*)scheme;
     const size_t* msgLensPtr = (size_t*)msgsLens;
@@ -262,28 +262,28 @@ bool CAugSchemeMPLAggregateVerify(
     return schemePtr->AggregateVerify(vecPubKeys, vecMsgs, *sigPtr);
 }
 
-void CAugSchemeMPLFree(CAugSchemeMPL scheme)
+void AugSchemeMPLFree(AugSchemeMPL scheme)
 {
     bls::AugSchemeMPL* schemePtr = (bls::AugSchemeMPL*)scheme;
     delete schemePtr;
 }
 
 // PopSchemeMPL
-CPopSchemeMPL NewCPopSchemeMPL() { return new bls::PopSchemeMPL(); }
+PopSchemeMPL NewPopSchemeMPL() { return new bls::PopSchemeMPL(); }
 
-CG2Element CPopSchemeMPLPopProve(
-    const CPopSchemeMPL scheme,
-    const CPrivateKey sk)
+G2Element PopSchemeMPLPopProve(
+    const PopSchemeMPL scheme,
+    const PrivateKey sk)
 {
     bls::PopSchemeMPL* schemePtr = (bls::PopSchemeMPL*)scheme;
     const bls::PrivateKey* skPtr = (bls::PrivateKey*)sk;
     return new bls::G2Element(schemePtr->PopProve(*skPtr));
 }
 
-bool CPopSchemeMPLPopVerify(
-    const CPopSchemeMPL scheme,
-    const CG1Element pk,
-    const CG2Element sig)
+bool PopSchemeMPLPopVerify(
+    const PopSchemeMPL scheme,
+    const G1Element pk,
+    const G2Element sig)
 {
     bls::PopSchemeMPL* schemePtr = (bls::PopSchemeMPL*)scheme;
     const bls::G1Element* pkPtr = (bls::G1Element*)pk;
@@ -291,13 +291,13 @@ bool CPopSchemeMPLPopVerify(
     return schemePtr->PopVerify(*pkPtr, *sigPtr);
 }
 
-bool CPopSchemeMPLFastAggregateVerify(
-    const CPopSchemeMPL scheme,
+bool PopSchemeMPLFastAggregateVerify(
+    const PopSchemeMPL scheme,
     void** pks,
     const size_t pksLen,
     const void* msg,
     const size_t msgLen,
-    const CG2Element sig)
+    const G2Element sig)
 {
     bls::PopSchemeMPL* schemePtr = (bls::PopSchemeMPL*)scheme;
     const bls::G2Element* sigPtr = (bls::G2Element*)sig;
@@ -307,18 +307,18 @@ bool CPopSchemeMPLFastAggregateVerify(
         vecPubKeys, bls::Bytes((uint8_t*)msg, msgLen), *sigPtr);
 }
 
-void CPopSchemeMPLFree(CPopSchemeMPL scheme)
+void PopSchemeMPLFree(PopSchemeMPL scheme)
 {
     bls::PopSchemeMPL* schemePtr = (bls::PopSchemeMPL*)scheme;
     delete schemePtr;
 }
 
 // LegacySchemeMPL
-CLegacySchemeMPL NewCLegacySchemeMPL() { return new bls::LegacySchemeMPL(); }
+LegacySchemeMPL NewLegacySchemeMPL() { return new bls::LegacySchemeMPL(); }
 
-CG2Element CLegacySchemeMPLSign(
-    const CLegacySchemeMPL scheme,
-    const CPrivateKey sk,
+G2Element LegacySchemeMPLSign(
+    const LegacySchemeMPL scheme,
+    const PrivateKey sk,
     const void* msg,
     const size_t msgLen)
 {
@@ -328,12 +328,12 @@ CG2Element CLegacySchemeMPLSign(
         schemePtr->Sign(*skPtr, bls::Bytes((uint8_t*)msg, msgLen)));
 }
 
-bool CLegacySchemeMPLVerify(
-    const CLegacySchemeMPL scheme,
-    const CG1Element pk,
+bool LegacySchemeMPLVerify(
+    const LegacySchemeMPL scheme,
+    const G1Element pk,
     const void* msg,
     const size_t msgLen,
-    const CG2Element sig)
+    const G2Element sig)
 {
     bls::LegacySchemeMPL* schemePtr = (bls::LegacySchemeMPL*)scheme;
     const bls::G1Element* pkPtr = (bls::G1Element*)pk;
@@ -342,11 +342,11 @@ bool CLegacySchemeMPLVerify(
     return schemePtr->Verify(*pkPtr, bls::Bytes(msgPtr, msgLen), *sigPtr);
 }
 
-bool CLegacySchemeMPLVerifySecure(
-    const CLegacySchemeMPL scheme,
+bool LegacySchemeMPLVerifySecure(
+    const LegacySchemeMPL scheme,
     void** pks,
     const size_t pksLen,
-    const CG2Element sig,
+    const G2Element sig,
     const void* msg,
     const size_t msgLen)
 {
@@ -360,14 +360,14 @@ bool CLegacySchemeMPLVerifySecure(
         vecPubKeys, *sigPtr, bls::Bytes(msgPtr, msgLen));
 }
 
-bool CLegacySchemeMPLAggregateVerify(
-    const CLegacySchemeMPL scheme,
+bool LegacySchemeMPLAggregateVerify(
+    const LegacySchemeMPL scheme,
     void** pks,
     const size_t pksLen,
     void** msgs,
     const void* msgsLens,
     const size_t msgsLen,
-    const CG2Element sig)
+    const G2Element sig)
 {
     bls::LegacySchemeMPL* schemePtr = (bls::LegacySchemeMPL*)scheme;
     const size_t* msgLensPtr = (size_t*)msgsLens;
@@ -381,7 +381,7 @@ bool CLegacySchemeMPLAggregateVerify(
     return schemePtr->AggregateVerify(vecPubKeys, vecMsgs, *sigPtr);
 }
 
-void CLegacySchemeMPLFree(CLegacySchemeMPL scheme)
+void LegacySchemeMPLFree(LegacySchemeMPL scheme)
 {
     bls::LegacySchemeMPL* schemePtr = (bls::LegacySchemeMPL*)scheme;
     delete schemePtr;

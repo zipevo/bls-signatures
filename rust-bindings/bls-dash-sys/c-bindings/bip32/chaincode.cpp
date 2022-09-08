@@ -4,7 +4,7 @@
 
 #include "bls.hpp"
 
-void* CBIP32ChainCodeSerialize(const CBIP32ChainCode cc)
+void* BIP32ChainCodeSerialize(const BIP32ChainCode cc)
 {
     const bls::ChainCode* ccPtr = (bls::ChainCode*)cc;
     const std::vector<uint8_t> serialized = ccPtr->Serialize();
@@ -13,14 +13,14 @@ void* CBIP32ChainCodeSerialize(const CBIP32ChainCode cc)
     return (void*)buffer;
 }
 
-bool CBIP32ChainCodeIsEqual(const CBIP32ChainCode cc1, const CBIP32ChainCode cc2)
+bool BIP32ChainCodeIsEqual(const BIP32ChainCode cc1, const BIP32ChainCode cc2)
 {
     const bls::ChainCode* cc1Ptr = (bls::ChainCode*)cc1;
     const bls::ChainCode* cc2Ptr = (bls::ChainCode*)cc2;
     return *cc1Ptr == *cc2Ptr;
 }
 
-void CBIP32ChainCodeFree(const CBIP32ChainCode cc)
+void BIP32ChainCodeFree(const BIP32ChainCode cc)
 {
     const bls::ChainCode* ccPtr = (bls::ChainCode*)cc;
     delete ccPtr;

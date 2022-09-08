@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef GO_BINDINGS_THRESHOLD_H_
-#define GO_BINDINGS_THRESHOLD_H_
+#ifndef THRESHOLD_H_
+#define THRESHOLD_H_
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -25,31 +25,31 @@ extern "C" {
 
 const int HashSize = 32;
 
-CPrivateKey CThresholdPrivateKeyShare(void** sks, const size_t sksLen, const void* hash, bool* didErr);
-CPrivateKey CThresholdPrivateKeyRecover(void** sks,
+PrivateKey ThresholdPrivateKeyShare(void** sks, const size_t sksLen, const void* hash, bool* didErr);
+PrivateKey ThresholdPrivateKeyRecover(void** sks,
                                         const size_t sksLen,
                                         void** hashes,
                                         const size_t hashesLen,
                                         bool* didErr);
 
-CG1Element CThresholdPublicKeyShare(void** pks, const size_t pksLen, const void* hash, bool* didErr);
-CG1Element CThresholdPublicKeyRecover(void** pks,
+G1Element ThresholdPublicKeyShare(void** pks, const size_t pksLen, const void* hash, bool* didErr);
+G1Element ThresholdPublicKeyRecover(void** pks,
                                       const size_t pksLen,
                                       void** hashes,
                                       const size_t hashesLen,
                                       bool* didErr);
 
-CG2Element CThresholdSignatureShare(void** sigs, const size_t sigsLen, const void* hash, bool* didErr);
-CG2Element CThresholdSignatureRecover(void** sigs,
+G2Element ThresholdSignatureShare(void** sigs, const size_t sigsLen, const void* hash, bool* didErr);
+G2Element ThresholdSignatureRecover(void** sigs,
                                       const size_t sigsLen,
                                       void** hashes,
                                       const size_t hashesLen,
                                       bool* didErr);
 
-CG2Element CThresholdSign(const CPrivateKey sk, const void* hash);
-bool CThresholdVerify(const CG1Element pk, const void* hash, const CG2Element sig);
+G2Element ThresholdSign(const PrivateKey sk, const void* hash);
+bool ThresholdVerify(const G1Element pk, const void* hash, const G2Element sig);
 
 #ifdef __cplusplus
 }
 #endif
-#endif  // GO_BINDINGS_THRESHOLD_H_
+#endif  // THRESHOLD_H_
