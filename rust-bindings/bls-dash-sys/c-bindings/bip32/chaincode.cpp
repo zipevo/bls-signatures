@@ -1,8 +1,6 @@
-#include "chaincode.h"
-
 #include <vector>
-
 #include "bls.hpp"
+#include "chaincode.h"
 
 void* BIP32ChainCodeSerialize(const BIP32ChainCode cc)
 {

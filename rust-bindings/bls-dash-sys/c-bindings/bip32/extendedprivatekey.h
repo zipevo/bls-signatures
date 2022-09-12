@@ -5,8 +5,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "chaincode.h"
 #include "extendedpublickey.h"
+#include "chaincode.h"
+
 
 #ifdef __cplusplus
 extern "C" {

@@ -45,7 +45,7 @@ fn main() {
     println!("root {}", root_path.display());
     println!("bls_dash_build_path {}", bls_dash_build_path.display());
     println!("bls_dash_src_path {}", bls_dash_src_path.display());
-    println!("c_bindings_path {}", c_bindings_path.display());
+    // println!("c_bindings_path {}", c_bindings_path.display());
 
     // Run cmake
 
@@ -180,46 +180,46 @@ fn main() {
     }
 
     // Generate rust code for c binding to src/lib.rs
-    println!("Generate C binding for rust:");
+    // println!("Generate C binding for rust:");
 
-    let mut builder = bindgen::Builder::default()
-        // .trust_clang_mangling(true)
-        // .wasm_import_module_name()
-        .size_t_is_usize(true)
-        .parse_callbacks(Box::new(bindgen::CargoCallbacks));
+    // let mut builder = bindgen::Builder::default()
+    //     // .trust_clang_mangling(true)
+    //     // .wasm_import_module_name()
+    //     .size_t_is_usize(true)
+    //     .parse_callbacks(Box::new(bindgen::CargoCallbacks));
 
-    let headers_to_process = [
-        "blschia.h",
-        "elements.h",
-        "privatekey.h",
-        "schemes.h",
-        "threshold.h",
-        "bip32/chaincode.h",
-        "bip32/extendedprivatekey.h",
-        "bip32/extendedpublickey.h",
-    ];
+    // let headers_to_process = [
+    //     "blschia.h",
+    //     "elements.h",
+    //     "privatekey.h",
+    //     "schemes.h",
+    //     "threshold.h",
+    //     "bip32/chaincode.h",
+    //     "bip32/extendedprivatekey.h",
+    //     "bip32/extendedpublickey.h",
+    // ];
 
-    for header in headers_to_process {
-        builder = builder.header(c_bindings_path.join(header).to_str().unwrap())
-    }
+    // for header in headers_to_process {
+    //     builder = builder.header(c_bindings_path.join(header).to_str().unwrap())
+    // }
 
-    if target_arch == "wasm32" {
-        builder = builder.clang_args(
-            include_paths
-                .iter()
-                .map(|path| format!("-I{}", path.display())),
-        );
-    }
+    // if target_arch == "wasm32" {
+    //     builder = builder.clang_args(
+    //         include_paths
+    //             .iter()
+    //             .map(|path| format!("-I{}", path.display())),
+    //     );
+    // }
 
-    let bindings = builder.generate().expect("Unable to generate bindings");
+    // let bindings = builder.generate().expect("Unable to generate bindings");
 
-    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+    // let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
 
-    bindings
-        .write_to_file(out_path.join("bindings.rs"))
-        .expect("couldn't write bindings");
+    // bindings
+    //     .write_to_file(out_path.join("bindings.rs"))
+    //     .expect("couldn't write bindings");
 
-    // Rerun build if files changed
-    println!("cargo:rerun-if-changed={}", c_bindings_path.display());
+    // // Rerun build if files changed
+    // println!("cargo:rerun-if-changed={}", c_bindings_path.display());
     println!("cargo:rerun-if-changed={}", bls_dash_src_path.display());
 }

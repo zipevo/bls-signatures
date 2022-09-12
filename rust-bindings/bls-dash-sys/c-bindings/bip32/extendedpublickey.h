@@ -1,10 +1,12 @@
 #ifndef BIP32EXTENDEDPUBLICKEY_H_
 #define BIP32EXTENDEDPUBLICKEY_H_
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 
 #include "chaincode.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

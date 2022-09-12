@@ -3,8 +3,5 @@ name = "example"
 version = "0.1.0"
 edition = "2021"
 
-[lib]
-crate-type = ["cdylib"]
-
 [dependencies]
-bls-signatures = { git = "https://github.com/dashevo/bls-signatures", branch = "rust-bindings" }
+bls-signatures = { path = "../bls-signatures" }
