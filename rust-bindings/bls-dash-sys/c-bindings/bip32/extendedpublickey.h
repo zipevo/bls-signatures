@@ -23,6 +23,7 @@ BIP32ExtendedPublicKey BIP32ExtendedPublicKeyPublicChild(
     const uint32_t index,
     const bool legacy);
 BIP32ChainCode BIP32ExtendedPublicKeyGetChainCode(const BIP32ExtendedPublicKey pk);
+void* BIP32ExtendedPublicKeyGetPublicKey(const BIP32ExtendedPublicKey pk);
 void* BIP32ExtendedPublicKeySerialize(
     const BIP32ExtendedPublicKey pk,
     const bool legacy);

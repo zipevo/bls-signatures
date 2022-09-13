@@ -32,10 +32,6 @@ mod tests {
 
         assert_eq!(public_key, public_key_2);
     }
-}
-
-mod extended_private_key {
-    use super::*;
 
     #[test]
     fn hierarchical_deterministic_keys_legacy() {

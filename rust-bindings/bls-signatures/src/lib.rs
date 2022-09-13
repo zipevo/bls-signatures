@@ -7,7 +7,7 @@ mod utils;
 mod legacy;
 
 #[cfg(feature = "bip32")]
-mod bip32;
+pub mod bip32;
 
 use std::{error::Error, fmt::Display};
 

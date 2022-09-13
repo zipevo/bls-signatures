@@ -178,4 +178,16 @@ mod tests {
                 .expect("cannot get extended public key")
         );
     }
+
+    #[test]
+    fn public_keys_match() {
+        let seed = b"seedweedseedweedseedweedseedweed";
+        let private_key =
+            ExtendedPrivateKey::from_seed(seed).expect("cannot generate extended private key");
+        let public_key = private_key
+            .extended_public_key()
+            .expect("cannot get extended public key");
+
+        assert_eq!(private_key.public_key(), Ok(public_key.public_key()));
+    }
 }

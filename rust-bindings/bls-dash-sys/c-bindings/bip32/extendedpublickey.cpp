@@ -40,6 +40,11 @@ BIP32ChainCode BIP32ExtendedPublicKeyGetChainCode(const BIP32ExtendedPublicKey p
     return new bls::ChainCode(pkPtr->GetChainCode());
 }
 
+void* BIP32ExtendedPublicKeyGetPublicKey(const BIP32ExtendedPublicKey pk) {
+    bls::ExtendedPublicKey* pkPtr = (bls::ExtendedPublicKey*)pk;
+    return new bls::G1Element(pkPtr->GetPublicKey());
+}
+
 void* BIP32ExtendedPublicKeySerialize(
     const BIP32ExtendedPublicKey pk,
     const bool legacy)

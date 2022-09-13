@@ -373,6 +373,10 @@ extern "C" {
         pk2: BIP32ExtendedPublicKey,
     ) -> bool;
 
+    pub fn BIP32ExtendedPublicKeyGetPublicKey(
+        pk: BIP32ExtendedPublicKey,
+    ) -> *mut ::std::os::raw::c_void;
+
     pub fn BIP32ExtendedPublicKeyFree(pk: BIP32ExtendedPublicKey);
 
     pub fn BIP32ExtendedPrivateKeyFromBytes(

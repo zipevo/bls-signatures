@@ -2,11 +2,12 @@ use std::ffi::c_void;
 
 use bls_dash_sys::{
     BIP32ExtendedPublicKeyFree, BIP32ExtendedPublicKeyFromBytes,
-    BIP32ExtendedPublicKeyGetChainCode, BIP32ExtendedPublicKeyIsEqual,
-    BIP32ExtendedPublicKeyPublicChild, BIP32ExtendedPublicKeySerialize,
+    BIP32ExtendedPublicKeyGetChainCode, BIP32ExtendedPublicKeyGetPublicKey,
+    BIP32ExtendedPublicKeyIsEqual, BIP32ExtendedPublicKeyPublicChild,
+    BIP32ExtendedPublicKeySerialize,
 };
 
-use crate::{bip32::chain_code::ChainCode, utils::c_err_to_result, BlsError};
+use crate::{bip32::chain_code::ChainCode, utils::c_err_to_result, BlsError, G1Element};
 
 pub const BIP32_EXTENDED_PUBLIC_KEY_SIZE: usize = 93;
 
@@ -79,6 +80,12 @@ impl ExtendedPublicKey {
     pub fn chain_code(&self) -> ChainCode {
         ChainCode {
             c_chain_code: unsafe { BIP32ExtendedPublicKeyGetChainCode(self.c_extended_public_key) },
+        }
+    }
+
+    pub fn public_key(&self) -> G1Element {
+        G1Element {
+            c_element: unsafe { BIP32ExtendedPublicKeyGetPublicKey(self.c_extended_public_key) },
         }
     }
 }
