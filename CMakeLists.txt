@@ -57,6 +57,8 @@ FetchContent_Declare(
   GIT_TAG ${RELIC_GIT_TAG}
 )
 
+string(CONCAT RELIC_SRC ${FETCHCONTENT_BASE_DIR} "/relic-src")
+
 # Relic related options
 
 set(STBIN TRUE)
@@ -131,6 +133,13 @@ set(PP_EXT "LAZYR" CACHE STRING "")
 set(PP_METHD "LAZYR;OATEP" CACHE STRING "")
 
 FetchContent_MakeAvailable(relic)
+
+message(STATUS "Patching Relic to make setjmp.h inclusion conditional")
+
+execute_process(
+  COMMAND bash -c "git apply ${CMAKE_SOURCE_DIR}/setjmp_patch.diff"
+  WORKING_DIRECTORY ${RELIC_SRC}
+)
 
 add_subdirectory(src)
 
