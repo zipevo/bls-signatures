@@ -45,7 +45,7 @@ if (DEFINED ENV{RELIC_MAIN})
   set(RELIC_GIT_TAG "origin/main")
 else ()
   # This is currently anchored to upstream aecdcae7956f542fbee2392c1f0feb0a8ac41dc5
-  set(RELIC_GIT_TAG "1d98e5abf3ca5b14fd729bd5bcced88ea70ecfd7")
+  set(RELIC_GIT_TAG "215c69966cb78b255995f0ee9c86bbbb41c3c42b")
 endif ()
 
 message(STATUS "Relic will be built from: ${RELIC_GIT_TAG}")
@@ -58,7 +58,8 @@ FetchContent_Declare(
 
 # Relic related options
 
-set(STBIN TRUE)
+set(STBIN "off" CACHE STRING "Relic - Build static binaries")
+
 find_package(gmp)
 if (GMP_FOUND)
   message(STATUS "Found libgmp")
@@ -82,7 +83,7 @@ endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   set(TIMER "ANSI" CACHE STRING "")
-  set(MULTI "" CACHE STRING "")
+  set(MULTI "OPENMP" CACHE STRING "")
 else()
   set(TIMER "CYCLE" CACHE STRING "")
   set(MULTI "PTHREAD" CACHE STRING "")
@@ -105,8 +106,6 @@ else()
   set(SEED "UDEV" CACHE STRING "")
   set(FP_QNRES "on" CACHE STRING "")
 endif()
-
-set(STBIN "OFF" CACHE STRING "")
 
 set(FP_METHD "INTEG;INTEG;INTEG;MONTY;LOWER;SLIDE" CACHE STRING "")
 

@@ -40,13 +40,14 @@ public:
         g1_set_infty(p);
     }
 
-    static G1Element FromBytes(const Bytes& bytes, bool fLegacy = false);
+    static G1Element FromBytes(Bytes bytes, bool fLegacy = false);
+    static G1Element FromBytesUnchecked(Bytes bytes, bool fLegacy = false);
     static G1Element FromByteVector(const std::vector<uint8_t> &bytevec, bool fLegacy = false);
     static G1Element FromNative(const g1_t element);
     static G1Element FromMessage(const std::vector<uint8_t> &message,
                                  const uint8_t *dst,
                                  int dst_len);
-    static G1Element FromMessage(const Bytes& message,
+    static G1Element FromMessage(Bytes message,
                                  const uint8_t* dst,
                                  int dst_len);
     static G1Element Generator();
@@ -80,14 +81,15 @@ public:
         g2_set_infty(q);
     }
 
-    static G2Element FromBytes(const Bytes& bytes, bool fLegacy = false);
+    static G2Element FromBytes(Bytes bytes, bool fLegacy = false);
+    static G2Element FromBytesUnchecked(Bytes bytes, bool fLegacy = false);
     static G2Element FromByteVector(const std::vector<uint8_t> &bytevec, bool fLegacy = false);
     static G2Element FromNative(const g2_t element);
     static G2Element FromMessage(const std::vector<uint8_t>& message,
                                  const uint8_t* dst,
                                  int dst_len,
                                  bool fLegacy = false);
-    static G2Element FromMessage(const Bytes& message,
+    static G2Element FromMessage(Bytes message,
                                  const uint8_t* dst,
                                  int dst_len,
                                  bool fLegacy = false);
@@ -115,7 +117,8 @@ private:
 class GTElement {
 public:
     static const size_t SIZE = 384;
-    static GTElement FromBytes(const Bytes& bytes);
+    static GTElement FromBytes(Bytes bytes);
+    static GTElement FromBytesUnchecked(Bytes bytes);
     static GTElement FromByteVector(const std::vector<uint8_t> &bytevec);
     static GTElement FromNative(const gt_t *element);
     static GTElement Unity();  // unity
