@@ -41,21 +41,6 @@ set(SODIUM_DISABLE_TESTS "on" CACHE STRING "")
 set(SODIUM_CHIA_MINIMAL "on" CACHE STRING "")
 FetchContent_MakeAvailable(Sodium)
 
-if (DEFINED ENV{RELIC_MAIN})
-  set(RELIC_GIT_TAG "origin/main")
-else ()
-  # This is currently anchored to upstream aecdcae7956f542fbee2392c1f0feb0a8ac41dc5
-  set(RELIC_GIT_TAG "215c69966cb78b255995f0ee9c86bbbb41c3c42b")
-endif ()
-
-message(STATUS "Relic will be built from: ${RELIC_GIT_TAG}")
-
-FetchContent_Declare(
-  relic
-  GIT_REPOSITORY https://github.com/Chia-Network/relic.git
-  GIT_TAG ${RELIC_GIT_TAG}
-)
-
 # Relic related options
 
 set(STBIN "off" CACHE STRING "Relic - Build static binaries")
@@ -128,8 +113,7 @@ set(QUIET "on" CACHE STRING "Relic - Build with printing disabled")
 set(PP_EXT "LAZYR" CACHE STRING "")
 set(PP_METHD "LAZYR;OATEP" CACHE STRING "")
 
-FetchContent_MakeAvailable(relic)
-
+add_subdirectory(depends/relic)
 add_subdirectory(src)
 
 if(EMSCRIPTEN)
