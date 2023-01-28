@@ -36,6 +36,14 @@ impl Mul<G1Element> for PrivateKey {
     }
 }
 
+impl Mul<PrivateKey> for G1Element {
+    type Output = Result<G1Element, BlsError>;
+
+    fn mul(self, rhs: PrivateKey) -> Self::Output {
+        rhs * self
+    }
+}
+
 impl PrivateKey {
     pub(crate) fn as_mut_ptr(&self) -> *mut c_void {
         self.c_private_key
@@ -155,4 +163,27 @@ mod tests {
 
         assert_eq!(*private_key.serialize(), expected_key_bytes);
     }
+
+    #[test]
+    fn test_keys_multiplication() {
+        //46891c2cec49593c81921e473db7480029e0fc1eb933c6b93d81f5370eb19fbd
+        let private_key_data = [70, 137, 28, 44, 236, 73, 89, 60, 129, 146, 30, 71, 61, 183, 72, 0,
+            41, 224, 252, 30, 185, 51, 198, 185, 61, 129, 245, 55, 14, 177, 159, 189];
+        //0e2f9055c17eb13221d8b41833468ab49f7d4e874ddf4b217f5126392a608fd48ccab3510548f1da4f397c1ad4f8e01a
+        let public_key_data = [14, 47, 144, 85, 193, 126, 177, 50, 33, 216, 180, 24, 51, 70, 138,
+            180, 159, 125, 78, 135, 77, 223, 75, 33, 127, 81, 38, 57, 42, 96, 143, 212, 140, 202,
+            179, 81, 5, 72, 241, 218, 79, 57, 124, 26, 212, 248, 224, 26];
+        //03fd387c4d4c66ec9dcdb31ef0c08ad881090dcda13d4b2c9cbc5ef264ff4dc7
+        let expected_data = [3, 253, 56, 124, 77, 76, 102, 236, 157, 205, 179, 30, 240, 192, 138,
+            216, 129, 9, 13, 205, 161, 61, 75, 44, 156, 188, 94, 242, 100, 255, 77, 199];
+        let private_key = PrivateKey::from_bytes(&private_key_data, false).unwrap();
+        let public_key = G1Element::from_bytes_legacy(&public_key_data).unwrap();
+        let result = (private_key * public_key).unwrap();
+        assert_eq!(&result.serialize_legacy()[..32], &expected_data, "should match");
+        let private_key = PrivateKey::from_bytes(&private_key_data, false).unwrap();
+        let public_key = G1Element::from_bytes_legacy(&public_key_data).unwrap();
+        let result = (public_key * private_key).unwrap();
+        assert_eq!(&result.serialize_legacy()[..32], &expected_data, "should match");
+    }
+
 }
