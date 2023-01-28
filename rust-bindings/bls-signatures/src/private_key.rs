@@ -27,6 +27,18 @@ impl PartialEq for PrivateKey {
 
 impl Eq for PrivateKey {}
 
+impl Mul<G1Element> for PrivateKey {
+    type Output = Result<G1Element, BlsError>;
+
+    fn mul(self, rhs: G1Element) -> Self::Output {
+        Ok(G1Element {
+            c_element: c_err_to_result(|did_err| unsafe {
+                G1ElementMul(self.c_private_key, rhs.c_element)
+            })?,
+        })
+    }
+}
+
 impl PrivateKey {
     pub(crate) fn as_mut_ptr(&self) -> *mut c_void {
         self.c_private_key
