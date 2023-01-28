@@ -1,10 +1,7 @@
 use std::ffi::c_void;
+use std::ops::Mul;
 
-use bls_dash_sys::{
-    CoreMPLDeriveChildSk, CoreMPLDeriveChildSkUnhardened, CoreMPLKeyGen, PrivateKeyFree,
-    PrivateKeyFromBytes, PrivateKeyFromSeedBIP32, PrivateKeyGetG1Element, PrivateKeyIsEqual,
-    PrivateKeySerialize,
-};
+use bls_dash_sys::{CoreMPLDeriveChildSk, CoreMPLDeriveChildSkUnhardened, CoreMPLKeyGen, G1ElementMul, PrivateKeyFree, PrivateKeyFromBytes, PrivateKeyFromSeedBIP32, PrivateKeyGetG1Element, PrivateKeyIsEqual, PrivateKeySerialize};
 
 use crate::{
     schemes::Scheme,
