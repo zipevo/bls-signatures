@@ -30,7 +30,7 @@ impl Mul<G1Element> for PrivateKey {
     fn mul(self, rhs: G1Element) -> Self::Output {
         Ok(G1Element {
             c_element: c_err_to_result(|did_err| unsafe {
-                G1ElementMul(self.c_private_key, rhs.c_element)
+                G1ElementMul(rhs.c_element, self.c_private_key)
             })?,
         })
     }
