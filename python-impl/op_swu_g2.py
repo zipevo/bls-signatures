@@ -198,7 +198,7 @@ def iso3(P):
 #
 # map from Fq2 element(s) to point in G2 subgroup of Ell2
 #
-def opt_swu2_map(t: Fq2, t2: Fq2 = None) -> JacobianPoint:
+def opt_swu2_map(t: Fq2, t2: Fq2 | None = None) -> JacobianPoint:
     Pp = iso3(osswu2_help(t))
     if t2 is not None:
         Pp2 = iso3(osswu2_help(t2))
