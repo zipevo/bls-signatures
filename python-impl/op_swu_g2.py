@@ -23,6 +23,7 @@ from fields import Fq, Fq2, roots_of_unity
 from hash_to_field import Hp2
 from typing import Union
 
+
 def sgn0(x: Fq2) -> int:
     # https://tools.ietf.org/html/draft-irtf-cfrg-hash-to-curve-07#section-4.1
 
