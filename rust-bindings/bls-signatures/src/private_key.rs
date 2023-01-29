@@ -105,7 +105,7 @@ impl PrivateKey {
     }
 
     pub fn from_bip32_seed(bytes: &[u8]) -> Self {
-        let c_private_key = unsafe { PrivateKeyFromSeedBIP32(bytes.as_ptr() as *const c_void) };
+        let c_private_key = unsafe { PrivateKeyFromSeedBIP32(bytes.as_ptr() as *const c_void, bytes.len()) };
 
         PrivateKey { c_private_key }
     }
@@ -156,16 +156,16 @@ mod tests {
 
     #[test]
     fn should_return_private_key_from_bip32_bytes() {
-        let bytes = [1, 2, 3, 4, 5, 6, 7];
-        let private_key = PrivateKey::from_bip32_seed(&bytes);
-        let expected_key_bytes = [
-            0, 40, 43, 250, 83, 117, 227, 93, 174, 67, 170, 185, 235, 46, 70, 117, 110, 208, 224,
-            23, 164, 13, 180, 200, 132, 46, 57, 21, 207, 149, 248, 135,
-        ];
-        assert_eq!(*private_key.serialize(), expected_key_bytes);
-        let alice_seed = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-        let pk1 = PrivateKey::from_bip32_seed(&bytes);
-        let private_key = pk1.serialize();
+        let long_seed = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2];
+        let long_private_key_test_data = [50, 67, 148, 112, 207, 6, 210, 118, 137, 125, 27, 144, 105, 189, 214, 228, 68, 83, 144, 205, 80, 105, 133, 222, 14, 26, 28, 136, 167, 111, 241, 118];
+        let long_private_key = PrivateKey::from_bip32_seed(&long_seed);
+        assert_eq!(*long_private_key.serialize(), long_private_key_test_data);
+
+        // Previously didn't work with seed with length != 32
+        let short_seed = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        let short_private_key_test_data = [70, 137, 28, 44, 236, 73, 89, 60, 129, 146, 30, 71, 61, 183, 72, 0, 41, 224, 252, 30, 185, 51, 198, 185, 61, 129, 245, 55, 14, 177, 159, 189];
+        let short_private_key = PrivateKey::from_bip32_seed(&short_seed);
+        assert_eq!(*short_private_key.serialize(), short_private_key_test_data);
     }
 
     #[test]
