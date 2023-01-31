@@ -55,7 +55,7 @@ impl ExtendedPrivateKey {
     pub fn from_seed(bytes: &[u8]) -> Result<Self, BlsError> {
         Ok(ExtendedPrivateKey {
             c_extended_private_key: c_err_to_result(|did_err| unsafe {
-                BIP32ExtendedPrivateKeyFromSeed(bytes.as_ptr() as *const _, did_err)
+                BIP32ExtendedPrivateKeyFromSeed(bytes.as_ptr() as *const _, bytes.len(), did_err)
             })?,
         })
     }
