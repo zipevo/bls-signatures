@@ -67,7 +67,7 @@ extern "C" {
         didErr: *mut bool,
     ) -> PrivateKey;
 
-    pub fn PrivateKeyFromSeedBIP32(data: *const ::std::os::raw::c_void) -> PrivateKey;
+    pub fn PrivateKeyFromSeedBIP32(data: *const ::std::os::raw::c_void, len: usize) -> PrivateKey;
 
     pub fn PrivateKeyAggregate(sks: *mut *mut ::std::os::raw::c_void, len: usize) -> PrivateKey;
 
@@ -386,6 +386,7 @@ extern "C" {
 
     pub fn BIP32ExtendedPrivateKeyFromSeed(
         data: *const ::std::os::raw::c_void,
+        len: usize,
         didErr: *mut bool,
     ) -> BIP32ExtendedPrivateKey;
 
