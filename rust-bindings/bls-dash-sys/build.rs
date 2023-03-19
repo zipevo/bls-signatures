@@ -17,7 +17,7 @@ fn create_cross_cmake_command() -> Command {
     if target_arch.eq("wasm32") {
         command.arg("cmake");
     }
-    if target.contains("apple-ios") {
+    if target_arch.contains("apple-ios") {
         command.arg("-DCMAKE_SYSTEM_NAME=iOS");
     }
 
