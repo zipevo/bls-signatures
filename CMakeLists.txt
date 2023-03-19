@@ -53,7 +53,7 @@ message(STATUS "Relic will be built from: ${RELIC_GIT_TAG}")
 
 FetchContent_Declare(
   relic
-  GIT_REPOSITORY https://github.com/dashpay/relic.git
+  GIT_REPOSITORY https://github.com/tikhop/relic.git
   GIT_TAG ${RELIC_GIT_TAG}
 )
 
