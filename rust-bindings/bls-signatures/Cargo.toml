@@ -8,6 +8,7 @@ edition = "2021"
 legacy = []
 bip32 = []
 default = [ "legacy", "bip32" ]
+apple = ["bls-dash-sys/apple"]
 
 [dependencies]
 bls-dash-sys = { path = "../bls-dash-sys" }

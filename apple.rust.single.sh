@@ -1,6 +1,12 @@
 #!/bin/sh
 set -x
-
+# "x86_64-apple-ios"
+# "x86_64-apple-ios-sim"
+# "aarch64-apple-ios"
+# "aarch64-apple-ios-sim"
+# "x86_64-apple-darwin"
+# "aarch64-apple-darwin"
+TARGET=$1
 git submodule update --init
 
 MIN_IOS="13.0"
@@ -97,12 +103,11 @@ prepare() {
             popd #contrib
         fi
     }
-    rm -rf ${BUILD}
+    #rm -rf ${BUILD}
     mkdir -p ${BUILD}
     download_relic
     download_gmp
     download_cmake_toolchain
-    mkdir -p ${BUILD}/artefacts/include
 }
 
 build_gmp_arch() {
@@ -326,87 +331,41 @@ build_all_arch() {
     build_bls_arch "$PLATFORM" "$ARCH"
 }
 
-build_all() {
+build_target() {
     BUILD_IN=$1
-    TARGET_DIR=build/artefacts
+    ARCH=""
+    PLATFORM=""
     # shellcheck disable=SC2039
-    IFS='|' read -ra BUILD_PAIRS <<< "$BUILD_IN"
-    # shellcheck disable=SC2039
-    for BUILD_PAIR in "${BUILD_PAIRS[@]}"
-    do
-        # shellcheck disable=SC2039
-        IFS=';' read -ra PARSED_PAIR <<< "$BUILD_PAIR"
-        # shellcheck disable=SC2039
-        PLATFORM=${PARSED_PAIR[0]}
-        # shellcheck disable=SC2039
-        ARCH=${PARSED_PAIR[1]}
-
-        GMP_LIPOARGS=""
-        RELIC_LIPOARGS=""
-        BLS_LIPOARGS=""
-
-        # shellcheck disable=SC2039
-        local NEED_LIPO=0
-        # shellcheck disable=SC2039
-        IFS='+' read -ra ARCHS <<< "$ARCH"
-        # shellcheck disable=SC2039
-        for i in "${!ARCHS[@]}"
-        do
-            # shellcheck disable=SC2039
-            local SINGLEARCH=${ARCHS[i]}
-
-            # build for every platform+arch
-            build_all_arch "$PLATFORM" "$SINGLEARCH"
-
-            PFX="${PLATFORM}"-"${SINGLEARCH}"
-            ARCH_TARGET_DIR=${TARGET_DIR}/${PFX}
-            rm -rf "${ARCH_TARGET_DIR}"
-            mkdir -p "${ARCH_TARGET_DIR}"
-            #mv "${BUILD}/gmplib-${PFX}/lib/libgmp.a" "${ARCH_TARGET_DIR}/libgmp.a"
-            #mv "${BUILD}/relic-${PFX}/_deps/relic-build/lib/librelic_s.a" "${ARCH_TARGET_DIR}/librelic.a"
-            #mv "${BUILD}/bls-${PFX}/libbls.a" "${ARCH_TARGET_DIR}/libbls.a"
-
-            libtool -static -o "${ARCH_TARGET_DIR}/libbls.a" \
-              "${BUILD}/gmplib-${PFX}/lib/libgmp.a" \
-              "${BUILD}/relic-${PFX}/_deps/relic-build/lib/librelic_s.a" \
-              "${BUILD}/bls-${PFX}/libbls.a"
-
-            # shellcheck disable=SC2039
-            GMP_LIPOARGS+="${ARCH_TARGET_DIR}/libgmp.a "
-            # shellcheck disable=SC2039
-            RELIC_LIPOARGS+="${ARCH_TARGET_DIR}/librelic.a "
-            # shellcheck disable=SC2039
-            BLS_LIPOARGS+="${ARCH_TARGET_DIR}/libbls.a "
-
-            NEED_LIPO=i
-        done
-
-        # Do lipo if we need https://developer.apple.com/forums/thread/666335?answerId=645963022#645963022
-#        if [[ $NEED_LIPO -gt 0 ]]
-#        then
-#            FAT_TARGET_DIR=${TARGET_DIR}/${PLATFORM}-fat
-#            rm -rf "${FAT_TARGET_DIR}"
-#            mkdir -p "${FAT_TARGET_DIR}"
-#            # shellcheck disable=SC2086
-#            xcrun lipo $GMP_LIPOARGS -create -output "${FAT_TARGET_DIR}/libgmp.a"
-#            # shellcheck disable=SC2086
-#            xcrun lipo $RELIC_LIPOARGS -create -output "${FAT_TARGET_DIR}/librelic.a"
-#            # shellcheck disable=SC2086
-#            xcrun lipo $BLS_LIPOARGS -create -output "${FAT_TARGET_DIR}/libbls.a"
-#            libtool -static -o "${FAT_TARGET_DIR}/libbls_combined.a" "${FAT_TARGET_DIR}/libgmp.a" "${FAT_TARGET_DIR}/librelic.a" "${FAT_TARGET_DIR}/libbls.a"
-#            rm "${FAT_TARGET_DIR}/libgmp.a"
-#            rm "${FAT_TARGET_DIR}/librelic.a"
-#            rm "${FAT_TARGET_DIR}/libbls.a"
-#            mv "${FAT_TARGET_DIR}/libbls_combined.a" "${FAT_TARGET_DIR}/libbls.a"
-#            # clean up
-#            # shellcheck disable=SC2039
-#            for i in "${!ARCHS[@]}"
-#            do
-#                local SINGLEARCH=${ARCHS[i]}
-#                rm -rf "${TARGET_DIR}-${SINGLEARCH}"
-#            done
-#        fi
-    done
+    if [[ $BUILD_IN = "x86_64-apple-ios" ]]; then
+      ARCH=x86_64
+      PLATFORM=$IPHONEOS
+    elif [[ $BUILD_IN = "x86_64-apple-ios-sim" ]]; then
+      ARCH=x86_64
+      PLATFORM=$IPHONESIMULATOR
+    elif [[ $BUILD_IN = "aarch64-apple-ios" ]]; then
+      ARCH=arm64
+      PLATFORM=$IPHONEOS
+    elif [[ $BUILD_IN = "aarch64-apple-ios-sim" ]]; then
+      ARCH=arm64
+      PLATFORM=$IPHONESIMULATOR
+    elif [[ $BUILD_IN = "x86_64-apple-darwin" ]]; then
+      ARCH=x86_64
+      PLATFORM=$MACOS
+    elif [[ $BUILD_IN = "aarch64-apple-ios-sim" ]]; then
+      ARCH=arm64
+      PLATFORM=$MACOS
+    fi
+    build_all_arch "$PLATFORM" "$ARCH"
+    PFX="${PLATFORM}"-"${ARCH}"
+    rm -rf "build/artefacts/${BUILD_IN}"
+    mkdir -p "build/artefacts/${BUILD_IN}/include"
+    libtool -static -o "build/artefacts/${BUILD_IN}/libbls.a" \
+                "build/gmplib-${PFX}/lib/libgmp.a" \
+                "build/relic-${PFX}/_deps/relic-build/lib/librelic_s.a" \
+                "build/bls-${PFX}/libbls.a"
+    cp -rf src/*.hpp build/artefacts/"${BUILD_IN}"/include
+    cp -rf build/gmplib-"${PFX}"/include/gmp.h build/artefacts/"${BUILD_IN}"/include
+    cp -rf build/relic-"${PFX}"/_deps/relic-build/include/*.h build/artefacts/"${BUILD_IN}"/include
 }
 
 #make_relic_headers_universal() {
@@ -418,40 +377,23 @@ build_all() {
 #    rm "build/contrib/relic/${RELIC_TARGET_DIR}/include/relic_conf.h"
 #    mv "build/contrib/relic/${RELIC_TARGET_DIR}/include/relic_conf.h.new" "build/contrib/relic/${RELIC_TARGET_DIR}/include/relic_conf.h"
 #}
-
+#
 #copy_headers() {
-#    mkdir build/artefacts/include
+##    mkdir build/artefacts/include
 #    # Copy all headers we will need
-#    cp -rf src/*.hpp build/artefacts/include
-#    cp -rf build/gmp/include/gmp.h build/artefacts/include
-#    cp -rf build/contrib/relic/include/*.h build/artefacts/include
-#    cp -rf build/contrib/relic/include/low/*.h build/artefacts/include
-#    cp -rf build/contrib/relic/relic-iphoneos-arm64/include/*.h build/artefacts/include
-#    rm -rf build/artefacts/include/test-utils.hpp
-#}
-
-#function make_fat_binary()
-#{
-#    pushd artefacts
-#
-#    XCFRAMEWORK_ARGS=""
-#
-#    for dir in */; do
-#        if [ -d "$dir" ]; then
-#            if [[ "$dir" != "include/" ]]; then
-#                libtool -static -o "${dir}libbls_combined.a" "${dir}libgmp.a" "${dir}librelic.a" "${dir}libbls.a"
-#
-#                XCFRAMEWORK_ARGS+="-library ${dir}libbls_combined.a -headers include "
-#            fi
-#        fi
-#    done
-#
-#    #xcodebuild -create-xcframework $XCFRAMEWORK_ARGS -output "libbls.xcframework"
+#    cp -rf src/*.hpp ${BUILD}/artefacts/include
+#    cp -rf ${BUILD}/contrib/gmp/include/gmp.h ${BUILD}/artefacts/include
+#    cp -rf ${BUILD}/contrib/relic/include/*.h ${BUILD}/artefacts/include
+#    cp -rf ${BUILD}/contrib/relic/include/low/*.h ${BUILD}/artefacts/include
+#    #cp -rf ${BUILD}/contrib/relic/relic-iphoneos-arm64/include/*.h ${BUILD}/artefacts/include
+#    rm -rf ${BUILD}/artefacts/include/test-utils.hpp
 #}
 
 prepare
-build_all "${MACOS};x86_64+arm64"
-build_all "${IPHONEOS};arm64|${IPHONESIMULATOR};arm64+x86_64"
+build_target "$TARGET"
+#copy_headers
+#build_all "${MACOS};x86_64+arm64"
+#build_all "${IPHONEOS};arm64|${IPHONESIMULATOR};arm64+x86_64"
 
 #make_relic_headers_universal
 #copy_headers

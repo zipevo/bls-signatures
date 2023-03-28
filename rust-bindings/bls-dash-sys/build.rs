@@ -36,6 +36,7 @@ fn handle_command_output(output: Output) {
     assert!(output.status.success());
 }
 
+#[cfg(not(feature = "apple"))]
 fn main() {
     let root_path = Path::new("../..")
         .canonicalize()
@@ -225,4 +226,38 @@ fn main() {
     // // Rerun build if files changed
     // println!("cargo:rerun-if-changed={}", c_bindings_path.display());
     println!("cargo:rerun-if-changed={}", bls_dash_src_path.display());
+}
+
+#[cfg(feature = "apple")]
+fn main() {
+    if cfg!(feature = "apple") {
+        println!("Feature A is enabled");
+        // Perform actions for feature_a
+    }
+
+    let target = env::var("TARGET").unwrap();
+    let root_path = Path::new("../..")
+        .canonicalize()
+        .expect("can't get abs path");
+    let bls_dash_build_path = root_path.join("build");
+    let artefacts_path = bls_dash_build_path.join("artefacts");
+    let target_path = artefacts_path.join(&target);
+    let script = root_path.join("apple.rust.single.sh");
+    if bls_dash_build_path.exists() {
+        fs::remove_dir_all(&bls_dash_build_path).expect("can't clean build directory");
+    }
+    fs::create_dir_all(&bls_dash_build_path).expect("can't create build directory");
+    let output = Command::new("sh")
+        .current_dir(&root_path)
+        .arg(script)
+        .arg(target)
+        .output()
+        .expect("Failed to execute the shell script");
+    handle_command_output(output);
+    let library_path = target_path.join("libbls.a");
+    if !fs::metadata(&library_path).is_ok() {
+        panic!("Library file not found: {}", library_path.display());
+    }
+    println!("cargo:rustc-link-search={}", target_path.display());
+    println!("cargo:rustc-link-lib=static=bls");
 }

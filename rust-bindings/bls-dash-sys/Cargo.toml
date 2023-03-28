@@ -5,6 +5,10 @@ version = "1.2.5"
 build = "build.rs"
 edition = "2021"
 
+[features]
+default = []
+apple = []
+
 [build-dependencies]
 cc = "1.0"
 bindgen = "0.60"
