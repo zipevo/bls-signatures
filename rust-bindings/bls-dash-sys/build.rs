@@ -5,6 +5,7 @@ use std::{
     process::{Command, Output},
 };
 
+#[cfg(not(feature = "apple"))]
 fn create_cross_cmake_command() -> Command {
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
 
@@ -230,12 +231,8 @@ fn main() {
 
 #[cfg(feature = "apple")]
 fn main() {
-    if cfg!(feature = "apple") {
-        println!("Feature A is enabled");
-        // Perform actions for feature_a
-    }
-
     let target = env::var("TARGET").unwrap();
+    println!("Building bls-signatures for apple target: {}", target);
     let root_path = Path::new("../..")
         .canonicalize()
         .expect("can't get abs path");
