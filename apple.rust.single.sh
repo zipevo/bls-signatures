@@ -333,6 +333,7 @@ build_all_arch() {
 
 build_target() {
     BUILD_IN=$1
+    echo "Build target: $BUILD_IN"
     ARCH=""
     PLATFORM=""
     # shellcheck disable=SC2039
@@ -351,7 +352,7 @@ build_target() {
     elif [[ $BUILD_IN = "x86_64-apple-darwin" ]]; then
       ARCH=x86_64
       PLATFORM=$MACOS
-    elif [[ $BUILD_IN = "aarch64-apple-ios-sim" ]]; then
+    elif [[ $BUILD_IN = "aarch64-apple-darwin" ]]; then
       ARCH=arm64
       PLATFORM=$MACOS
     fi
