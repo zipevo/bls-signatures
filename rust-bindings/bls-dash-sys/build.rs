@@ -310,15 +310,12 @@ fn main() {
         bls_dash_src_path.clone(),
     ]);
 
-    let mut cc = cc::Build::new();
-
-    let cpp_files_mask = c_bindings_path.join("**/*.cpp");
-
-    let cpp_files: Vec<_> = glob::glob(cpp_files_mask.to_str().unwrap())
+    let cpp_files: Vec<_> = glob::glob(c_bindings_path.join("**/*.cpp").to_str().unwrap())
         .expect("can't get list of cpp files")
         .filter_map(Result::ok)
         .collect();
 
+    let mut cc = cc::Build::new();
     cc.files(cpp_files)
         .includes(&include_paths)
         .cpp(true)
@@ -326,17 +323,15 @@ fn main() {
         .flag("-Wno-sign-compare")
         .flag("-Wno-delete-non-abstract-non-virtual-dtor")
         .flag("-std=c++14");
-        // .flag_if_supported("-std=c++14");
 
-    //cc.archiver("llvm-ar");
-
-    cc.compile("bls");
+    cc.compile("dashbls");
 
     println!("cargo:rustc-link-search={}", target_path.display());
     println!("cargo:rustc-link-lib=static=gmp");
     println!("cargo:rustc-link-lib=static=sodium");
     println!("cargo:rustc-link-lib=static=relic_s");
-    println!("cargo:rustc-link-search={}", bls_dash_src_path.display());
     println!("cargo:rustc-link-lib=static=bls");
+    println!("cargo:rustc-link-search={}", bls_dash_src_path.display());
+    println!("cargo:rustc-link-lib=static=dashbls");
     println!("cargo:rerun-if-changed={}", bls_dash_src_path.display());
 }

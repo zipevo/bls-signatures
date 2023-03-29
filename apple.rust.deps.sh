@@ -328,7 +328,7 @@ build_all_arch() {
     ARCH=$2
     build_gmp_arch "$PLATFORM" "$ARCH"
     build_relic_arch "$PLATFORM" "$ARCH"
-    #build_bls_arch "$PLATFORM" "$ARCH"
+    build_bls_arch "$PLATFORM" "$ARCH"
 }
 
 build_target() {
@@ -354,13 +354,13 @@ build_target() {
       PLATFORM=$MACOS
     fi
     build_all_arch "$PLATFORM" "$ARCH"
-#    PFX="${PLATFORM}"-"${ARCH}"
+    PFX="${PLATFORM}"-"${ARCH}"
     rm -rf "build/artefacts/${BUILD_IN}"
     mkdir -p "build/artefacts/${BUILD_IN}"
     cp "build/gmplib-${PFX}/lib/libgmp.a" "build/artefacts/${BUILD_IN}"
     cp "build/relic-${PFX}/_deps/relic-build/lib/librelic_s.a" "build/artefacts/${BUILD_IN}"
     cp "build/relic-${PFX}/_deps/sodium-build/libsodium.a" "build/artefacts/${BUILD_IN}"
-#    cp "build/bls-${PFX}/libbls.a" "build/artefacts/${BUILD_IN}"
+    cp "build/bls-${PFX}/libbls.a" "build/artefacts/${BUILD_IN}"
 #    cp -rf build/bls-"${PFX}"/*.o build/artefacts/"${BUILD_IN}"/include
 #    cp -rf src/*.hpp build/artefacts/"${BUILD_IN}"/include
 #    cp -rf build/gmplib-"${PFX}"/include/gmp.h build/artefacts/"${BUILD_IN}"/include
