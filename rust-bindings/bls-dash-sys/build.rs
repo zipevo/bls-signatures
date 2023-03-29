@@ -256,4 +256,5 @@ fn main() {
     println!("cargo:rustc-link-lib=static=sodium");
     println!("cargo:rustc-link-lib=static=relic_s");
     println!("cargo:rustc-link-lib=static=bls");
+    println!("cargo:rustc-link-search={}", bls_dash_build_path.join("src").display());
 }

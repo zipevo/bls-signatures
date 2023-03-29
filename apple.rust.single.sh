@@ -104,7 +104,7 @@ prepare() {
             popd #contrib
         fi
     }
-    #rm -rf ${BUILD}
+    rm -rf ${BUILD}
     mkdir -p ${BUILD}
     download_relic
     download_gmp
@@ -366,6 +366,7 @@ build_target() {
     cp "build/relic-${PFX}/_deps/relic-build/lib/librelic_s.a" "build/artefacts/${BUILD_IN}"
     cp "build/relic-${PFX}/_deps/sodium-build/libsodium.a" "build/artefacts/${BUILD_IN}"
     cp "build/bls-${PFX}/libbls.a" "build/artefacts/${BUILD_IN}"
+    cp -rf build/bls-"${PFX}"/*.o build/artefacts/"${BUILD_IN}"/include
     cp -rf src/*.hpp build/artefacts/"${BUILD_IN}"/include
     cp -rf build/gmplib-"${PFX}"/include/gmp.h build/artefacts/"${BUILD_IN}"/include
     cp -rf build/relic-"${PFX}"/_deps/relic-build/include/*.h build/artefacts/"${BUILD_IN}"/include
