@@ -1,4 +1,5 @@
 use std::{env, fs, io, io::Write, path::Path, process::{Command, Output}};
+use std::path::PathBuf;
 
 #[cfg(not(feature = "apple"))]
 fn create_cross_cmake_command() -> Command {
@@ -12,9 +13,6 @@ fn create_cross_cmake_command() -> Command {
 
     if target_arch.eq("wasm32") {
         command.arg("cmake");
-    }
-    if target_arch.contains("apple-ios") {
-        command.arg("-DCMAKE_SYSTEM_NAME=iOS");
     }
 
     command
@@ -225,6 +223,41 @@ fn main() {
     println!("cargo:rerun-if-changed={}", bls_dash_src_path.display());
 }
 
+// fn main() {
+//     let target = env::var("TARGET").unwrap();
+//     println!("Building bls-signatures for apple target: {}", target);
+//     let root_path = Path::new("../..")
+//         .canonicalize()
+//         .expect("can't get abs path");
+//     let bls_dash_build_path = root_path.join("build");
+//     let bls_dash_src_path = root_path.join("src");
+//     let artefacts_path = bls_dash_build_path.join("artefacts");
+//     let target_path = artefacts_path.join(&target);
+//     let script = root_path.join("apple.rust.single.sh");
+//     if bls_dash_build_path.exists() {
+//         fs::remove_dir_all(&bls_dash_build_path).expect("can't clean build directory");
+//     }
+//     fs::create_dir_all(&bls_dash_build_path).expect("can't create build directory");
+//     let output = Command::new("sh")
+//         .current_dir(&root_path)
+//         .arg(script)
+//         .arg(target)
+//         .output()
+//         .expect("Failed to execute the shell script");
+//     handle_command_output(output);
+//     let library_path = target_path.join("libbls.a");
+//     if !fs::metadata(&library_path).is_ok() {
+//         panic!("Library file not found: {}", library_path.display());
+//     }
+//     println!("cargo:rustc-link-search={}", target_path.display());
+//     println!("cargo:rustc-link-lib=static=gmp");
+//     println!("cargo:rustc-link-lib=static=sodium");
+//     println!("cargo:rustc-link-lib=static=relic_s");
+//     println!("cargo:rustc-link-search={}", bls_dash_build_path.join("src").display());
+//     println!("cargo:rustc-link-lib=static=bls");
+//     println!("cargo:rerun-if-changed={}", bls_dash_src_path.display());
+// }
+
 #[cfg(feature = "apple")]
 fn main() {
     let target = env::var("TARGET").unwrap();
@@ -233,9 +266,11 @@ fn main() {
         .canonicalize()
         .expect("can't get abs path");
     let bls_dash_build_path = root_path.join("build");
+    let bls_dash_src_path = root_path.join("src");
+    let c_bindings_path = root_path.join("rust-bindings/bls-dash-sys/c-bindings");
     let artefacts_path = bls_dash_build_path.join("artefacts");
     let target_path = artefacts_path.join(&target);
-    let script = root_path.join("apple.rust.single.sh");
+    let script = root_path.join("apple.rust.deps.sh");
     if bls_dash_build_path.exists() {
         fs::remove_dir_all(&bls_dash_build_path).expect("can't clean build directory");
     }
@@ -243,18 +278,73 @@ fn main() {
     let output = Command::new("sh")
         .current_dir(&root_path)
         .arg(script)
-        .arg(target)
+        .arg(target.as_str())
         .output()
         .expect("Failed to execute the shell script");
     handle_command_output(output);
-    let library_path = target_path.join("libbls.a");
-    if !fs::metadata(&library_path).is_ok() {
-        panic!("Library file not found: {}", library_path.display());
-    }
+    let (arch, platform) = match target.as_str() {
+        "x86_64-apple-ios" => ("x86_64", "iphonesimulator"),
+        "aarch64-apple-ios" => ("arm64", "iphoneos"),
+        "aarch64-apple-ios-sim" => ("arm64", "iphonesimulator"),
+        "x86_64-apple-darwin" => ("x86_64", "macosx"),
+        "aarch64-apple-darwin" => ("arm64", "macosx"),
+        _ => panic!("Target {} not supported", target.as_str())
+    };
+    env::set_var("IPHONEOS_DEPLOYMENT_TARGET", "13.0");
+
+    // Collect include paths
+    let include_paths_file_path = bls_dash_build_path.join("include_paths.txt");
+
+    let include_paths =
+        fs::read_to_string(include_paths_file_path).expect("should read include paths from file");
+
+    let mut include_paths: Vec<_> = include_paths
+        .split(';')
+        .filter(|path| !path.is_empty())
+        .map(|path| PathBuf::from(path))
+        .collect();
+
+    include_paths.extend([
+        bls_dash_build_path.join(format!("relic-{}-{}/_deps/relic-src/include", platform, arch)),
+        bls_dash_build_path.join(format!("relic-{}-{}/_deps/relic-build/include", platform, arch)),
+        bls_dash_build_path.join("contrib/relic/src"),
+        bls_dash_src_path.clone(),
+    ]);
+
+    let mut cc = cc::Build::new();
+
+    let cpp_files_mask = c_bindings_path.join("**/*.cpp");
+
+    let cpp_files: Vec<_> = glob::glob(cpp_files_mask.to_str().unwrap())
+        .expect("can't get list of cpp files")
+        .filter_map(Result::ok)
+        .collect();
+
+    cc.files(cpp_files)
+        .includes(&include_paths)
+        .cpp(true)
+        .flag("-Wno-unused-parameter")
+        .flag("-Wno-sign-compare")
+        .flag("-Wno-delete-non-abstract-non-virtual-dtor")
+        .flag("-std=c++14");
+        // .flag_if_supported("-std=c++14");
+
+    //cc.archiver("llvm-ar");
+
+    cc.compile("bls");
+
     println!("cargo:rustc-link-search={}", target_path.display());
     println!("cargo:rustc-link-lib=static=gmp");
     println!("cargo:rustc-link-lib=static=sodium");
     println!("cargo:rustc-link-lib=static=relic_s");
+    println!(
+        "cargo:rustc-link-search={}",
+        bls_dash_build_path.join("src").display()
+    );
+
     println!("cargo:rustc-link-lib=static=bls");
-    println!("cargo:rustc-link-search={}", bls_dash_build_path.join("src").display());
+
+    // println!("cargo:rustc-link-search={}", bls_dash_src_path.display());
+    // println!("cargo:rustc-link-lib=static=bls");
+    println!("cargo:rerun-if-changed={}", bls_dash_src_path.display());
 }
