@@ -6,9 +6,10 @@ set -x
 # "aarch64-apple-ios-sim"
 # "x86_64-apple-darwin"
 # "aarch64-apple-darwin"
+# TODO: it's probably needs to be optimized in order to increase better build velocity
+# TODO: so we need to combine multiple targets
 TARGET=$1
 git submodule update --init
-
 MIN_IOS="13.0"
 MIN_WATCHOS="5.0"
 MIN_TVOS=$MIN_IOS
@@ -338,9 +339,6 @@ build_target() {
     PLATFORM=""
     # shellcheck disable=SC2039
     if [[ $BUILD_IN = "x86_64-apple-ios" ]]; then
-      ARCH=x86_64
-      PLATFORM=$IPHONEOS
-    elif [[ $BUILD_IN = "x86_64-apple-ios-sim" ]]; then
       ARCH=x86_64
       PLATFORM=$IPHONESIMULATOR
     elif [[ $BUILD_IN = "aarch64-apple-ios" ]]; then

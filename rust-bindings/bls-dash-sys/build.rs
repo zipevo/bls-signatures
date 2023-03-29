@@ -1,9 +1,4 @@
-use std::{
-    env, fs, io,
-    io::Write,
-    path::{Path, PathBuf},
-    process::{Command, Output},
-};
+use std::{env, fs, io, io::Write, path::Path, process::{Command, Output}};
 
 #[cfg(not(feature = "apple"))]
 fn create_cross_cmake_command() -> Command {
@@ -39,6 +34,7 @@ fn handle_command_output(output: Output) {
 
 #[cfg(not(feature = "apple"))]
 fn main() {
+    use std::{path, path::PathBuf};
     let root_path = Path::new("../..")
         .canonicalize()
         .expect("can't get abs path");
