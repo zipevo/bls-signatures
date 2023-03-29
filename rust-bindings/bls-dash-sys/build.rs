@@ -252,5 +252,8 @@ fn main() {
         panic!("Library file not found: {}", library_path.display());
     }
     println!("cargo:rustc-link-search={}", target_path.display());
+    println!("cargo:rustc-link-lib=static=gmp");
+    println!("cargo:rustc-link-lib=static=sodium");
+    println!("cargo:rustc-link-lib=static=relic_s");
     println!("cargo:rustc-link-lib=static=bls");
 }

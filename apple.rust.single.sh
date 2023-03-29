@@ -358,10 +358,14 @@ build_target() {
     PFX="${PLATFORM}"-"${ARCH}"
     rm -rf "build/artefacts/${BUILD_IN}"
     mkdir -p "build/artefacts/${BUILD_IN}/include"
-    libtool -static -o "build/artefacts/${BUILD_IN}/libbls.a" \
-                "build/gmplib-${PFX}/lib/libgmp.a" \
-                "build/relic-${PFX}/_deps/relic-build/lib/librelic_s.a" \
-                "build/bls-${PFX}/libbls.a"
+#    libtool -static -o "build/artefacts/${BUILD_IN}/libbls.a" \
+#                "build/gmplib-${PFX}/lib/libgmp.a" \
+#                "build/relic-${PFX}/_deps/relic-build/lib/librelic_s.a" \
+#                "build/bls-${PFX}/libbls.a"
+    cp "build/gmplib-${PFX}/lib/libgmp.a" "build/artefacts/${BUILD_IN}"
+    cp "build/relic-${PFX}/_deps/relic-build/lib/librelic_s.a" "build/artefacts/${BUILD_IN}"
+    cp "build/relic-${PFX}/_deps/sodium-build/libsodium.a" "build/artefacts/${BUILD_IN}"
+    cp "build/bls-${PFX}/libbls.a" "build/artefacts/${BUILD_IN}"
     cp -rf src/*.hpp build/artefacts/"${BUILD_IN}"/include
     cp -rf build/gmplib-"${PFX}"/include/gmp.h build/artefacts/"${BUILD_IN}"/include
     cp -rf build/relic-"${PFX}"/_deps/relic-build/include/*.h build/artefacts/"${BUILD_IN}"/include
