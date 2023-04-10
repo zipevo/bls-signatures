@@ -14,7 +14,7 @@ use crate::{
     BlsError, G1Element, PrivateKey,
 };
 
-pub const BIP32_EXTENDED_PRIVATE_KEY_SIZE: usize = 93;
+pub const BIP32_EXTENDED_PRIVATE_KEY_SIZE: usize = 77;
 
 #[derive(Debug)]
 pub struct ExtendedPrivateKey {
