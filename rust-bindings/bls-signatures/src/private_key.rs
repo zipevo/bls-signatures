@@ -9,11 +9,7 @@ use rand::{prelude::StdRng, Rng};
 #[cfg(feature = "use_serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use crate::{
-    schemes::Scheme,
-    utils::{c_err_to_result, SecureBox},
-    BasicSchemeMPL, BlsError, G1Element,
-};
+use crate::{schemes::Scheme, utils::{c_err_to_result, SecureBox}, BasicSchemeMPL, BlsError, G1Element, G2Element};
 
 pub const PRIVATE_KEY_SIZE: usize = 32; // TODO somehow extract it from bls library
 
@@ -83,6 +79,16 @@ impl PrivateKey {
                 )
             })?,
         })
+    }
+
+    #[cfg(feature = "dash_helpers")]
+    pub fn sign(&self, message: &[u8]) -> G2Element {
+        self.sign_basic(message)
+    }
+
+    pub fn sign_basic(&self, message: &[u8]) -> G2Element {
+        let scheme = BasicSchemeMPL::new();
+        scheme.sign(self, message)
     }
 
     #[cfg(feature = "dash_helpers")]
