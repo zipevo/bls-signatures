@@ -6,11 +6,13 @@ use bls_dash_sys::{
     PrivateKeyIsEqual, PrivateKeySerialize, ThresholdPrivateKeyRecover,
 };
 use rand::{prelude::StdRng, Rng};
+#[cfg(feature = "use_serde")]
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::{
     schemes::Scheme,
     utils::{c_err_to_result, SecureBox},
-    BlsError, G1Element,
+    BasicSchemeMPL, BlsError, G1Element,
 };
 
 pub const PRIVATE_KEY_SIZE: usize = 32; // TODO somehow extract it from bls library
@@ -70,6 +72,7 @@ impl PrivateKey {
     #[cfg(feature = "dash_helpers")]
     pub fn generate_dash(rng: &mut StdRng) -> Result<Self, BlsError> {
         let seed = rng.gen::<[u8; 32]>();
+        let scheme = BasicSchemeMPL::new();
         Ok(PrivateKey {
             c_private_key: c_err_to_result(|did_err| unsafe {
                 CoreMPLKeyGen(
@@ -98,7 +101,7 @@ impl PrivateKey {
         })
     }
 
-    pub fn serialize(&self) -> SecureBox {
+    pub fn to_bytes(&self) -> SecureBox {
         // `PrivateKeySerialize` internally securely allocates memory which we have to
         // wrap safely
         unsafe {
@@ -161,12 +164,7 @@ impl PrivateKey {
             let len = bls_ids_with_private_keys.len();
             let (c_hashes, c_elements): (Vec<_>, Vec<_>) = bls_ids_with_private_keys
                 .into_iter()
-                .map(|(hash, element)| {
-                    (
-                        hash.as_ptr() as *mut c_void,
-                        element.c_element as *mut c_void,
-                    )
-                })
+                .map(|(hash, element)| (hash.as_ptr() as *mut c_void, element.c_private_key))
                 .unzip();
             let c_hashes_ptr = c_hashes.as_ptr() as *mut *mut c_void;
             let c_elements_ptr = c_elements.as_ptr() as *mut *mut c_void;
@@ -176,6 +174,45 @@ impl PrivateKey {
                 })?,
             })
         }
+    }
+}
+
+#[cfg(feature = "use_serde")]
+// Implement Serialize trait for G1Element
+impl Serialize for PrivateKey {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_bytes(self.to_bytes().as_slice())
+    }
+}
+
+#[cfg(feature = "use_serde")]
+// Implement Deserialize trait for G1Element
+impl<'de> Deserialize<'de> for PrivateKey {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct PrivateKeyElementVisitor;
+
+        impl<'de> serde::de::Visitor<'de> for PrivateKeyElementVisitor {
+            type Value = PrivateKey;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("a byte array representing a Private Key")
+            }
+
+            fn visit_bytes<E>(self, bytes: &[u8]) -> Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                PrivateKey::from_bytes(bytes, false).map_err(serde::de::Error::custom)
+            }
+        }
+
+        deserializer.deserialize_bytes(PrivateKeyElementVisitor)
     }
 }
 
@@ -195,7 +232,7 @@ mod tests {
         let seed = b"seedweedseedweedseedweedseedweed";
         let scheme = AugSchemeMPL::new();
         let sk1 = PrivateKey::key_gen(&scheme, seed).expect("unable to generate private key");
-        let sk1_bytes = sk1.serialize();
+        let sk1_bytes = sk1.to_bytes();
         let sk2 = PrivateKey::from_bytes(sk1_bytes.as_slice(), false)
             .expect("cannot build private key from bytes");
 
@@ -213,7 +250,7 @@ mod tests {
             205, 80, 105, 133, 222, 14, 26, 28, 136, 167, 111, 241, 118,
         ];
         let long_private_key = PrivateKey::from_bip32_seed(&long_seed);
-        assert_eq!(*long_private_key.serialize(), long_private_key_test_data);
+        assert_eq!(*long_private_key.to_bytes(), long_private_key_test_data);
 
         // Previously didn't work with seed with length != 32
         let short_seed = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -222,7 +259,7 @@ mod tests {
             185, 51, 198, 185, 61, 129, 245, 55, 14, 177, 159, 189,
         ];
         let short_private_key = PrivateKey::from_bip32_seed(&short_seed);
-        assert_eq!(*short_private_key.serialize(), short_private_key_test_data);
+        assert_eq!(*short_private_key.to_bytes(), short_private_key_test_data);
     }
 
     #[test]

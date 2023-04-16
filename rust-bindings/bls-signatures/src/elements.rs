@@ -6,6 +6,8 @@ use bls_dash_sys::{
     G2ElementFromBytes, G2ElementIsEqual, G2ElementSerialize, ThresholdPublicKeyRecover,
     ThresholdSignatureRecover,
 };
+#[cfg(feature = "use_serde")]
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::{schemes::Scheme, utils::c_err_to_result, BlsError};
 
@@ -64,15 +66,15 @@ impl G1Element {
         Self::from_bytes_with_legacy_flag(bytes, false)
     }
 
-    pub(crate) fn serialize_with_legacy_flag(&self, legacy: bool) -> Box<[u8; G1_ELEMENT_SIZE]> {
+    pub(crate) fn to_bytes_with_legacy_flag(&self, legacy: bool) -> Box<[u8; G1_ELEMENT_SIZE]> {
         unsafe {
             let malloc_ptr = G1ElementSerialize(self.c_element, legacy);
             Box::from_raw(malloc_ptr as *mut _)
         }
     }
 
-    pub fn serialize(&self) -> Box<[u8; G1_ELEMENT_SIZE]> {
-        self.serialize_with_legacy_flag(false)
+    pub fn to_bytes(&self) -> Box<[u8; G1_ELEMENT_SIZE]> {
+        self.to_bytes_with_legacy_flag(false)
     }
 
     pub fn derive_child_public_key_unhardened(
@@ -120,6 +122,46 @@ impl G1Element {
     }
 }
 
+#[cfg(feature = "use_serde")]
+// Implement Serialize trait for G1Element
+impl Serialize for G1Element {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let bytes = *self.to_bytes();
+        serializer.serialize_bytes(&bytes)
+    }
+}
+
+#[cfg(feature = "use_serde")]
+// Implement Deserialize trait for G1Element
+impl<'de> Deserialize<'de> for G1Element {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct G1ElementVisitor;
+
+        impl<'de> serde::de::Visitor<'de> for G1ElementVisitor {
+            type Value = G1Element;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("a byte array representing a G1Element")
+            }
+
+            fn visit_bytes<E>(self, bytes: &[u8]) -> Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                G1Element::from_bytes(bytes).map_err(serde::de::Error::custom)
+            }
+        }
+
+        deserializer.deserialize_bytes(G1ElementVisitor)
+    }
+}
+
 impl Drop for G1Element {
     fn drop(&mut self) {
         unsafe { G1ElementFree(self.c_element) }
@@ -164,15 +206,15 @@ impl G2Element {
         Self::from_bytes_with_legacy_flag(bytes, false)
     }
 
-    pub(crate) fn serialize_with_legacy_flag(&self, legacy: bool) -> Box<[u8; G2_ELEMENT_SIZE]> {
+    pub(crate) fn to_bytes_with_legacy_flag(&self, legacy: bool) -> Box<[u8; G2_ELEMENT_SIZE]> {
         unsafe {
             let malloc_ptr = G2ElementSerialize(self.c_element, legacy);
             Box::from_raw(malloc_ptr as *mut _)
         }
     }
 
-    pub fn serialize(&self) -> Box<[u8; G2_ELEMENT_SIZE]> {
-        self.serialize_with_legacy_flag(false)
+    pub fn to_bytes(&self) -> Box<[u8; G2_ELEMENT_SIZE]> {
+        self.to_bytes_with_legacy_flag(false)
     }
 
     pub fn threshold_recover(
@@ -200,6 +242,46 @@ impl G2Element {
     }
 }
 
+#[cfg(feature = "use_serde")]
+// Implement Serialize trait for G1Element
+impl Serialize for G2Element {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let bytes = *self.to_bytes();
+        serializer.serialize_bytes(&bytes)
+    }
+}
+
+#[cfg(feature = "use_serde")]
+// Implement Deserialize trait for G1Element
+impl<'de> Deserialize<'de> for G2Element {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct G2ElementVisitor;
+
+        impl<'de> serde::de::Visitor<'de> for G2ElementVisitor {
+            type Value = G2Element;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("a byte array representing a G2Element")
+            }
+
+            fn visit_bytes<E>(self, bytes: &[u8]) -> Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                G2Element::from_bytes(bytes).map_err(serde::de::Error::custom)
+            }
+        }
+
+        deserializer.deserialize_bytes(G2ElementVisitor)
+    }
+}
+
 impl Drop for G2Element {
     fn drop(&mut self) {
         unsafe { G2ElementFree(self.c_element) }
@@ -221,7 +303,7 @@ mod tests {
         let sk = PrivateKey::key_gen(&scheme, seed).expect("unable to generate private key");
 
         let g1 = sk.g1_element().expect("cannot get G1 element");
-        let g1_bytes = g1.serialize();
+        let g1_bytes = g1.to_bytes();
         let g1_2 =
             G1Element::from_bytes(g1_bytes.as_ref()).expect("cannot build G1 element from bytes");
 
@@ -235,7 +317,7 @@ mod tests {
         let sk = PrivateKey::key_gen(&scheme, seed).expect("unable to generate private key");
 
         let g2 = scheme.sign(&sk, b"ayy");
-        let g2_bytes = g2.serialize();
+        let g2_bytes = g2.to_bytes();
         let g2_2 =
             G2Element::from_bytes(g2_bytes.as_ref()).expect("cannot build G2 element from bytes");
 
@@ -246,7 +328,7 @@ mod tests {
     fn should_generate_new_g1_element() {
         let g1_element = G1Element::generate();
 
-        assert_eq!(g1_element.serialize().len(), 48);
+        assert_eq!(g1_element.to_bytes().len(), 48);
     }
 
     #[test]
