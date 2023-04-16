@@ -98,12 +98,12 @@ impl G1Element {
     }
 
     pub fn threshold_recover(
-        bls_ids_with_elements: Vec<(Vec<u8>, G1Element)>,
+        bls_ids_with_elements: &[(Vec<u8>, G1Element)],
     ) -> Result<Self, BlsError> {
         unsafe {
             let len = bls_ids_with_elements.len();
             let (c_hashes, c_elements): (Vec<_>, Vec<_>) = bls_ids_with_elements
-                .into_iter()
+                .iter()
                 .map(|(hash, element)| {
                     (
                         hash.as_ptr() as *mut c_void,
@@ -227,12 +227,12 @@ impl G2Element {
     }
 
     pub fn threshold_recover(
-        bls_ids_with_elements: Vec<(Vec<u8>, G2Element)>,
+        bls_ids_with_elements: &[(Vec<u8>, G2Element)],
     ) -> Result<Self, BlsError> {
         unsafe {
             let len = bls_ids_with_elements.len();
             let (c_hashes, c_elements): (Vec<_>, Vec<_>) = bls_ids_with_elements
-                .into_iter()
+                .iter()
                 .map(|(hash, element)| {
                     (
                         hash.as_ptr() as *mut c_void,

@@ -158,12 +158,12 @@ impl PrivateKey {
     }
 
     pub fn threshold_recover(
-        bls_ids_with_private_keys: Vec<(Vec<u8>, PrivateKey)>,
+        bls_ids_with_private_keys: &[(Vec<u8>, PrivateKey)],
     ) -> Result<Self, BlsError> {
         unsafe {
             let len = bls_ids_with_private_keys.len();
             let (c_hashes, c_elements): (Vec<_>, Vec<_>) = bls_ids_with_private_keys
-                .into_iter()
+                .iter()
                 .map(|(hash, element)| (hash.as_ptr() as *mut c_void, element.c_private_key))
                 .unzip();
             let c_hashes_ptr = c_hashes.as_ptr() as *mut *mut c_void;
