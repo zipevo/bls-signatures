@@ -122,6 +122,15 @@ impl G1Element {
     }
 }
 
+impl Clone for G1Element {
+    fn clone(&self) -> Self {
+        // Serialize the element
+        let bytes = self.to_bytes();
+        // We can panic
+        G1Element::from_bytes(bytes.as_slice()).expect("expected bytes to be valid")
+    }
+}
+
 #[cfg(feature = "use_serde")]
 // Implement Serialize trait for G1Element
 impl Serialize for G1Element {
@@ -239,6 +248,15 @@ impl G2Element {
                 })?,
             })
         }
+    }
+}
+
+impl Clone for G2Element {
+    fn clone(&self) -> Self {
+        // Serialize the element
+        let bytes = self.to_bytes();
+        // We can panic
+        G2Element::from_bytes(bytes.as_slice()).expect("expected bytes to be valid")
     }
 }
 

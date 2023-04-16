@@ -177,6 +177,15 @@ impl PrivateKey {
     }
 }
 
+impl Clone for PrivateKey {
+    fn clone(&self) -> Self {
+        // Serialize the element
+        let bytes = self.to_bytes();
+        // We can panic
+        PrivateKey::from_bytes(bytes.as_slice(), false).expect("expected bytes to be valid")
+    }
+}
+
 #[cfg(feature = "use_serde")]
 // Implement Serialize trait for G1Element
 impl Serialize for PrivateKey {
