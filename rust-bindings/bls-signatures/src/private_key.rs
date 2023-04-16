@@ -1,11 +1,11 @@
-use std::ffi::c_void;
-use std::ops::Mul;
+use std::{ffi::c_void, ops::Mul};
 
 use bls_dash_sys::{
     CoreMPLDeriveChildSk, CoreMPLDeriveChildSkUnhardened, CoreMPLKeyGen, G1ElementMul,
     PrivateKeyFree, PrivateKeyFromBytes, PrivateKeyFromSeedBIP32, PrivateKeyGetG1Element,
-    PrivateKeyIsEqual, PrivateKeySerialize,
+    PrivateKeyIsEqual, PrivateKeySerialize, ThresholdPrivateKeyRecover,
 };
+use rand::{prelude::StdRng, Rng};
 
 use crate::{
     schemes::Scheme,
@@ -67,6 +67,29 @@ impl PrivateKey {
         })
     }
 
+    #[cfg(feature = "dash_helpers")]
+    pub fn generate_dash(rng: &mut StdRng) -> Result<Self, BlsError> {
+        let seed = rng.gen::<[u8; 32]>();
+        Ok(PrivateKey {
+            c_private_key: c_err_to_result(|did_err| unsafe {
+                CoreMPLKeyGen(
+                    scheme.as_mut_ptr(),
+                    seed.as_ptr() as *const _,
+                    seed.len(),
+                    did_err,
+                )
+            })?,
+        })
+    }
+
+    #[cfg(feature = "dash_helpers")]
+    pub fn generate_dash_many(count: usize, rng: &mut StdRng) -> Result<Vec<Self>, BlsError> {
+        (0..count)
+            .into_iter()
+            .map(|_| Self::generate_dash(rng))
+            .collect()
+    }
+
     pub fn g1_element(&self) -> Result<G1Element, BlsError> {
         Ok(G1Element {
             c_element: c_err_to_result(|did_err| unsafe {
@@ -105,7 +128,8 @@ impl PrivateKey {
     }
 
     pub fn from_bip32_seed(bytes: &[u8]) -> Self {
-        let c_private_key = unsafe { PrivateKeyFromSeedBIP32(bytes.as_ptr() as *const c_void, bytes.len()) };
+        let c_private_key =
+            unsafe { PrivateKeyFromSeedBIP32(bytes.as_ptr() as *const c_void, bytes.len()) };
 
         PrivateKey { c_private_key }
     }
@@ -127,6 +151,30 @@ impl PrivateKey {
             c_private_key: unsafe {
                 CoreMPLDeriveChildSkUnhardened(scheme.as_mut_ptr(), self.c_private_key, index)
             },
+        }
+    }
+
+    pub fn threshold_recover(
+        bls_ids_with_private_keys: Vec<(Vec<u8>, PrivateKey)>,
+    ) -> Result<Self, BlsError> {
+        unsafe {
+            let len = bls_ids_with_private_keys.len();
+            let (c_hashes, c_elements): (Vec<_>, Vec<_>) = bls_ids_with_private_keys
+                .into_iter()
+                .map(|(hash, element)| {
+                    (
+                        hash.as_ptr() as *mut c_void,
+                        element.c_element as *mut c_void,
+                    )
+                })
+                .unzip();
+            let c_hashes_ptr = c_hashes.as_ptr() as *mut *mut c_void;
+            let c_elements_ptr = c_elements.as_ptr() as *mut *mut c_void;
+            Ok(PrivateKey {
+                c_private_key: c_err_to_result(|did_err| {
+                    ThresholdPrivateKeyRecover(c_elements_ptr, len, c_hashes_ptr, len, did_err)
+                })?,
+            })
         }
     }
 }
@@ -156,32 +204,41 @@ mod tests {
 
     #[test]
     fn should_return_private_key_from_bip32_bytes() {
-        let long_seed = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2];
-        let long_private_key_test_data = [50, 67, 148, 112, 207, 6, 210, 118, 137, 125, 27, 144, 105, 189, 214, 228, 68, 83, 144, 205, 80, 105, 133, 222, 14, 26, 28, 136, 167, 111, 241, 118];
+        let long_seed = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8,
+            9, 10, 1, 2,
+        ];
+        let long_private_key_test_data = [
+            50, 67, 148, 112, 207, 6, 210, 118, 137, 125, 27, 144, 105, 189, 214, 228, 68, 83, 144,
+            205, 80, 105, 133, 222, 14, 26, 28, 136, 167, 111, 241, 118,
+        ];
         let long_private_key = PrivateKey::from_bip32_seed(&long_seed);
         assert_eq!(*long_private_key.serialize(), long_private_key_test_data);
 
         // Previously didn't work with seed with length != 32
         let short_seed = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-        let short_private_key_test_data = [70, 137, 28, 44, 236, 73, 89, 60, 129, 146, 30, 71, 61, 183, 72, 0, 41, 224, 252, 30, 185, 51, 198, 185, 61, 129, 245, 55, 14, 177, 159, 189];
+        let short_private_key_test_data = [
+            70, 137, 28, 44, 236, 73, 89, 60, 129, 146, 30, 71, 61, 183, 72, 0, 41, 224, 252, 30,
+            185, 51, 198, 185, 61, 129, 245, 55, 14, 177, 159, 189,
+        ];
         let short_private_key = PrivateKey::from_bip32_seed(&short_seed);
         assert_eq!(*short_private_key.serialize(), short_private_key_test_data);
     }
 
     #[test]
     fn test_keys_multiplication() {
-        //46891c2cec49593c81921e473db7480029e0fc1eb933c6b93d81f5370eb19fbd
+        // 46891c2cec49593c81921e473db7480029e0fc1eb933c6b93d81f5370eb19fbd
         let private_key_data = [
             70, 137, 28, 44, 236, 73, 89, 60, 129, 146, 30, 71, 61, 183, 72, 0, 41, 224, 252, 30,
             185, 51, 198, 185, 61, 129, 245, 55, 14, 177, 159, 189,
         ];
-        //0e2f9055c17eb13221d8b41833468ab49f7d4e874ddf4b217f5126392a608fd48ccab3510548f1da4f397c1ad4f8e01a
+        // 0e2f9055c17eb13221d8b41833468ab49f7d4e874ddf4b217f5126392a608fd48ccab3510548f1da4f397c1ad4f8e01a
         let public_key_data = [
             14, 47, 144, 85, 193, 126, 177, 50, 33, 216, 180, 24, 51, 70, 138, 180, 159, 125, 78,
             135, 77, 223, 75, 33, 127, 81, 38, 57, 42, 96, 143, 212, 140, 202, 179, 81, 5, 72, 241,
             218, 79, 57, 124, 26, 212, 248, 224, 26,
         ];
-        //03fd387c4d4c66ec9dcdb31ef0c08ad881090dcda13d4b2c9cbc5ef264ff4dc7
+        // 03fd387c4d4c66ec9dcdb31ef0c08ad881090dcda13d4b2c9cbc5ef264ff4dc7
         let expected_data = [
             3, 253, 56, 124, 77, 76, 102, 236, 157, 205, 179, 30, 240, 192, 138, 216, 129, 9, 13,
             205, 161, 61, 75, 44, 156, 188, 94, 242, 100, 255, 77, 199,

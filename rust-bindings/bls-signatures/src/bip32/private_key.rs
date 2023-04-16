@@ -193,10 +193,13 @@ mod tests {
 
     #[test]
     fn fingerprint_for_short_bip32_seed() {
-        assert_eq!(ExtendedPrivateKey::from_seed(&[1u8, 50, 6, 244, 24, 199, 1, 25])
-            .expect("cannot generate extended private key")
-            .public_key()
-            .expect("cannot get public key from extended private key")
-            .fingerprint_legacy(), 0xa4700b27);
+        assert_eq!(
+            ExtendedPrivateKey::from_seed(&[1u8, 50, 6, 244, 24, 199, 1, 25])
+                .expect("cannot generate extended private key")
+                .public_key()
+                .expect("cannot get public key from extended private key")
+                .fingerprint_legacy(),
+            0xa4700b27
+        );
     }
 }

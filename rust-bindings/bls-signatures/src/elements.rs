@@ -3,7 +3,8 @@ use std::ffi::c_void;
 use bls_dash_sys::{
     CoreMPLDeriveChildPkUnhardened, G1ElementFree, G1ElementFromBytes, G1ElementGenerator,
     G1ElementGetFingerprint, G1ElementIsEqual, G1ElementSerialize, G2ElementFree,
-    G2ElementFromBytes, G2ElementIsEqual, G2ElementSerialize,
+    G2ElementFromBytes, G2ElementIsEqual, G2ElementSerialize, ThresholdPublicKeyRecover,
+    ThresholdSignatureRecover,
 };
 
 use crate::{schemes::Scheme, utils::c_err_to_result, BlsError};
@@ -12,6 +13,12 @@ use crate::{schemes::Scheme, utils::c_err_to_result, BlsError};
 
 pub const G1_ELEMENT_SIZE: usize = 48; // TODO somehow extract it from bls library
 pub const G2_ELEMENT_SIZE: usize = 96; // TODO somehow extract it from bls library
+
+#[cfg(feature = "dash_helpers")]
+pub type PublicKey = G1Element;
+
+#[cfg(feature = "dash_helpers")]
+pub type Signature = G2Element;
 
 #[derive(Debug)]
 pub struct G1Element {
@@ -87,6 +94,30 @@ impl G1Element {
     pub fn fingerprint(&self) -> u32 {
         self.fingerprint_with_legacy_flag(false)
     }
+
+    pub fn threshold_recover(
+        bls_ids_with_elements: Vec<(Vec<u8>, G1Element)>,
+    ) -> Result<Self, BlsError> {
+        unsafe {
+            let len = bls_ids_with_elements.len();
+            let (c_hashes, c_elements): (Vec<_>, Vec<_>) = bls_ids_with_elements
+                .into_iter()
+                .map(|(hash, element)| {
+                    (
+                        hash.as_ptr() as *mut c_void,
+                        element.c_element as *mut c_void,
+                    )
+                })
+                .unzip();
+            let c_hashes_ptr = c_hashes.as_ptr() as *mut *mut c_void;
+            let c_elements_ptr = c_elements.as_ptr() as *mut *mut c_void;
+            Ok(G1Element {
+                c_element: c_err_to_result(|did_err| {
+                    ThresholdPublicKeyRecover(c_elements_ptr, len, c_hashes_ptr, len, did_err)
+                })?,
+            })
+        }
+    }
 }
 
 impl Drop for G1Element {
@@ -142,6 +173,30 @@ impl G2Element {
 
     pub fn serialize(&self) -> Box<[u8; G2_ELEMENT_SIZE]> {
         self.serialize_with_legacy_flag(false)
+    }
+
+    pub fn threshold_recover(
+        bls_ids_with_elements: Vec<(Vec<u8>, G2Element)>,
+    ) -> Result<Self, BlsError> {
+        unsafe {
+            let len = bls_ids_with_elements.len();
+            let (c_hashes, c_elements): (Vec<_>, Vec<_>) = bls_ids_with_elements
+                .into_iter()
+                .map(|(hash, element)| {
+                    (
+                        hash.as_ptr() as *mut c_void,
+                        element.c_element as *mut c_void,
+                    )
+                })
+                .unzip();
+            let c_hashes_ptr = c_hashes.as_ptr() as *mut *mut c_void;
+            let c_elements_ptr = c_elements.as_ptr() as *mut *mut c_void;
+            Ok(G2Element {
+                c_element: c_err_to_result(|did_err| {
+                    ThresholdSignatureRecover(c_elements_ptr, len, c_hashes_ptr, len, did_err)
+                })?,
+            })
+        }
     }
 }
 
