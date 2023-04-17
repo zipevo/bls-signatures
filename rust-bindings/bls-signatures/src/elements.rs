@@ -43,11 +43,11 @@ impl G1Element {
     }
 
     #[cfg(feature = "dash_helpers")]
-    fn verify(&self, signature: &G2Element, message: &[u8]) -> bool {
+    pub fn verify(&self, signature: &G2Element, message: &[u8]) -> bool {
         self.verify_basic(signature, message)
     }
 
-    fn verify_basic(&self, signature: &G2Element, message: &[u8]) -> bool {
+    pub fn verify_basic(&self, signature: &G2Element, message: &[u8]) -> bool {
         let basic_scheme = BasicSchemeMPL::new();
         basic_scheme.verify(self, message, signature)
     }
