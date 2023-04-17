@@ -9,7 +9,7 @@ use bls_dash_sys::{
 #[cfg(feature = "use_serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use crate::{schemes::Scheme, utils::c_err_to_result, BlsError};
+use crate::{schemes::Scheme, utils::c_err_to_result, BlsError, BasicSchemeMPL};
 
 // TODO Split into modules
 
@@ -40,6 +40,16 @@ impl G1Element {
         let c_element = unsafe { G1ElementGenerator() };
 
         G1Element { c_element }
+    }
+
+    #[cfg(feature = "dash_helpers")]
+    fn verify(&self, signature: &G2Element, message: &[u8]) -> bool {
+        self.verify_basic(signature, message)
+    }
+
+    fn verify_basic(&self, signature: &G2Element, message: &[u8]) -> bool {
+        let basic_scheme = BasicSchemeMPL::new();
+        basic_scheme.verify(self, message, signature)
     }
 
     pub(crate) fn from_bytes_with_legacy_flag(
