@@ -111,12 +111,12 @@ set(MI_OVERRIDE     "off" CACHE STRING "")
 add_subdirectory(depends/relic)
 add_subdirectory(depends/mimalloc)
 
-message(STATUS "Patching Relic to make setjmp.h inclusion conditional")
-
-execute_process(
-  COMMAND bash -c "git apply ${CMAKE_SOURCE_DIR}/setjmp_patch.diff"
-  WORKING_DIRECTORY ${RELIC_SRC}
-)
+#message(STATUS "Patching Relic to make setjmp.h inclusion conditional")
+#
+#execute_process(
+#  COMMAND bash -c "git apply ${CMAKE_SOURCE_DIR}/setjmp_patch.diff"
+#  WORKING_DIRECTORY ${RELIC_SRC}
+#)
 
 add_subdirectory(src)
 
