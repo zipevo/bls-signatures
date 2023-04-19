@@ -309,6 +309,8 @@ build_bls_arch() {
     for F in "${BLS_FILES[@]}"
     do
         clang -I"../contrib/relic/include" \
+          -I"../../depends/relic/include" \
+          -I"../../include/dashbls" \
           -I"../relic-${PFX}/_deps/relic-build/include" \
           -I"../../src/" \
           -I"../gmplib-${PFX}/include" \

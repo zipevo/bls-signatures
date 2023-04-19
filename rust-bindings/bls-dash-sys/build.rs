@@ -94,6 +94,11 @@ fn main() {
         bls_dash_build_path.join("_deps/relic-src/include"),
         bls_dash_build_path.join("_deps/relic-build/include"),
         bls_dash_build_path.join("src"),
+        root_path.join("include/dashbls"),
+        bls_dash_build_path.join("depends/relic/include"),
+        bls_dash_build_path.join("depends/mimalloc/include"),
+        root_path.join("depends/relic/include"),
+        root_path.join("depends/mimalloc/include"),
         bls_dash_src_path.clone(),
     ]);
 
@@ -133,27 +138,34 @@ fn main() {
 
     cc.compile("bls-dash-sys");
 
-    // Link dependencies
+    // // Link dependencies
+    // println!(
+    //     "cargo:rustc-link-search={}",
+    //     bls_dash_build_path.join("_deps/sodium-build").display()
+    // );
+
+    // println!("cargo:rustc-link-lib=static=sodium");
+
     println!(
         "cargo:rustc-link-search={}",
-        bls_dash_build_path.join("_deps/sodium-build").display()
-    );
-
-    println!("cargo:rustc-link-lib=static=sodium");
-
-    println!(
-        "cargo:rustc-link-search={}",
-        bls_dash_build_path.join("_deps/relic-build/lib").display()
+        root_path.join("build/depends/relic/lib").display()
     );
 
     println!("cargo:rustc-link-lib=static=relic_s");
 
     println!(
         "cargo:rustc-link-search={}",
+        root_path.join("build/depends/mimalloc").display()
+    );
+
+    println!("cargo:rustc-link-lib=static=mimalloc-secure");
+
+    println!(
+        "cargo:rustc-link-search={}",
         bls_dash_build_path.join("src").display()
     );
 
-    println!("cargo:rustc-link-lib=static=bls-dash");
+    println!("cargo:rustc-link-lib=static=dashbls");
 
     // Link GMP if exists
     let gmp_libraries_file_path = bls_dash_build_path.join("gmp_libraries.txt");
@@ -265,6 +277,7 @@ fn main() {
         .expect("can't get abs path");
     let bls_dash_build_path = root_path.join("build");
     let bls_dash_src_path = root_path.join("src");
+    let bls_dash_src_include_path = root_path.join("include/dashbls");
     let c_bindings_path = root_path.join("rust-bindings/bls-dash-sys/c-bindings");
     let artefacts_path = bls_dash_build_path.join("artefacts");
     let target_path = artefacts_path.join(&target);
@@ -307,7 +320,12 @@ fn main() {
         bls_dash_build_path.join(format!("relic-{}-{}/_deps/relic-build/include", platform, arch)),
         bls_dash_build_path.join("contrib/relic/src"),
         root_path.join("src"),
+        root_path.join("include/dashbls"),
+        root_path.join("depends/relic/include"),
+        root_path.join("depends/mimalloc/include"),
+        root_path.join("depends/catch2/include"),
         bls_dash_src_path.clone(),
+        bls_dash_src_include_path.clone()
     ]);
 
     let cpp_files: Vec<_> = glob::glob(c_bindings_path.join("**/*.cpp").to_str().unwrap())
@@ -328,8 +346,8 @@ fn main() {
 
     println!("cargo:rustc-link-search={}", target_path.display());
     println!("cargo:rustc-link-lib=static=gmp");
-    println!("cargo:rustc-link-lib=static=sodium");
-    println!("cargo:rustc-link-lib=static=relic_s");
+    // println!("cargo:rustc-link-lib=static=sodium");
+    // println!("cargo:rustc-link-lib=static=relic_s");
     println!("cargo:rustc-link-lib=static=bls");
     println!("cargo:rustc-link-search={}", bls_dash_src_path.display());
     println!("cargo:rustc-link-lib=static=dashbls");
