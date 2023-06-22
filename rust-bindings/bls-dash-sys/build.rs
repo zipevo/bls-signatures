@@ -338,9 +338,9 @@ fn main() {
     include_paths.extend([
         bls_dash_build_path.join(format!("relic-{}-{}/depends/relic/include", platform, arch)),
         bls_dash_build_path.join("contrib/relic/src"),
+        bls_dash_build_path.join("contrib/relic/include"),
         root_path.join("src"),
         root_path.join("include/dashbls"),
-        root_path.join("depends/relic/include"),
         root_path.join("depends/mimalloc/include"),
         root_path.join("depends/catch2/include"),
         bls_dash_src_path.clone(),
