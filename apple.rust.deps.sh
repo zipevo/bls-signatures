@@ -309,9 +309,8 @@ build_bls_arch() {
     for F in "${BLS_FILES[@]}"
     do
         clang -I"../contrib/relic/include" \
-          -I"../../depends/relic/include" \
           -I"../../include/dashbls" \
-          -I"../relic-${PFX}/_deps/relic-build/include" \
+          -I"../relic-${PFX}/depends/relic/include" \
           -I"../../src/" \
           -I"../gmplib-${PFX}/include" \
           -x c++ -std=c++14 -stdlib=libc++ -fembed-bitcode -arch "${ARCH}" -isysroot "${SDK}" "${EXTRA_ARGS}" \
@@ -319,7 +318,7 @@ build_bls_arch() {
     done
 
     # shellcheck disable=SC2086
-    xcrun -sdk "$PLATFORM" ar -cvq libbls.a $ALL_BLS_OBJ_FILES
+    xcrun -sdk "$PLATFORM" ar -cvq libdashbls.a $ALL_BLS_OBJ_FILES
 
     # shellcheck disable=SC2039,SC2164
     popd # "$BUILDDIR"
@@ -360,9 +359,10 @@ build_target() {
     rm -rf "build/artefacts/${BUILD_IN}"
     mkdir -p "build/artefacts/${BUILD_IN}"
     cp "build/gmplib-${PFX}/lib/libgmp.a" "build/artefacts/${BUILD_IN}"
-    cp "build/relic-${PFX}/_deps/relic-build/lib/librelic_s.a" "build/artefacts/${BUILD_IN}"
-    cp "build/relic-${PFX}/_deps/sodium-build/libsodium.a" "build/artefacts/${BUILD_IN}"
-    cp "build/bls-${PFX}/libbls.a" "build/artefacts/${BUILD_IN}"
+    cp "build/relic-${PFX}/depends/relic/lib/librelic_s.a" "build/artefacts/${BUILD_IN}"
+    cp "build/relic-${PFX}/depends/mimalloc/libmimalloc-secure.a" "build/artefacts/${BUILD_IN}"
+#    cp "build/relic-${PFX}/_deps/sodium-build/libsodium.a" "build/artefacts/${BUILD_IN}"
+    cp "build/bls-${PFX}/libdashbls.a" "build/artefacts/${BUILD_IN}"
 #    cp -rf build/bls-"${PFX}"/*.o build/artefacts/"${BUILD_IN}"/include
 #    cp -rf src/*.hpp build/artefacts/"${BUILD_IN}"/include
 #    cp -rf build/gmplib-"${PFX}"/include/gmp.h build/artefacts/"${BUILD_IN}"/include
