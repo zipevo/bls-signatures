@@ -277,6 +277,7 @@ fn main() {
 //     println!("cargo:rerun-if-changed={}", bls_dash_src_path.display());
 // }
 
+// Need to build as 'cargo b --features="default apple" --target=XXX'
 #[cfg(feature = "apple")]
 fn main() {
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
@@ -335,8 +336,7 @@ fn main() {
         .collect();
 
     include_paths.extend([
-        bls_dash_build_path.join(format!("relic-{}-{}/_deps/relic-src/include", platform, arch)),
-        bls_dash_build_path.join(format!("relic-{}-{}/_deps/relic-build/include", platform, arch)),
+        bls_dash_build_path.join(format!("relic-{}-{}/depends/relic/include", platform, arch)),
         bls_dash_build_path.join("contrib/relic/src"),
         root_path.join("src"),
         root_path.join("include/dashbls"),
