@@ -94,7 +94,7 @@ AC_ARG_ENABLE([debug],
   [use_debug=$enableval],
   [use_debug=no])
 
-if [[[ "$use_debug" == "yes" ]]]; then
+if [[[ "$use_debug" == "yes" || "$use_optimizations" == "no" ]]]; then
   dnl Clear default -g -O2 flags
   if test x"$CFLAGS_overridden" = x"no"; then
     CFLAGS=""
@@ -106,13 +106,21 @@ if [[[ "$use_debug" == "yes" ]]]; then
   dnl Disable optimizations
   AX_CHECK_COMPILE_FLAG([-O0], [[DEBUG_FLAGS="$DEBUG_FLAGS -O0"]])
 
-  dnl Prefer -g3, fall back to -g if that is unavailable.
-  AX_CHECK_COMPILE_FLAG(
-    [-g3],
-    [[DEBUG_FLAGS="$DEBUG_FLAGS -g3"]],
-    [AX_CHECK_COMPILE_FLAG([-g],[[DEBUG_FLAGS="$DEBUG_FLAGS -g"]])])
-  
-  AX_CHECK_COMPILE_FLAG([-ftrapv],[DEBUG_FLAGS="$DEBUG_FLAGS -ftrapv"])
+  if [[[ "$use_debug" == "yes" ]]]; then
+    dnl Prefer -g3, fall back to -g if that is unavailable.
+    AX_CHECK_COMPILE_FLAG(
+      [-g3],
+      [[DEBUG_FLAGS="$DEBUG_FLAGS -g3"]],
+      [AX_CHECK_COMPILE_FLAG([-g],[[DEBUG_FLAGS="$DEBUG_FLAGS -g"]])])
+
+    AX_CHECK_COMPILE_FLAG([-ftrapv],[DEBUG_FLAGS="$DEBUG_FLAGS -ftrapv"])
+  else
+    dnl Reintroduce -g flag deleted during C(XX)FLAGS reset
+    AX_CHECK_COMPILE_FLAG([-g],[[DEBUG_FLAGS="$DEBUG_FLAGS -g"]])
+
+    dnl -ftrapv and -fwrapv conflict, so we only set this if use_debug=no
+    AX_CHECK_COMPILE_FLAG([-fwrapv],[DEBUG_FLAGS="$DEBUG_FLAGS -fwrapv"])
+  fi
 fi
 
 dnl Define enum mappings for relic config
