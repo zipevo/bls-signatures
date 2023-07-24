@@ -58,21 +58,21 @@ AC_PATH_TOOL(STRIP, strip)
 
 AM_PROG_AS
 
-AC_ARG_ENABLE(tests,
-  [AS_HELP_STRING([--disable-tests],
-  [do not compile tests (default is to compile)])],
+AC_ARG_ENABLE([tests],
+  [AS_HELP_STRING([--enable-tests],
+  [Compile with tests (default is yes)])],
   [use_tests=$enableval],
   [use_tests=yes])
 
-AC_ARG_ENABLE(bench,
-  [AS_HELP_STRING([--disable-bench],
-  [do not compile benchmarks (default is to compile)])],
+AC_ARG_ENABLE([bench],
+  [AS_HELP_STRING([--enable-bench],
+  [Compile with benchmarks (default is yes)])],
   [use_bench=$enableval],
   [use_bench=yes])
 
 AC_ARG_ENABLE([hardening],
-  [AS_HELP_STRING([--disable-hardening],
-  [do not attempt to harden the resulting executables (default is to harden when possible)])],
+  [AS_HELP_STRING([--enable-hardening],
+  [Enable hardening flags and arguments (default is yes)])],
   [use_hardening=$enableval],
   [use_hardening=auto])
 
