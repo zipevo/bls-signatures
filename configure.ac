@@ -60,19 +60,19 @@ AM_PROG_AS
 
 AC_ARG_ENABLE([tests],
   [AS_HELP_STRING([--enable-tests],
-  [Compile with tests (default is yes)])],
+  [Compile with tests [default=yes]])],
   [use_tests=$enableval],
   [use_tests=yes])
 
 AC_ARG_ENABLE([bench],
   [AS_HELP_STRING([--enable-bench],
-  [Compile with benchmarks (default is yes)])],
+  [Compile with benchmarks [default=yes]])],
   [use_bench=$enableval],
   [use_bench=yes])
 
 AC_ARG_ENABLE([hardening],
   [AS_HELP_STRING([--enable-hardening],
-  [Enable hardening flags and arguments (default is yes)])],
+  [Enable hardening flags and arguments [default=auto]])],
   [use_hardening=$enableval],
   [use_hardening=auto])
 
@@ -260,7 +260,7 @@ AC_DEFINE([LOWER],   [8], [Use implementation provided by the lower layer.])
 dnl Define relic switches
 AC_ARG_ENABLE([debug],
   [AS_HELP_STRING([--enable-debug],
-  [Build with debugging support (default is no)])],
+  [Build with debugging support [default=no]])],
   [use_debug=$enableval],
   [use_debug=no])
 
@@ -270,7 +270,7 @@ fi
 
 AC_ARG_ENABLE([profiling],
   [AS_HELP_STRING([--enable-profiling],
-  [Build with profiling support (default is no)])],
+  [Build with profiling support [default=no]])],
   [use_profiling=$enableval],
   [use_profiling=no])
 
@@ -280,7 +280,7 @@ fi
 
 AC_ARG_ENABLE([check],
   [AS_HELP_STRING([--enable-check],
-  [Build with error-checking support (default is no)])],
+  [Build with error-checking support [default=no]])],
   [use_check=$enableval],
   [use_check=no])
 
@@ -290,7 +290,7 @@ fi
 
 AC_ARG_ENABLE([verbs],
   [AS_HELP_STRING([--enable-verbs],
-  [Build with detailed error messages (default is no)])],
+  [Build with detailed error messages [default=no]])],
   [use_verbs=$enableval],
   [use_verbs=no])
 
@@ -300,7 +300,7 @@ fi
 
 AC_ARG_ENABLE([overhead],
   [AS_HELP_STRING([--enable-overhead],
-  [Build with overhead estimation (default is no)])],
+  [Build with overhead estimation [default=no]])],
   [use_overhead=$enableval],
   [use_overhead=no])
 
@@ -310,7 +310,7 @@ fi
 
 AC_ARG_ENABLE([quiet],
   [AS_HELP_STRING([--enable-quiet],
-  [Build with printing disabled (default is yes)])],
+  [Build with printing disabled [default=yes]])],
   [use_quiet=$enableval],
   [use_quiet=yes])
 
@@ -320,7 +320,7 @@ fi
 
 AC_ARG_ENABLE([color],
   [AS_HELP_STRING([--enable-color],
-  [Build with colored output support (default is yes)])],
+  [Build with colored output support [default=yes]])],
   [use_color=$enableval],
   [use_color=yes])
 
@@ -330,7 +330,7 @@ fi
 
 AC_ARG_ENABLE([big_endian],
   [AS_HELP_STRING([--enable-big-endian],
-  [Build with big-endian support (default is no)])],
+  [Build with big-endian support [default=no]])],
   [use_big_endian=$enableval],
   [use_big_endian=no])
 
