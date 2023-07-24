@@ -371,16 +371,16 @@ elif [[[ "$host_cpu" == arm* && "$use_optimizations" == "yes" ]]]; then
   CPU_ARCH="arm"
   AC_DEFINE([ARCH], [ARM], [Architecture.])
   AC_DEFINE([WSIZE], [32], [Size of word in this architecture.])
-elif [[[ "$host_cpu" == *32* ]]]; then
-  dnl Support for an undefined 32-bit architecture
-  CPU_ARCH="none"
-  AC_DEFINE([ARCH], [RELIC_NONE], [Architecture.])
-  AC_DEFINE([WSIZE], [32], [Size of word in this architecture.])
 elif [[[ "$host_cpu" == *64* ]]]; then
   dnl Support for an undefined 64-bit architecture
   CPU_ARCH="none"
   AC_DEFINE([ARCH], [RELIC_NONE], [Architecture.])
   AC_DEFINE([WSIZE], [64], [Size of word in this architecture.])
+elif [[[ "$host_cpu" == *32* || "$host_cpu" == arm* || "$host_cpu" == i?86 ]]]; then
+  dnl Support for an undefined 32-bit architecture
+  CPU_ARCH="none"
+  AC_DEFINE([ARCH], [RELIC_NONE], [Architecture.])
+  AC_DEFINE([WSIZE], [32], [Size of word in this architecture.])
 else
   AC_MSG_ERROR([Unable to determine host architecture, may not be supported!])
 fi
