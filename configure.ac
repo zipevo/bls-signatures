@@ -88,6 +88,33 @@ AC_ARG_ENABLE([optimizations],
   [use_optimizations=$enableval],
   [use_optimizations=yes])
 
+AC_ARG_ENABLE([debug],
+  [AS_HELP_STRING([--enable-debug],
+  [Build with debugging support [default=no]])],
+  [use_debug=$enableval],
+  [use_debug=no])
+
+if [[[ "$use_debug" == "yes" ]]]; then
+  dnl Clear default -g -O2 flags
+  if test x"$CFLAGS_overridden" = x"no"; then
+    CFLAGS=""
+  fi
+  if test x"$CXXFLAGS_overridden" = x"no"; then
+    CXXFLAGS=""
+  fi
+
+  dnl Disable optimizations
+  AX_CHECK_COMPILE_FLAG([-O0], [[DEBUG_FLAGS="$DEBUG_FLAGS -O0"]])
+
+  dnl Prefer -g3, fall back to -g if that is unavailable.
+  AX_CHECK_COMPILE_FLAG(
+    [-g3],
+    [[DEBUG_FLAGS="$DEBUG_FLAGS -g3"]],
+    [AX_CHECK_COMPILE_FLAG([-g],[[DEBUG_FLAGS="$DEBUG_FLAGS -g"]])])
+  
+  AX_CHECK_COMPILE_FLAG([-ftrapv],[DEBUG_FLAGS="$DEBUG_FLAGS -ftrapv"])
+fi
+
 dnl Define enum mappings for relic config
 AC_DEFINE([RLC_VERSION], ["0.5.0"], [Relic Version])
 
@@ -273,17 +300,11 @@ AC_DEFINE([BRUCH],   [6], [Hardware-friendly inversion by Brunner-Curiger-Hofste
 AC_DEFINE([CTAIA],   [7], [Constant-time version of almost inverse.])
 AC_DEFINE([LOWER],   [8], [Use implementation provided by the lower layer.])
 
-dnl Define relic switches
-AC_ARG_ENABLE([debug],
-  [AS_HELP_STRING([--enable-debug],
-  [Build with debugging support [default=no]])],
-  [use_debug=$enableval],
-  [use_debug=no])
-
-if test x$use_debug = xyes; then
+if test x"$use_debug" = x"yes"; then
   AC_DEFINE([DEBUG],   [1], [Define this symbol if debugging support is enabled])
 fi
 
+dnl Define relic switches
 AC_ARG_ENABLE([profiling],
   [AS_HELP_STRING([--enable-profiling],
   [Build with profiling support [default=no]])],
@@ -767,6 +788,7 @@ AM_CONDITIONAL([ARITH_EASY], [test "$want_backend" = "easy"])
 AM_CONDITIONAL([ARITH_GMP], [test "$want_backend" = "gmp"])
 
 AC_SUBST(CPU_ARCH)
+AC_SUBST(DEBUG_FLAGS)
 AC_SUBST(RAND_PATH, hashd)
 AC_SUBST(RELIC_CPPFLAGS)
 AC_SUBST(WARN_CFLAGS)
