@@ -76,6 +76,12 @@ AC_ARG_ENABLE([hardening],
   [use_hardening=$enableval],
   [use_hardening=auto])
 
+AC_ARG_ENABLE([optimizations],
+  [AS_HELP_STRING([--enable-optimizations],
+  [Enable compiler and library optimizations [default=yes]])],
+  [use_optimizations=$enableval],
+  [use_optimizations=yes])
+
 dnl Define enum mappings for relic config
 AC_DEFINE([RLC_VERSION], ["0.5.0"], [Relic Version])
 
@@ -753,6 +759,7 @@ AM_CONDITIONAL(WITH_FBX, test 1 -eq 1)
 AM_CONDITIONAL([USE_TESTS], [test x$BUILD_TEST = xyes])
 AM_CONDITIONAL([USE_BENCH], [test x$BUILD_BENCH = xyes])
 AM_CONDITIONAL([HARDEN], [test "$use_hardening" = "yes"])
+AM_CONDITIONAL([OPTIMIZE], [test "$use_optimizations" = "yes"])
 
 AM_CONDITIONAL([ARITH_EASY], [test "$want_backend" = "easy"])
 AM_CONDITIONAL([ARITH_GMP], [test "$want_backend" = "gmp"])
