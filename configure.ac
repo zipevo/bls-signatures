@@ -652,19 +652,19 @@ AC_SEARCH_LIBS([clock_gettime],[rt])
 
 if test "$TARGET_OS" != "windows"; then
   dnl All windows code is PIC, forcing it on just adds useless compile warnings
-  AX_CHECK_COMPILE_FLAG([-fPIC], [HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fPIC"])
+  AX_CHECK_COMPILE_FLAG([-fPIC], [HARDENED_FLAGS="$HARDENED_FLAGS -fPIC"])
 fi
 
 dnl All versions of gcc that we commonly use for building are subject to bug
 dnl https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90348. To work around that, set
 dnl -fstack-reuse=none for all gcc builds. (Only gcc understands this flag)
-AX_CHECK_COMPILE_FLAG([-fstack-reuse=none], [HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fstack-reuse=none"])
+AX_CHECK_COMPILE_FLAG([-fstack-reuse=none], [HARDENED_FLAGS="$HARDENED_FLAGS -fstack-reuse=none"])
 if test "$use_hardening" != "no"; then
   use_hardening=yes
-  AX_CHECK_COMPILE_FLAG([-Wstack-protector], [HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -Wstack-protector"])
-  AX_CHECK_COMPILE_FLAG([-fstack-protector-all], [HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fstack-protector-all"])
+  AX_CHECK_COMPILE_FLAG([-Wstack-protector], [HARDENED_FLAGS="$HARDENED_FLAGS -Wstack-protector"])
+  AX_CHECK_COMPILE_FLAG([-fstack-protector-all], [HARDENED_FLAGS="$HARDENED_FLAGS -fstack-protector-all"])
 
-  AX_CHECK_COMPILE_FLAG([-fcf-protection=full], [HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fcf-protection=full"])
+  AX_CHECK_COMPILE_FLAG([-fcf-protection=full], [HARDENED_FLAGS="$HARDENED_FLAGS -fcf-protection=full"])
 
   case $host in
     *mingw*)
@@ -672,7 +672,7 @@ if test "$use_hardening" != "no"; then
       dnl See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90458 for more details.
       ;;
     *)
-      AX_CHECK_COMPILE_FLAG([-fstack-clash-protection], [HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fstack-clash-protection"], [], [])
+      AX_CHECK_COMPILE_FLAG([-fstack-clash-protection], [HARDENED_FLAGS="$HARDENED_FLAGS -fstack-clash-protection"], [], [])
       ;;
   esac
 
@@ -683,7 +683,7 @@ if test "$use_hardening" != "no"; then
   AX_CHECK_LINK_FLAG([-Wl,-z,relro], [HARDENED_LDFLAGS="$HARDENED_LDFLAGS -Wl,-z,relro"], [], [])
   AX_CHECK_LINK_FLAG([-Wl,-z,now], [HARDENED_LDFLAGS="$HARDENED_LDFLAGS -Wl,-z,now"], [], [])
   AX_CHECK_LINK_FLAG([-Wl,-z,separate-code], [HARDENED_LDFLAGS="$HARDENED_LDFLAGS -Wl,-z,separate-code"], [], [])
-  AX_CHECK_LINK_FLAG([-fPIE -pie], [HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fPIE"; HARDENED_LDFLAGS="$HARDENED_LDFLAGS -pie"], [], [])
+  AX_CHECK_LINK_FLAG([-fPIE -pie], [HARDENED_FLAGS="$HARDENED_FLAGS -fPIE"; HARDENED_LDFLAGS="$HARDENED_LDFLAGS -pie"], [], [])
 
   case $host in
     *mingw*)
@@ -802,7 +802,7 @@ AC_SUBST(RELIC_CPPFLAGS)
 AC_SUBST(WARN_CFLAGS)
 AC_SUBST(NOWARN_CFLAGS)
 AC_SUBST(LIBTOOL_APP_LDFLAGS)
-AC_SUBST(HARDENED_CXXFLAGS)
+AC_SUBST(HARDENED_FLAGS)
 AC_SUBST(HARDENED_LDFLAGS)
 AC_SUBST(CORE_LDFLAGS)
 AC_SUBST(CORE_CPPFLAGS)
