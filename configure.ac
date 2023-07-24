@@ -350,48 +350,40 @@ fi
 
 use_pkgconfig=yes
 
-case $host_cpu in
-  x86_64)
-    dnl Support for AMD64 (also known as x86_64 on some platforms) processors
-    CPU_ARCH="x64"
-    AC_DEFINE([ARCH], [X64], [Architecture.])
-    AC_DEFINE([WSIZE], [64], [Size of word in this architecture.])
-    ;;
-  aarch*)
-    dnl Relic doesn't support aarch64 yet, set CPU_ARCH to none.
-    dnl Support for 64-bit ARM processors
-    CPU_ARCH="none"
-    AC_DEFINE([ARCH], [ARM], [Architecture.])
-    AC_DEFINE([WSIZE], [64], [Size of word in this architecture.])
-    ;;
-  i?86)
-    dnl Support for Intel x86 processors
-    CPU_ARCH="x86"
-    AC_DEFINE([ARCH], [X86], [Architecture.])
-    AC_DEFINE([WSIZE], [32], [Size of word in this architecture.])
-    ;;
-  arm*)
-    dnl Support for 32-bit native ARM processors
-    CPU_ARCH="arm"
-    AC_DEFINE([ARCH], [ARM], [Architecture.])
-    AC_DEFINE([WSIZE], [32], [Size of word in this architecture.])
-    ;;
-  *32*)
-    dnl Support for an undefined 32-bit architecture
-    CPU_ARCH="none"
-    AC_DEFINE([ARCH], [RELIC_NONE], [Architecture.])
-    AC_DEFINE([WSIZE], [32], [Size of word in this architecture.])
-    ;;
-  *64*)
-    dnl Support for an undefined 64-bit architecture
-    CPU_ARCH="none"
-    AC_DEFINE([ARCH], [RELIC_NONE], [Architecture.])
-    AC_DEFINE([WSIZE], [64], [Size of word in this architecture.])
-    ;;
-  *)
-    AC_MSG_ERROR([Unable to determine host architecture, may not be supported!])
-    ;;
-esac
+if [[[ "$host_cpu" == x86_64 && "$use_optimizations" == "yes" ]]]; then
+  dnl Support for AMD64 (also known as x86_64 on some platforms) processors
+  CPU_ARCH="x64"
+  AC_DEFINE([ARCH], [X64], [Architecture.])
+  AC_DEFINE([WSIZE], [64], [Size of word in this architecture.])
+elif [[[ "$host_cpu" == aarch* && "$use_optimizations" == "yes" ]]]; then
+  dnl Relic doesn't support aarch64 yet, set CPU_ARCH to none.
+  dnl Support for 64-bit ARM processors
+  CPU_ARCH="none"
+  AC_DEFINE([ARCH], [ARM], [Architecture.])
+  AC_DEFINE([WSIZE], [64], [Size of word in this architecture.])
+elif [[[ "$host_cpu" == i?86 && "$use_optimizations" == "yes" ]]]; then
+  dnl Support for Intel x86 processors
+  CPU_ARCH="x86"
+  AC_DEFINE([ARCH], [X86], [Architecture.])
+  AC_DEFINE([WSIZE], [32], [Size of word in this architecture.])
+elif [[[ "$host_cpu" == arm* && "$use_optimizations" == "yes" ]]]; then
+  dnl Support for 32-bit native ARM processors
+  CPU_ARCH="arm"
+  AC_DEFINE([ARCH], [ARM], [Architecture.])
+  AC_DEFINE([WSIZE], [32], [Size of word in this architecture.])
+elif [[[ "$host_cpu" == *32* ]]]; then
+  dnl Support for an undefined 32-bit architecture
+  CPU_ARCH="none"
+  AC_DEFINE([ARCH], [RELIC_NONE], [Architecture.])
+  AC_DEFINE([WSIZE], [32], [Size of word in this architecture.])
+elif [[[ "$host_cpu" == *64* ]]]; then
+  dnl Support for an undefined 64-bit architecture
+  CPU_ARCH="none"
+  AC_DEFINE([ARCH], [RELIC_NONE], [Architecture.])
+  AC_DEFINE([WSIZE], [64], [Size of word in this architecture.])
+else
+  AC_MSG_ERROR([Unable to determine host architecture, may not be supported!])
+fi
 
 case $host in
   *darwin*)
