@@ -652,7 +652,7 @@ AC_SEARCH_LIBS([clock_gettime],[rt])
 
 if test "$TARGET_OS" != "windows"; then
   dnl All windows code is PIC, forcing it on just adds useless compile warnings
-  AX_CHECK_COMPILE_FLAG([-fPIC], [PIC_FLAGS="-fPIC"])
+  AX_CHECK_COMPILE_FLAG([-fPIC], [HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fPIC"])
 fi
 
 dnl All versions of gcc that we commonly use for building are subject to bug
@@ -683,7 +683,7 @@ if test "$use_hardening" != "no"; then
   AX_CHECK_LINK_FLAG([-Wl,-z,relro], [HARDENED_LDFLAGS="$HARDENED_LDFLAGS -Wl,-z,relro"], [], [])
   AX_CHECK_LINK_FLAG([-Wl,-z,now], [HARDENED_LDFLAGS="$HARDENED_LDFLAGS -Wl,-z,now"], [], [])
   AX_CHECK_LINK_FLAG([-Wl,-z,separate-code], [HARDENED_LDFLAGS="$HARDENED_LDFLAGS -Wl,-z,separate-code"], [], [])
-  AX_CHECK_LINK_FLAG([-fPIE -pie], [PIE_FLAGS="-fPIE"; HARDENED_LDFLAGS="$HARDENED_LDFLAGS -pie"], [], [])
+  AX_CHECK_LINK_FLAG([-fPIE -pie], [HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fPIE"; HARDENED_LDFLAGS="$HARDENED_LDFLAGS -pie"], [], [])
 
   case $host in
     *mingw*)
@@ -804,8 +804,6 @@ AC_SUBST(NOWARN_CFLAGS)
 AC_SUBST(LIBTOOL_APP_LDFLAGS)
 AC_SUBST(HARDENED_CXXFLAGS)
 AC_SUBST(HARDENED_LDFLAGS)
-AC_SUBST(PIC_FLAGS)
-AC_SUBST(PIE_FLAGS)
 AC_SUBST(CORE_LDFLAGS)
 AC_SUBST(CORE_CPPFLAGS)
 AC_SUBST(CORE_CXXFLAGS)
