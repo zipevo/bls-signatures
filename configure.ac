@@ -123,26 +123,26 @@ if test x"$want_backend" = x"auto"; then
   if test x"$use_optimizations" = x"no"; then
     want_backend=easy
   else
-  GMP_CHECK
-  if test x"$has_gmp" = x"yes"; then
-    case $host in
-      *darwin*)
-        case $host_cpu in
-          aarch*)
-            want_backend=easy
-            ;;
-          *)
-            want_backend=gmp
-            ;;
-        esac
-        ;;
-      *)
-        want_backend=gmp
-        ;;
-    esac
-  else
-    want_backend=easy
-  fi
+    GMP_CHECK
+    if test x"$has_gmp" = x"yes"; then
+      case $host in
+        *darwin*)
+          case $host_cpu in
+            aarch*)
+              want_backend=easy
+              ;;
+            *)
+              want_backend=gmp
+              ;;
+          esac
+          ;;
+        *)
+          want_backend=gmp
+          ;;
+      esac
+    else
+      want_backend=easy
+    fi
   fi
 else
   case $want_backend in
