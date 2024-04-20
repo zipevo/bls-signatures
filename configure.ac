@@ -120,6 +120,9 @@ AC_ARG_WITH([backend],
 )
 
 if test x"$want_backend" = x"auto"; then
+  if test x"$use_optimizations" = x"no"; then
+    want_backend=easy
+  else
   GMP_CHECK
   if test x"$has_gmp" = x"yes"; then
     case $host in
@@ -139,6 +142,7 @@ if test x"$want_backend" = x"auto"; then
     esac
   else
     want_backend=easy
+  fi
   fi
 else
   case $want_backend in
