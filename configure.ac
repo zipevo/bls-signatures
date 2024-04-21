@@ -519,19 +519,19 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[char foo;]])],
       CFLAGS="$saved_CFLAGS"
     ])
 
-if [[[ "$CFLAGS_overridden" == "no" ]]]; then
+if [[[ "$CFLAGS_overridden" == "no" && "$CXXFLAGS_overridden" == "no" ]]]; then
   dnl Enable warnings
-  AX_CHECK_COMPILE_FLAG([-Wall],[WARN_CFLAGS="$WARN_CFLAGS -Wall"],,)
-  AX_CHECK_COMPILE_FLAG([-Wextra],[WARN_CFLAGS="$WARN_CFLAGS -Wextra"],,)
-  AX_CHECK_COMPILE_FLAG([-Wcast-align],[WARN_CFLAGS="$WARN_CFLAGS -Wcast-align"],,)
+  AX_CHECK_COMPILE_FLAG([-Wall],[WARN_FLAGS="$WARN_FLAGS -Wall"],,)
+  AX_CHECK_COMPILE_FLAG([-Wcast-align],[WARN_FLAGS="$WARN_FLAGS -Wcast-align"],,)
+  AX_CHECK_COMPILE_FLAG([-Wextra],[WARN_FLAGS="$WARN_FLAGS -Wextra"],,)
 
   dnl Exclude known warnings
-  AX_CHECK_COMPILE_FLAG([-Wunused-parameter],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-unused-parameter"],,)
-  AX_CHECK_COMPILE_FLAG([-Wshadow],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-shadow"],,)
-  AX_CHECK_COMPILE_FLAG([-Wsign-compare],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-sign-compare"],,)
-  AX_CHECK_COMPILE_FLAG([-Wstrict-prototypes],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-strict-prototypes"],,)
-  AX_CHECK_COMPILE_FLAG([-Wunused-function],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-unused-function"],,)
-  AX_CHECK_COMPILE_FLAG([-Wlong-long],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-long-long"],,)
+  AX_CHECK_COMPILE_FLAG([-Wlong-long],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-long-long"],,)
+  AX_CHECK_COMPILE_FLAG([-Wshadow],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-shadow"],,)
+  AX_CHECK_COMPILE_FLAG([-Wsign-compare],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-sign-compare"],,)
+  AX_CHECK_COMPILE_FLAG([-Wstrict-prototypes],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-strict-prototypes"],,)
+  AX_CHECK_COMPILE_FLAG([-Wunused-function],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-unused-function"],,)
+  AX_CHECK_COMPILE_FLAG([-Wunused-parameter],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-unused-parameter"],,)
 fi
 
 dnl set default settings for relic
@@ -806,8 +806,8 @@ AC_SUBST(CPU_ARCH)
 AC_SUBST(DEBUG_FLAGS)
 AC_SUBST(RAND_PATH, hashd)
 AC_SUBST(RELIC_CPPFLAGS)
-AC_SUBST(WARN_CFLAGS)
-AC_SUBST(NOWARN_CFLAGS)
+AC_SUBST(WARN_FLAGS)
+AC_SUBST(NOWARN_FLAGS)
 AC_SUBST(LIBTOOL_APP_LDFLAGS)
 AC_SUBST(HARDENED_FLAGS)
 AC_SUBST(HARDENED_LDFLAGS)
