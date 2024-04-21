@@ -745,7 +745,7 @@ if test "$TARGET_OS" = "darwin"; then
 fi
 
 dnl Don't allow extended (non-ASCII) symbols in identifiers. This is easier for code review.
-AX_CHECK_COMPILE_FLAG([-fno-extended-identifiers], [CORE_CXXFLAGS="$CORE_CXXFLAGS -fno-extended-identifiers"], [], [])
+AX_CHECK_COMPILE_FLAG([-fno-extended-identifiers], [CORE_FLAGS="$CORE_FLAGS -fno-extended-identifiers"], [], [])
 
 AC_MSG_CHECKING([whether to build runtest])
 if test x$use_tests = xyes; then
@@ -806,7 +806,7 @@ AC_SUBST(HARDENED_FLAGS)
 AC_SUBST(HARDENED_LDFLAGS)
 AC_SUBST(CORE_LDFLAGS)
 AC_SUBST(CORE_CPPFLAGS)
-AC_SUBST(CORE_CXXFLAGS)
+AC_SUBST(CORE_FLAGS)
 
 AC_SUBST(GMP_LDFLAGS)
 AC_SUBST(GMP_CPPFLAGS)
