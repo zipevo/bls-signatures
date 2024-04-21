@@ -96,6 +96,15 @@ AC_ARG_ENABLE([debug],
 
 AC_LANG_PUSH([C])
 
+dnl Check for a flag to turn compiler warnings into errors. This is helpful for checks which may
+dnl appear to succeed because by default they merely emit warnings when they fail.
+dnl
+dnl Note that this is not necessarily a check to see if -Werror is supported, but rather to see if
+dnl a compile with -Werror can succeed. This is important because the compiler may already be
+dnl warning about something unrelated, for example about some path issue. If that is the case,
+dnl -Werror cannot be used because all of those warnings would be turned into errors.
+AX_CHECK_COMPILE_FLAG([-Werror], [FLAG_WERROR="-Werror"], [FLAG_WERROR=""])
+
 if [[[ "$use_debug" == "yes" || "$use_optimizations" == "no" ]]]; then
   dnl Clear default -g -O2 flags
   if test x"$CFLAGS_overridden" = x"no"; then
@@ -106,22 +115,22 @@ if [[[ "$use_debug" == "yes" || "$use_optimizations" == "no" ]]]; then
   fi
 
   dnl Disable optimizations
-  AX_CHECK_COMPILE_FLAG([-O0], [[DEBUG_FLAGS="$DEBUG_FLAGS -O0"]])
+  AX_CHECK_COMPILE_FLAG([-O0], [[DEBUG_FLAGS="$DEBUG_FLAGS -O0"]], [], [[$FLAG_WERROR]])
 
   if [[[ "$use_debug" == "yes" ]]]; then
     dnl Prefer -g3, fall back to -g if that is unavailable.
     AX_CHECK_COMPILE_FLAG(
       [-g3],
       [[DEBUG_FLAGS="$DEBUG_FLAGS -g3"]],
-      [AX_CHECK_COMPILE_FLAG([-g],[[DEBUG_FLAGS="$DEBUG_FLAGS -g"]])])
+      [AX_CHECK_COMPILE_FLAG([-g],[[DEBUG_FLAGS="$DEBUG_FLAGS -g"]])], [[$FLAG_WERROR]])
 
-    AX_CHECK_COMPILE_FLAG([-ftrapv],[DEBUG_FLAGS="$DEBUG_FLAGS -ftrapv"])
+    AX_CHECK_COMPILE_FLAG([-ftrapv],[DEBUG_FLAGS="$DEBUG_FLAGS -ftrapv"], [], [[$FLAG_WERROR]])
   else
     dnl Reintroduce -g flag deleted during C(XX)FLAGS reset
-    AX_CHECK_COMPILE_FLAG([-g],[[DEBUG_FLAGS="$DEBUG_FLAGS -g"]])
+    AX_CHECK_COMPILE_FLAG([-g],[[DEBUG_FLAGS="$DEBUG_FLAGS -g"]], [], [[$FLAG_WERROR]])
 
     dnl -ftrapv and -fwrapv conflict, so we only set this if use_debug=no
-    AX_CHECK_COMPILE_FLAG([-fwrapv],[DEBUG_FLAGS="$DEBUG_FLAGS -fwrapv"])
+    AX_CHECK_COMPILE_FLAG([-fwrapv],[DEBUG_FLAGS="$DEBUG_FLAGS -fwrapv"], [], [[$FLAG_WERROR]])
   fi
 fi
 
@@ -521,17 +530,17 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[char foo;]])],
 
 if [[[ "$CFLAGS_overridden" == "no" && "$CXXFLAGS_overridden" == "no" ]]]; then
   dnl Enable warnings
-  AX_CHECK_COMPILE_FLAG([-Wall],[WARN_FLAGS="$WARN_FLAGS -Wall"],,)
-  AX_CHECK_COMPILE_FLAG([-Wcast-align],[WARN_FLAGS="$WARN_FLAGS -Wcast-align"],,)
-  AX_CHECK_COMPILE_FLAG([-Wextra],[WARN_FLAGS="$WARN_FLAGS -Wextra"],,)
+  AX_CHECK_COMPILE_FLAG([-Wall],[WARN_FLAGS="$WARN_FLAGS -Wall"], [], [[$FLAG_WERROR]])
+  AX_CHECK_COMPILE_FLAG([-Wcast-align],[WARN_FLAGS="$WARN_FLAGS -Wcast-align"], [], [[$FLAG_WERROR]])
+  AX_CHECK_COMPILE_FLAG([-Wextra],[WARN_FLAGS="$WARN_FLAGS -Wextra"], [], [[$FLAG_WERROR]])
 
   dnl Exclude known warnings
-  AX_CHECK_COMPILE_FLAG([-Wlong-long],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-long-long"],,)
-  AX_CHECK_COMPILE_FLAG([-Wshadow],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-shadow"],,)
-  AX_CHECK_COMPILE_FLAG([-Wsign-compare],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-sign-compare"],,)
-  AX_CHECK_COMPILE_FLAG([-Wstrict-prototypes],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-strict-prototypes"],,)
-  AX_CHECK_COMPILE_FLAG([-Wunused-function],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-unused-function"],,)
-  AX_CHECK_COMPILE_FLAG([-Wunused-parameter],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-unused-parameter"],,)
+  AX_CHECK_COMPILE_FLAG([-Wlong-long],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-long-long"], [], [[$FLAG_WERROR]])
+  AX_CHECK_COMPILE_FLAG([-Wshadow],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-shadow"], [], [[$FLAG_WERROR]])
+  AX_CHECK_COMPILE_FLAG([-Wsign-compare],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-sign-compare"], [], [[$FLAG_WERROR]])
+  AX_CHECK_COMPILE_FLAG([-Wstrict-prototypes],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-strict-prototypes"], [], [[$FLAG_WERROR]])
+  AX_CHECK_COMPILE_FLAG([-Wunused-function],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-unused-function"], [], [[$FLAG_WERROR]])
+  AX_CHECK_COMPILE_FLAG([-Wunused-parameter],[NOWARN_FLAGS="$NOWARN_FLAGS -Wno-unused-parameter"], [], [[$FLAG_WERROR]])
 fi
 
 dnl set default settings for relic
@@ -657,19 +666,19 @@ AC_SEARCH_LIBS([clock_gettime],[rt])
 
 if test "$TARGET_OS" != "windows"; then
   dnl All windows code is PIC, forcing it on just adds useless compile warnings
-  AX_CHECK_COMPILE_FLAG([-fPIC], [HARDENED_FLAGS="$HARDENED_FLAGS -fPIC"])
+  AX_CHECK_COMPILE_FLAG([-fPIC], [HARDENED_FLAGS="$HARDENED_FLAGS -fPIC"], [], [[$FLAG_WERROR]])
 fi
 
 dnl All versions of gcc that we commonly use for building are subject to bug
 dnl https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90348. To work around that, set
 dnl -fstack-reuse=none for all gcc builds. (Only gcc understands this flag)
-AX_CHECK_COMPILE_FLAG([-fstack-reuse=none], [HARDENED_FLAGS="$HARDENED_FLAGS -fstack-reuse=none"])
+AX_CHECK_COMPILE_FLAG([-fstack-reuse=none], [HARDENED_FLAGS="$HARDENED_FLAGS -fstack-reuse=none"], [], [[$FLAG_WERROR]])
 if test "$use_hardening" != "no"; then
   use_hardening=yes
   AX_CHECK_COMPILE_FLAG([-Wstack-protector], [HARDENED_FLAGS="$HARDENED_FLAGS -Wstack-protector"])
-  AX_CHECK_COMPILE_FLAG([-fstack-protector-all], [HARDENED_FLAGS="$HARDENED_FLAGS -fstack-protector-all"])
+  AX_CHECK_COMPILE_FLAG([-fstack-protector-all], [HARDENED_FLAGS="$HARDENED_FLAGS -fstack-protector-all"], [], [[$FLAG_WERROR]])
 
-  AX_CHECK_COMPILE_FLAG([-fcf-protection=full], [HARDENED_FLAGS="$HARDENED_FLAGS -fcf-protection=full"])
+  AX_CHECK_COMPILE_FLAG([-fcf-protection=full], [HARDENED_FLAGS="$HARDENED_FLAGS -fcf-protection=full"], [], [[$FLAG_WERROR]])
 
   case $host in
     *mingw*)
@@ -677,7 +686,7 @@ if test "$use_hardening" != "no"; then
       dnl See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90458 for more details.
       ;;
     *)
-      AX_CHECK_COMPILE_FLAG([-fstack-clash-protection], [HARDENED_FLAGS="$HARDENED_FLAGS -fstack-clash-protection"], [], [])
+      AX_CHECK_COMPILE_FLAG([-fstack-clash-protection], [HARDENED_FLAGS="$HARDENED_FLAGS -fstack-clash-protection"], [], [[$FLAG_WERROR]])
       ;;
   esac
 
@@ -750,7 +759,7 @@ if test "$TARGET_OS" = "darwin"; then
 fi
 
 dnl Don't allow extended (non-ASCII) symbols in identifiers. This is easier for code review.
-AX_CHECK_COMPILE_FLAG([-fno-extended-identifiers], [CORE_FLAGS="$CORE_FLAGS -fno-extended-identifiers"], [], [])
+AX_CHECK_COMPILE_FLAG([-fno-extended-identifiers], [CORE_FLAGS="$CORE_FLAGS -fno-extended-identifiers"], [], [[$FLAG_WERROR]])
 
 AC_LANG_POP([C])
 
