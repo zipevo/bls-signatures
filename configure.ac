@@ -94,6 +94,8 @@ AC_ARG_ENABLE([debug],
   [use_debug=$enableval],
   [use_debug=no])
 
+AC_LANG_PUSH([C])
+
 if [[[ "$use_debug" == "yes" || "$use_optimizations" == "no" ]]]; then
   dnl Clear default -g -O2 flags
   if test x"$CFLAGS_overridden" = x"no"; then
@@ -517,17 +519,20 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[char foo;]])],
       CFLAGS="$saved_CFLAGS"
     ])
 
-AC_LANG_PUSH([C])
-AX_CHECK_COMPILE_FLAG([-Wall],[WARN_CFLAGS="$WARN_CFLAGS -Wall"],,)
-AX_CHECK_COMPILE_FLAG([-Wextra],[WARN_CFLAGS="$WARN_CFLAGS -Wextra"],,)
-AX_CHECK_COMPILE_FLAG([-Wcast-align],[WARN_CFLAGS="$WARN_CFLAGS -Wcast-align"],,)
-AX_CHECK_COMPILE_FLAG([-Wunused-parameter],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-unused-parameter"],,)
-AX_CHECK_COMPILE_FLAG([-Wshadow],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-shadow"],,)
-AX_CHECK_COMPILE_FLAG([-Wsign-compare],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-sign-compare"],,)
-AX_CHECK_COMPILE_FLAG([-Wstrict-prototypes],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-strict-prototypes"],,)
-AX_CHECK_COMPILE_FLAG([-Wunused-function],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-unused-function"],,)
-AX_CHECK_COMPILE_FLAG([-Wlong-long],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-long-long"],,)
-AC_LANG_POP([C])
+if [[[ "$CFLAGS_overridden" == "no" ]]]; then
+  dnl Enable warnings
+  AX_CHECK_COMPILE_FLAG([-Wall],[WARN_CFLAGS="$WARN_CFLAGS -Wall"],,)
+  AX_CHECK_COMPILE_FLAG([-Wextra],[WARN_CFLAGS="$WARN_CFLAGS -Wextra"],,)
+  AX_CHECK_COMPILE_FLAG([-Wcast-align],[WARN_CFLAGS="$WARN_CFLAGS -Wcast-align"],,)
+
+  dnl Exclude known warnings
+  AX_CHECK_COMPILE_FLAG([-Wunused-parameter],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-unused-parameter"],,)
+  AX_CHECK_COMPILE_FLAG([-Wshadow],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-shadow"],,)
+  AX_CHECK_COMPILE_FLAG([-Wsign-compare],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-sign-compare"],,)
+  AX_CHECK_COMPILE_FLAG([-Wstrict-prototypes],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-strict-prototypes"],,)
+  AX_CHECK_COMPILE_FLAG([-Wunused-function],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-unused-function"],,)
+  AX_CHECK_COMPILE_FLAG([-Wlong-long],[NOWARN_CFLAGS="$NOWARN_CFLAGS -Wno-long-long"],,)
+fi
 
 dnl set default settings for relic
 AC_DEFINE([ALIGN], [1], [Byte boundary to align digit vectors.])
@@ -746,6 +751,8 @@ fi
 
 dnl Don't allow extended (non-ASCII) symbols in identifiers. This is easier for code review.
 AX_CHECK_COMPILE_FLAG([-fno-extended-identifiers], [CORE_FLAGS="$CORE_FLAGS -fno-extended-identifiers"], [], [])
+
+AC_LANG_POP([C])
 
 AC_MSG_CHECKING([whether to build runtest])
 if test x$use_tests = xyes; then
